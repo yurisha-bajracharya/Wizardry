@@ -2,6 +2,8 @@
 #ifndef COLLECTIBLES_H
 #define COLLECTIBLES_H
 
+extern int CollectibleCount;//declaring CollectibleCount as an external variable
+
 class Collectibles
 {
 public:

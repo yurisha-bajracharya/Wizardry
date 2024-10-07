@@ -6,6 +6,7 @@
 #include "gameover.h"
 #include "collectibles.h"
 #include "character.h"
+#include "Pause.h"
 
 using namespace std;
 
@@ -17,18 +18,21 @@ enum GameState
     MENU = 0,
     LEVEL1,
     LEVEL2,
-    GAMEOVER
+    GAMEOVER,
+    PAUSE
 };
 
 int main()
 {
-    InitWindow(30 * 25, 30 * 25, "Harry Potter and the Great Getaway");
+    InitWindow(1400, 900, "Wizardry");
     SetTargetFPS(60);
     cout << "Window Initialized" << endl;
-
+    float startTime = 0.0f;
+    float elapsedTime = 0.0f;
+    float endTime = 30.0f;
+    float RemainingTime = 0.0f;
     // Current state of the game
     GameState currentState = MENU;
-
     Collectibles collectible;
     Texture2D texture1 = {0}, texture2 = {0}; // Initializing texture to 0 because if the variable texture1 is declared but not initialized before the switch statement, this can cause issues if the control jumps directly to a case that uses texture1. AND before the while(!WindowShouldClose()) loop, because I donot want the image to be loaded and unloaded multiple times. I want it to be loaded once and used throughout the game.
     texture1 = collectible.LoadTexture("./images/polyjuice_potion.png");
@@ -51,22 +55,29 @@ int main()
 
     while (!WindowShouldClose())
     {
-        // Update game based on the current state
+        elapsedTime = GetTime() - startTime;
+        RemainingTime = endTime - elapsedTime;
         switch (currentState)
         {
         case MENU:
             UpdateMenu();
             if (IsKeyPressed(KEY_ENTER))
             {
-                currentState = LEVEL1; // Start the game
+                currentState = LEVEL1;
+                startTime = GetTime();
             }
             break;
 
         case LEVEL1:
             UpdateLevel1();
+            if (RemainingTime <= 0) /* time up*/
+            {
+                RemainingTime = 0;
+                currentState = PAUSE;
+            }
             if (IsKeyDown(KEY_L))
             {
-                currentState = LEVEL2; // Move to the second level
+                currentState = LEVEL2;
             }
             break;
 
@@ -89,8 +100,15 @@ int main()
                 currentState = MENU; // Return to the main menu
             }
             break;
-        }
 
+        case PAUSE:
+            UpdatePause();
+            if (IsKeyPressed(KEY_P))
+            {
+                currentState = LEVEL2; // Move to the next level
+            }
+            break;
+        }
         // Update cloud positions
         for (int i = 0; i < numClouds; i++)
         {
@@ -125,6 +143,9 @@ int main()
             {
                 DrawTexture(cloud, cloudPositions[i].x, cloudPositions[i].y, WHITE);
             }
+            RemainingTime = endTime - elapsedTime;
+            // Draw Timer
+            DrawText(TextFormat("Remaining Time: %.2f", RemainingTime), 10, 10, 40, BLACK);
             break;
 
         case LEVEL2:
@@ -134,6 +155,10 @@ int main()
 
         case GAMEOVER:
             DrawGameOver();
+            break;
+
+        case PAUSE:
+            DrawPause();
             break;
         }
 

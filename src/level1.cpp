@@ -6,9 +6,13 @@
 #include <cstdio> // Add this line to include the header file that declares the FormatText function
 using namespace std;
 
-int cellSize = 30;
-int cellCount = 25;
+const int screenWidth = 1400;
+const int screenHeight = 900;
+int cellSize = 50;
+const int cellCountX = screenWidth / cellSize;
+const int cellCountY = screenHeight / cellSize;
 int CollectibleCount = 0;
+
 Character hp;
 Collectibles::Collectibles() : texture1({0}), texture2({0})
 {
@@ -44,8 +48,6 @@ Collectibles::~Collectibles()
 
 void Collectibles::Draw(Texture2D texture1, Texture2D texture2)
 {
-    // DrawRectangle(0, 0, 100, 100, RED);
-    // cout << "Draw called" << endl;
     DrawTexture(texture1, position1.x * cellSize, position1.y * cellSize, WHITE); // syntax: DrawTexture(texture, x, y, tint); x and y are the coordinates of the top-left corner of the texture
     DrawTexture(texture2, position2.x * cellSize, position2.y * cellSize, WHITE); // Multiplying by cellSize converts grid coordinates to pixel coordinates for rendering.
     DrawText(("Collectible Count: " + std::to_string(CollectibleCount)).c_str(), 100, 200, 20, DARKGRAY);
@@ -65,8 +67,8 @@ void Collectibles::Draw(Texture2D texture1, Texture2D texture2)
 
 Vector2 Collectibles::GenerateRandomPosition()
 {
-    float x = GetRandomValue(0, cellCount - 1);
-    float y = GetRandomValue(0, cellCount - 1);
+    float x = GetRandomValue(0, cellCountX - 1);
+    float y = GetRandomValue(0, cellCountY - 1);
     return Vector2{x, y};
 }
 
