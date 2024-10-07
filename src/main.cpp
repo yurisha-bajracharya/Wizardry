@@ -28,6 +28,7 @@ int main()
     InitWindow(1400, 900, "Wizardry");
     SetTargetFPS(60);
     cout << "Window Initialized" << endl;
+    Texture2D backgroundlevel1 = LoadTexture("./images/bg.png");
     float startTime = 0.0f;
     float elapsedTime = 0.0f;
     float endTime = 30.0f;
@@ -191,6 +192,7 @@ int main()
         case LEVEL1:
             // adding image on background
             ClearBackground(GRAY);
+            DrawTexture(backgroundlevel1, 0, 0, WHITE);
             collectible.Draw(texture1, texture2);
             DrawLevel1(character);
 

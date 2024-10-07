@@ -5,7 +5,6 @@
 #include "character.h"
 #include <cstdio> // Add this line to include the header file that declares the FormatText function
 using namespace std;
-
 const int screenWidth = 1400;
 const int screenHeight = 900;
 int cellSize = 50;
