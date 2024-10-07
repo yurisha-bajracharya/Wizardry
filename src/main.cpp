@@ -16,6 +16,7 @@ Color darkGreen = {43, 51, 24, 255};
 enum GameState
 {
     MENU = 0,
+    MAP,
     LEVEL1,
     LEVEL2,
     GAMEOVER,
@@ -34,6 +35,7 @@ int main()
     // Current state of the game
     GameState currentState = MENU;
     Collectibles collectible;
+    Texture2D currentMapImage = {0};
     Texture2D texture1 = {0}, texture2 = {0}; // Initializing texture to 0 because if the variable texture1 is declared but not initialized before the switch statement, this can cause issues if the control jumps directly to a case that uses texture1. AND before the while(!WindowShouldClose()) loop, because I donot want the image to be loaded and unloaded multiple times. I want it to be loaded once and used throughout the game.
     texture1 = collectible.LoadTexture("./images/polyjuice_potion.png");
     texture2 = collectible.LoadTexture("./images/expelliarmus.png");
@@ -53,17 +55,67 @@ int main()
         cloudPositions[i].y = GetRandomValue(0, GetScreenHeight() - cloud.height);
     }
 
+    // Load map and highlighted images
+    Texture2D mapImage = LoadTexture("./images/mapimg.png");
+    Texture2D hogsmeadehovered = LoadTexture("./images/hogsmeadehovered.png");
+    Texture2D forbiddenhovered = LoadTexture("./images/forbiddenhovered.png");
+    Texture2D mainbuildinghovered = LoadTexture("./images/mainbuildinghovered.png");
+
+    // defining areas for each level
+    Rectangle hogsmeadeArea = {100, 200, 200, 150}; // syntax: Rectangle{x, y, width, height}
+    Rectangle forbiddenArea = {1200, 300, 200, 150};
+    Rectangle mainbuildingArea = {800, 600, 300, 300};
+
     while (!WindowShouldClose())
     {
         elapsedTime = GetTime() - startTime;
         RemainingTime = endTime - elapsedTime;
+        Vector2 mousePosition = GetMousePosition();
+        bool isHoveringHogsmeade = CheckCollisionPointRec(mousePosition, hogsmeadeArea);
+        bool isHoveringForbiddenForest = CheckCollisionPointRec(mousePosition, forbiddenArea);
+        bool isHoveringMainBuilding = CheckCollisionPointRec(mousePosition, mainbuildingArea);
+
         switch (currentState)
         {
         case MENU:
             UpdateMenu();
             if (IsKeyPressed(KEY_ENTER))
             {
+                currentState = MAP;
+                startTime = GetTime();
+            }
+            break;
+
+        case MAP:
+            if (isHoveringHogsmeade)
+            {
+                currentMapImage = hogsmeadehovered;
+            }
+            else if (isHoveringForbiddenForest)
+            {
+                currentMapImage = forbiddenhovered;
+            }
+            else if (isHoveringMainBuilding)
+            {
+                currentMapImage = mainbuildinghovered;
+            }
+            else
+            {
+                currentMapImage = mapImage;
+            }
+            if (isHoveringHogsmeade && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+            {
                 currentState = LEVEL1;
+                startTime = GetTime();
+            }
+            else if (isHoveringForbiddenForest && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+            {
+                currentState = LEVEL2;
+                startTime = GetTime();
+            }
+            else if (isHoveringMainBuilding && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+            {
+                currentState = GAMEOVER;
                 startTime = GetTime();
             }
             break;
@@ -130,6 +182,10 @@ int main()
         {
         case MENU:
             DrawMenu();
+            break;
+
+        case MAP:
+            DrawTexture(currentMapImage, 0, 0, WHITE);
             break;
 
         case LEVEL1:
