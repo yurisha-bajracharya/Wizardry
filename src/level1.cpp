@@ -19,11 +19,10 @@ Character hp;
 // loading the background music
 Sound level1Music;
 
-Collectibles::Collectibles() : texture1({0}), texture2({0}), speed(0.005f)
+Collectibles::Collectibles() : texture({0}), speed(0.005f)
 {
     cout << "Collectibles constructor called";
-    position1 = GenerateRandomPosition();
-    position2 = GenerateRandomPosition();
+    snitch_position = GenerateRandomPosition();
 }
 
 Texture2D Collectibles::LoadTexture(const char *filePath)
@@ -31,7 +30,7 @@ Texture2D Collectibles::LoadTexture(const char *filePath)
     Texture2D texture;
     Image img;
     img = LoadImage(filePath);
-    ImageResize(&img, 90, 90);
+    ImageResize(&img, 60, 60);
     texture = LoadTextureFromImage(img);
     if (texture.id == 0)
     {
@@ -46,47 +45,39 @@ Texture2D Collectibles::LoadTexture(const char *filePath)
 
 void Collectibles::Update()
 {
-    float frameTime = GetFrameTime(); // Get time between frames for smooth movement
+    snitch_timer += GetFrameTime(); // Update the timer with the frame time
 
-    // Move collectibles horizontally only by a smaller value
-    position1.x += speed * frameTime * 100.0f; // Multiply by 100 to get a reasonable speed
-    position2.x += speed * frameTime * 100.0f;
-
-    // Reset collectible position if it moves out of the screen
-    if (position1.x > screenWidth) // Directly compare to screen width
+    if (snitch_timer >= 10.0f)
     {
-        position1 = GenerateRandomPosition();
+        snitch_position = GenerateRandomPosition(); // Generate a new random position
+        snitch_timer = 0.0f;
     }
-    if (position2.x > screenWidth)
+
+    // Check for collision with the character
+    if (CheckCollisionRecs({snitch_position.x * cellSize, snitch_position.y * cellSize, 30, 30}, Rectangle{hp.x, hp.y, 100, 100}))
     {
-        position2 = GenerateRandomPosition();
+        std::cout << "Collision detected" << std::endl;
+        CollectibleCount++;
+        snitch_position = GenerateRandomPosition(); // Generate a new random position on collision
+        snitch_timer = 0.0f;                        // Reset the timer
     }
 }
 
 Collectibles::~Collectibles()
 {
     cout << "Collectibles destructor called" << endl;
-    UnloadTexture(texture1);
-    UnloadTexture(texture2);
+    UnloadTexture(texture);
 };
 
-void Collectibles::Draw(Texture2D texture1, Texture2D texture2)
+void Collectibles::Draw(Texture2D texture)
 {
-    DrawTexture(texture1, position1.x * cellSize, position1.y * cellSize, WHITE);
-    DrawTexture(texture2, position2.x * cellSize, position2.y * cellSize, WHITE); // Multiplying by cellSize converts grid coordinates to pixel coordinates for rendering.
-    DrawText(("Collectible Count: " + std::to_string(CollectibleCount)).c_str(), 100, 200, 20, DARKGRAY);
-    if (CheckCollisionRecs({position1.x * cellSize, position1.y * cellSize, 30, 30}, Rectangle{hp.x, hp.y, 100, 100}))
-    {
-        std::cout << "Collision detected" << std::endl;
-        CollectibleCount++;
-        position1 = GenerateRandomPosition();
-    }
-    if (CheckCollisionRecs({position2.x * cellSize, position2.y * cellSize, 30, 30}, {hp.x, hp.y, 100, 100}))
-    {
-        std::cout << "Collision detected" << std::endl;
-        CollectibleCount++;
-        position2 = GenerateRandomPosition();
-    }
+    DrawTexture(texture, snitch_position.x * cellSize, snitch_position.y * cellSize, WHITE);
+    DrawText(("Snitch Count: " + std::to_string(CollectibleCount)).c_str(), 590, 100, 30, GOLD);
+    // if (CheckCollisionRecs({snitch_position.x * cellSize, snitch_position.y * cellSize, 30, 30}, Rectangle{hp.x, hp.y, 100, 100}))
+    // {
+    //     std::cout << "Collision detected" << std::endl;
+    //     CollectibleCount++;
+    // }
 }
 
 Vector2 Collectibles::GenerateRandomPosition()
@@ -112,37 +103,37 @@ void Character::Update()
 {
     if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D))
     {
-        x += 1;
+        x += 4;
     }
     if (IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A))
     {
-        x -= 1;
+        x -= 4;
     }
     if (IsKeyDown(KEY_UP) || IsKeyDown(KEY_W))
     {
-        y -= 1;
+        y -= 4;
     }
     if (IsKeyDown(KEY_DOWN) || IsKeyDown(KEY_S))
     {
-        y += 1;
+        y += 4;
     }
 
-    // FOR faster speed of the character while clicking the keys along with the shift key
+    // FOR slower speed of the character while clicking the keys along with the shift key
     if ((IsKeyDown(KEY_RIGHT) && IsKeyDown(KEY_RIGHT_SHIFT)) || (IsKeyDown(KEY_D) && IsKeyDown(KEY_RIGHT_SHIFT)))
     {
-        x += 3;
+        x += 1;
     }
     if ((IsKeyDown(KEY_LEFT) && IsKeyDown(KEY_RIGHT_SHIFT)) || (IsKeyDown(KEY_A) && IsKeyDown(KEY_RIGHT_SHIFT)))
     {
-        x -= 3;
+        x -= 1;
     }
     if ((IsKeyDown(KEY_UP) && IsKeyDown(KEY_RIGHT_SHIFT)) || (IsKeyDown(KEY_W) && IsKeyDown(KEY_RIGHT_SHIFT)))
     {
-        y -= 3;
+        y -= 1;
     }
     if ((IsKeyDown(KEY_DOWN) && IsKeyDown(KEY_RIGHT_SHIFT)) || (IsKeyDown(KEY_S) && IsKeyDown(KEY_RIGHT_SHIFT)))
     {
-        y += 3;
+        y += 1;
     }
 }
 
@@ -155,9 +146,12 @@ void UpdateLevel1()
 
 void DrawLevel1(Texture2D character)
 {
-    DrawText("Level 1 - Collect the valuable items!", 100, 100, 20, DARKGRAY);
-    // cout << "DrawLevel1 called";
     hp.Draw(character);
+}
+
+void DrawCollectible(Texture2D texture)
+{
+    collectible.Draw(texture);
 }
 
 // function to initialize level1

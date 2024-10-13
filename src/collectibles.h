@@ -10,14 +10,15 @@ public:
     Collectibles();
     Texture2D LoadTexture(const char *fileName);
     ~Collectibles();
-    void Draw(Texture2D texture1, Texture2D texture2);
+    void Draw(Texture2D texture);
     Vector2 GenerateRandomPosition();
     void Update();
 
-    private:
-    Vector2 position1, position2;
-    Texture2D texture1, texture2;
+private:
+    Texture2D texture;
+    Vector2 snitch_position;
     float speed;
+    float snitch_timer;
 };
 
 #endif // COLLECTIBLES_H

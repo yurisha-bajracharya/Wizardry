@@ -31,19 +31,23 @@ int main()
     InitWindow(1400, 900, "Wizardry");
     SetTargetFPS(60);
     cout << "Window Initialized" << endl;
-    Texture2D backgroundlevel1 = LoadTexture("./images/bg.png");
+    Texture2D backgroundlevel1 = LoadTexture("./images/bg1.png");
     float startTime = 0.0f;
     float elapsedTime = 0.0f;
     float endTime = 30.0f;
     float RemainingTime = 0.0f;
+
+    Color OLIVE_GREEN = {107, 142, 35, 255};
     // Current state of the game
     GameState currentState = MENU;
     Collectibles collectible;
     Texture2D currentMapImage = {0};
-    Texture2D texture1 = {0}, texture2 = {0}; // Initializing texture to 0 because if the variable texture1 is declared but not initialized before the switch statement, this can cause issues if the control jumps directly to a case that uses texture1. AND before the while(!WindowShouldClose()) loop, because I donot want the image to be loaded and unloaded multiple times. I want it to be loaded once and used throughout the game.
-    texture1 = collectible.LoadTexture("./images/polyjuice_potion.png");
-    texture2 = collectible.LoadTexture("./images/expelliarmus.png");
+    // Texture2D texture = {0};
+
+    // Texture2D texture1 = {0}, texture2 = {0}; // Initializing texture to 0 because if the variable texture1 is declared but not initialized before the switch statement, this can cause issues if the control jumps directly to a case that uses texture1. AND before the while(!WindowShouldClose()) loop, because I donot want the image to be loaded and unloaded multiple times. I want it to be loaded once and used throughout the game.
+    // texture2 = collectible.LoadTexture("./images/expelliarmus.png");
     Image charimg = LoadImage("./images/hpright.png");
+    Texture2D texture = collectible.LoadTexture("./images/snitch.png");
     ImageResize(&charimg, 100, 100);
     Texture2D character = LoadTextureFromImage(charimg);
 
@@ -111,6 +115,7 @@ int main()
             {
                 currentState = LEVEL1;
                 startTime = GetTime();
+                InitLevel1();
             }
             else if (isHoveringForbiddenForest && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
             {
@@ -196,8 +201,9 @@ int main()
             // adding image on background
             ClearBackground(GRAY);
             DrawTexture(backgroundlevel1, 0, 0, WHITE);
-            collectible.Draw(texture1, texture2);
+            // collectible.Draw(texture);
             DrawLevel1(character);
+            DrawCollectible(texture);
 
             // Draw clouds
             for (int i = 0; i < numClouds; i++)
@@ -206,7 +212,7 @@ int main()
             }
             RemainingTime = endTime - elapsedTime;
             // Draw Timer
-            DrawText(TextFormat("Remaining Time: %.2f", RemainingTime), 10, 10, 40, BLACK);
+            DrawText(TextFormat("Remaining Time: %.2f", RemainingTime), 520, 30, 40, OLIVE_GREEN);
             break;
 
         case LEVEL2:

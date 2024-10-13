@@ -5,6 +5,7 @@
 
 void UpdateLevel1();
 void DrawLevel1(Texture2D character);
+void DrawCollectible(Texture2D texture);
 void InitLevel1();
 void UnloadLevel1();
 
