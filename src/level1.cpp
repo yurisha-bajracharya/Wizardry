@@ -57,6 +57,8 @@ void Collectibles::Update()
     if (CheckCollisionRecs({snitch_position.x * cellSize, snitch_position.y * cellSize, 30, 30}, Rectangle{hp.x, hp.y, 100, 100}))
     {
         std::cout << "Collision detected" << std::endl;
+        Sound chimeMusic = LoadSound("./audio/chime-sound.mp3");
+        PlaySound(chimeMusic);
         CollectibleCount++;
         snitch_position = GenerateRandomPosition(); // Generate a new random position on collision
         snitch_timer = 0.0f;                        // Reset the timer

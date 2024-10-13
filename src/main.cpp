@@ -212,7 +212,7 @@ int main()
             }
             RemainingTime = endTime - elapsedTime;
             // Draw Timer
-            DrawText(TextFormat("Remaining Time: %.2f", RemainingTime), 520, 30, 40, OLIVE_GREEN);
+            DrawText(TextFormat("Remaining Time: %.2f", RemainingTime), 515, 30, 40, OLIVE_GREEN);
             break;
 
         case LEVEL2:
