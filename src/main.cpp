@@ -7,6 +7,7 @@
 #include "collectibles.h"
 #include "character.h"
 #include "Pause.h"
+#include "globals.h"
 
 using namespace std;
 
@@ -22,6 +23,8 @@ enum GameState
     GAMEOVER,
     PAUSE
 };
+
+Collectibles collectible;
 
 int main()
 {

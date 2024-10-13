@@ -3,8 +3,10 @@
 #include <iostream>
 #include "collectibles.h"
 #include "character.h"
+#include "globals.h"
 #include <cstdio> // Add this line to include the header file that declares the FormatText function
 using namespace std;
+
 const int screenWidth = 1400;
 const int screenHeight = 900;
 int cellSize = 50;
@@ -13,7 +15,11 @@ const int cellCountY = screenHeight / cellSize;
 int CollectibleCount = 0;
 
 Character hp;
-Collectibles::Collectibles() : texture1({0}), texture2({0})
+
+// loading the background music
+Sound level1Music;
+
+Collectibles::Collectibles() : texture1({0}), texture2({0}), speed(0.005f)
 {
     cout << "Collectibles constructor called";
     position1 = GenerateRandomPosition();
@@ -25,7 +31,7 @@ Texture2D Collectibles::LoadTexture(const char *filePath)
     Texture2D texture;
     Image img;
     img = LoadImage(filePath);
-    ImageResize(&img, 30, 30);
+    ImageResize(&img, 90, 90);
     texture = LoadTextureFromImage(img);
     if (texture.id == 0)
     {
@@ -38,6 +44,25 @@ Texture2D Collectibles::LoadTexture(const char *filePath)
     return texture;
 }
 
+void Collectibles::Update()
+{
+    float frameTime = GetFrameTime(); // Get time between frames for smooth movement
+
+    // Move collectibles horizontally only by a smaller value
+    position1.x += speed * frameTime * 100.0f; // Multiply by 100 to get a reasonable speed
+    position2.x += speed * frameTime * 100.0f;
+
+    // Reset collectible position if it moves out of the screen
+    if (position1.x > screenWidth) // Directly compare to screen width
+    {
+        position1 = GenerateRandomPosition();
+    }
+    if (position2.x > screenWidth)
+    {
+        position2 = GenerateRandomPosition();
+    }
+}
+
 Collectibles::~Collectibles()
 {
     cout << "Collectibles destructor called" << endl;
@@ -47,7 +72,7 @@ Collectibles::~Collectibles()
 
 void Collectibles::Draw(Texture2D texture1, Texture2D texture2)
 {
-    DrawTexture(texture1, position1.x * cellSize, position1.y * cellSize, WHITE); // syntax: DrawTexture(texture, x, y, tint); x and y are the coordinates of the top-left corner of the texture
+    DrawTexture(texture1, position1.x * cellSize, position1.y * cellSize, WHITE);
     DrawTexture(texture2, position2.x * cellSize, position2.y * cellSize, WHITE); // Multiplying by cellSize converts grid coordinates to pixel coordinates for rendering.
     DrawText(("Collectible Count: " + std::to_string(CollectibleCount)).c_str(), 100, 200, 20, DARKGRAY);
     if (CheckCollisionRecs({position1.x * cellSize, position1.y * cellSize, 30, 30}, Rectangle{hp.x, hp.y, 100, 100}))
@@ -125,6 +150,7 @@ void UpdateLevel1()
 {
     // cout << "UpdateLevel1 called";
     hp.Update();
+    collectible.Update();
 }
 
 void DrawLevel1(Texture2D character)
@@ -132,4 +158,24 @@ void DrawLevel1(Texture2D character)
     DrawText("Level 1 - Collect the valuable items!", 100, 100, 20, DARKGRAY);
     // cout << "DrawLevel1 called";
     hp.Draw(character);
+}
+
+// function to initialize level1
+void InitLevel1()
+{
+    if (!IsAudioDeviceReady())
+    {
+        InitAudioDevice();
+    }
+    level1Music = LoadSound("./audio/level1.mp3");
+    PlaySound(level1Music);
+}
+
+void UnloadLevel1()
+{
+    UnloadSound(level1Music);
+    if (IsAudioDeviceReady())
+    {
+        CloseAudioDevice();
+    }
 }
