@@ -34,7 +34,7 @@ int main()
     Texture2D backgroundlevel1 = LoadTexture("./images/bg1.png");
     float startTime = 0.0f;
     float elapsedTime = 0.0f;
-    float endTime = 30.0f;
+    float endTime = 90.0f;
     float RemainingTime = 0.0f;
 
     Color OLIVE_GREEN = {107, 142, 35, 255};
@@ -42,14 +42,9 @@ int main()
     GameState currentState = MENU;
     Collectibles collectible;
     Texture2D currentMapImage = {0};
-    // Texture2D texture = {0};
 
-    // Texture2D texture1 = {0}, texture2 = {0}; // Initializing texture to 0 because if the variable texture1 is declared but not initialized before the switch statement, this can cause issues if the control jumps directly to a case that uses texture1. AND before the while(!WindowShouldClose()) loop, because I donot want the image to be loaded and unloaded multiple times. I want it to be loaded once and used throughout the game.
-    // texture2 = collectible.LoadTexture("./images/expelliarmus.png");
-    Image charimg = LoadImage("./images/hpright.png");
     Texture2D texture = collectible.LoadTexture("./images/snitch.png");
-    ImageResize(&charimg, 100, 100);
-    Texture2D character = LoadTextureFromImage(charimg);
+    Texture2D bludgerTexture = collectible.LoadTexture("./images/bludgers.png");
 
     // Load cloud texture
     Texture2D cloud = LoadTexture("./images/bgclouds.png");
@@ -131,6 +126,7 @@ int main()
 
         case LEVEL1:
             UpdateLevel1();
+            collectible.UpdateBludgers();
             if (RemainingTime <= 0) /* time up*/
             {
                 RemainingTime = 0;
@@ -202,8 +198,9 @@ int main()
             ClearBackground(GRAY);
             DrawTexture(backgroundlevel1, 0, 0, WHITE);
             // collectible.Draw(texture);
-            DrawLevel1(character);
+            DrawLevel1();
             DrawCollectible(texture);
+            DrawBludgers(bludgerTexture);
 
             // Draw clouds
             for (int i = 0; i < numClouds; i++)
@@ -212,7 +209,7 @@ int main()
             }
             RemainingTime = endTime - elapsedTime;
             // Draw Timer
-            DrawText(TextFormat("Remaining Time: %.2f", RemainingTime), 515, 30, 40, OLIVE_GREEN);
+            DrawText(TextFormat("Remaining Time: %.2f", RemainingTime), 510, 30, 40, OLIVE_GREEN);
             break;
 
         case LEVEL2:

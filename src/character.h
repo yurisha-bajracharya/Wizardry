@@ -13,6 +13,8 @@ public:
     ~Character();
     void Draw(Texture2D texture);
     void Update();
+    float hp_pause_timer;
+    bool isHpPaused;
 };
 
 #endif // CHARACTER_H

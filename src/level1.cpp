@@ -4,7 +4,8 @@
 #include "collectibles.h"
 #include "character.h"
 #include "globals.h"
-#include <cstdio> // Add this line to include the header file that declares the FormatText function
+#include <cstdio>
+#include <cmath>
 using namespace std;
 
 const int screenWidth = 1400;
@@ -15,14 +16,25 @@ const int cellCountY = screenHeight / cellSize;
 int CollectibleCount = 0;
 
 Character hp;
+Sound level1Music, hitSound;
+Texture2D characterimg;
+Texture2D characterimgfrozen;
 
-// loading the background music
-Sound level1Music;
+// Define the radii of the bludger and the character
+const float bludgerRadius = 15.0f;   // Half of the bludger's width/height
+const float characterRadius = 50.0f; // Half of the character's width/height
 
-Collectibles::Collectibles() : texture({0}), speed(0.005f)
+Collectibles::Collectibles() : texture{0}, bludger_texture{0}, snitch_position{0, 0}, bludger_positions{{0, 0}, {0, 0}, {0, 0}}, bludger_velocities{{0, 0}, {0, 0}, {0, 0}}, bludger_speed{200}, speed{200}, snitch_timer{0.0f}
 {
     cout << "Collectibles constructor called";
     snitch_position = GenerateRandomPosition();
+
+    for (int i = 0; i < 3; i++)
+    {
+        bludger_positions[i].x = GetRandomValue(0, GetScreenWidth() - 30);
+        bludger_positions[i].y = 0;
+        bludger_velocities[i].y = GetRandomValue(2, 5);
+    };
 }
 
 Texture2D Collectibles::LoadTexture(const char *filePath)
@@ -65,21 +77,67 @@ void Collectibles::Update()
     }
 }
 
+void Collectibles::UpdateBludgers()
+{
+    cout << "UpdateBludgers called" << endl;
+
+    for (int i = 0; i < 3; i++)
+    {
+        cout << "reachedd" << endl;
+        bludger_velocities[i].y += 0.1f;
+
+        bludger_positions[i].y += bludger_velocities[i].y * GetFrameTime() * bludger_speed;
+        cout << "Bludger Y-Position: " << bludger_positions[i].y << endl;
+
+        // Reset bludger position if it moves out of the screen
+        if (bludger_positions[i].y > GetScreenHeight())
+        {
+            bludger_positions[i].x = GetRandomValue(0, GetScreenWidth() - 30);
+            bludger_positions[i].y = 0;
+            bludger_velocities[i].y = 0.0f;
+        }
+
+        // if (CheckCollisionRecs(Rectangle{bludger_positions[i].x, bludger_positions[i].y, 30, 30}, Rectangle{hp.x, hp.y, 100, 100}))
+        // {
+        //     PlaySound(hitSound);
+        //     hp.isHpPaused = true;
+        //     hp.hp_pause_timer = 0.0f;
+        // }
+
+        // Calculate the distance between the centers of the bludger and the character
+        float dx = bludger_positions[i].x + bludgerRadius - (hp.x + characterRadius);
+        float dy = bludger_positions[i].y + bludgerRadius - (hp.y + characterRadius);
+        float distance = sqrt(dx * dx + dy * dy);
+
+        // Check for collision
+        if (distance < bludgerRadius + characterRadius)
+        {
+            PlaySound(hitSound);
+            hp.isHpPaused = true;
+            hp.hp_pause_timer = 0.0f;
+        }
+    }
+}
+
 Collectibles::~Collectibles()
 {
     cout << "Collectibles destructor called" << endl;
     UnloadTexture(texture);
+    UnloadTexture(bludger_texture);
 };
 
 void Collectibles::Draw(Texture2D texture)
 {
     DrawTexture(texture, snitch_position.x * cellSize, snitch_position.y * cellSize, WHITE);
     DrawText(("Snitch Count: " + std::to_string(CollectibleCount)).c_str(), 590, 100, 30, GOLD);
-    // if (CheckCollisionRecs({snitch_position.x * cellSize, snitch_position.y * cellSize, 30, 30}, Rectangle{hp.x, hp.y, 100, 100}))
-    // {
-    //     std::cout << "Collision detected" << std::endl;
-    //     CollectibleCount++;
-    // }
+}
+
+void Collectibles::DrawBludgers(Texture2D bludgerTexture)
+{
+    for (int i = 0; i < 3; i++)
+    {
+        DrawTexture(bludgerTexture, bludger_positions[i].x, bludger_positions[i].y, WHITE);
+    }
 }
 
 Vector2 Collectibles::GenerateRandomPosition()
@@ -91,8 +149,8 @@ Vector2 Collectibles::GenerateRandomPosition()
 
 Character::Character()
 {
-    x = 0;
-    y = 0;
+    x = 680;
+    y = 445;
 }
 Character::~Character()
 {
@@ -103,52 +161,72 @@ void Character::Draw(Texture2D texture)
 }
 void Character::Update()
 {
-    if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D))
+    if (!hp.isHpPaused)
     {
-        x += 4;
-    }
-    if (IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A))
-    {
-        x -= 4;
-    }
-    if (IsKeyDown(KEY_UP) || IsKeyDown(KEY_W))
-    {
-        y -= 4;
-    }
-    if (IsKeyDown(KEY_DOWN) || IsKeyDown(KEY_S))
-    {
-        y += 4;
+        if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D))
+        {
+            x += 4;
+        }
+        if (IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A))
+        {
+            x -= 4;
+        }
+        if (IsKeyDown(KEY_UP) || IsKeyDown(KEY_W))
+        {
+            y -= 4;
+        }
+        if (IsKeyDown(KEY_DOWN) || IsKeyDown(KEY_S))
+        {
+            y += 4;
+        }
+
+        // FOR faster speed of the character while clicking the keys along with the shift key
+        if ((IsKeyDown(KEY_RIGHT) && IsKeyDown(KEY_RIGHT_SHIFT)) || (IsKeyDown(KEY_D) && IsKeyDown(KEY_RIGHT_SHIFT)))
+        {
+            x += 1;
+        }
+        if ((IsKeyDown(KEY_LEFT) && IsKeyDown(KEY_RIGHT_SHIFT)) || (IsKeyDown(KEY_A) && IsKeyDown(KEY_RIGHT_SHIFT)))
+        {
+            x -= 1;
+        }
+        if ((IsKeyDown(KEY_UP) && IsKeyDown(KEY_RIGHT_SHIFT)) || (IsKeyDown(KEY_W) && IsKeyDown(KEY_RIGHT_SHIFT)))
+        {
+            y -= 1;
+        }
+        if ((IsKeyDown(KEY_DOWN) && IsKeyDown(KEY_RIGHT_SHIFT)) || (IsKeyDown(KEY_S) && IsKeyDown(KEY_RIGHT_SHIFT)))
+        {
+            y += 1;
+        }
     }
 
-    // FOR slower speed of the character while clicking the keys along with the shift key
-    if ((IsKeyDown(KEY_RIGHT) && IsKeyDown(KEY_RIGHT_SHIFT)) || (IsKeyDown(KEY_D) && IsKeyDown(KEY_RIGHT_SHIFT)))
+    else if (hp.isHpPaused)
     {
-        x += 1;
-    }
-    if ((IsKeyDown(KEY_LEFT) && IsKeyDown(KEY_RIGHT_SHIFT)) || (IsKeyDown(KEY_A) && IsKeyDown(KEY_RIGHT_SHIFT)))
-    {
-        x -= 1;
-    }
-    if ((IsKeyDown(KEY_UP) && IsKeyDown(KEY_RIGHT_SHIFT)) || (IsKeyDown(KEY_W) && IsKeyDown(KEY_RIGHT_SHIFT)))
-    {
-        y -= 1;
-    }
-    if ((IsKeyDown(KEY_DOWN) && IsKeyDown(KEY_RIGHT_SHIFT)) || (IsKeyDown(KEY_S) && IsKeyDown(KEY_RIGHT_SHIFT)))
-    {
-        y += 1;
+        hp.hp_pause_timer += GetFrameTime();
+        if (hp.hp_pause_timer >= 2.0f)
+        {
+            hp.isHpPaused = false;
+            hp.hp_pause_timer = 0.0f;
+        }
     }
 }
 
 void UpdateLevel1()
 {
-    // cout << "UpdateLevel1 called";
     hp.Update();
     collectible.Update();
+    collectible.UpdateBludgers();
 }
 
-void DrawLevel1(Texture2D character)
+void DrawLevel1()
 {
-    hp.Draw(character);
+    if (!hp.isHpPaused)
+    {
+        hp.Draw(characterimg);
+    }
+    else
+    {
+        hp.Draw(characterimgfrozen);
+    }
 }
 
 void DrawCollectible(Texture2D texture)
@@ -156,7 +234,11 @@ void DrawCollectible(Texture2D texture)
     collectible.Draw(texture);
 }
 
-// function to initialize level1
+void DrawBludgers(Texture2D bludgerTexture)
+{
+    collectible.DrawBludgers(bludgerTexture);
+}
+
 void InitLevel1()
 {
     if (!IsAudioDeviceReady())
@@ -165,11 +247,25 @@ void InitLevel1()
     }
     level1Music = LoadSound("./audio/level1.mp3");
     PlaySound(level1Music);
+    hitSound = LoadSound("./audio/hit.mp3");
+    hp.isHpPaused = false;
+
+    Image charimg = LoadImage("./images/hpright.png");
+    Image charimgfrozen = LoadImage("./images/hp-frozen.png");
+    ImageResize(&charimg, 120, 120);
+    ImageResize(&charimgfrozen, 120, 120);
+    characterimg = LoadTextureFromImage(charimg);
+    characterimgfrozen = LoadTextureFromImage(charimgfrozen);
+
+    UnloadImage(charimg);
+    UnloadImage(charimgfrozen);
 }
 
 void UnloadLevel1()
 {
     UnloadSound(level1Music);
+    UnloadTexture(characterimg);
+    UnloadTexture(characterimgfrozen);
     if (IsAudioDeviceReady())
     {
         CloseAudioDevice();
