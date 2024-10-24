@@ -21,10 +21,10 @@ Texture2D characterimg;
 Texture2D characterimgfrozen;
 
 // Define the radii of the bludger and the character
-const float bludgerRadius = 15.0f;   // Half of the bludger's width/height
-const float characterRadius = 50.0f; // Half of the character's width/height
+const float bludgerRadius = 30.0f;   // Half of the bludger's width/height
+const float characterRadius = 60.0f; // Half of the character's width/height
 
-Collectibles::Collectibles() : texture{0}, bludger_texture{0}, snitch_position{0, 0}, bludger_positions{{0, 0}, {0, 0}, {0, 0}}, bludger_velocities{{0, 0}, {0, 0}, {0, 0}}, bludger_speed{200}, speed{200}, snitch_timer{0.0f}
+Collectibles::Collectibles() : texture{0}, bludger_texture{0}, snitch_position{0, 0}, bludger_positions{{0, 0}, {0, 0}, {0, 0}, {0, 0}}, bludger_velocities{{0, 0}, {0, 0}, {0, 0}, {0, 0}}, bludger_speed{200}, speed{200}, snitch_timer{0.0f}
 {
     cout << "Collectibles constructor called";
     snitch_position = GenerateRandomPosition();
@@ -32,7 +32,7 @@ Collectibles::Collectibles() : texture{0}, bludger_texture{0}, snitch_position{0
     for (int i = 0; i < 3; i++)
     {
         bludger_positions[i].x = GetRandomValue(0, GetScreenWidth() - 30);
-        bludger_positions[i].y = 0;
+        bludger_positions[i].y = -30;
         bludger_velocities[i].y = GetRandomValue(2, 5);
     };
 }
@@ -59,7 +59,7 @@ void Collectibles::Update()
 {
     snitch_timer += GetFrameTime(); // Update the timer with the frame time
 
-    if (snitch_timer >= 10.0f)
+    if (snitch_timer >= 4.0f)
     {
         snitch_position = GenerateRandomPosition(); // Generate a new random position
         snitch_timer = 0.0f;
@@ -84,38 +84,51 @@ void Collectibles::UpdateBludgers()
     for (int i = 0; i < 3; i++)
     {
         cout << "reachedd" << endl;
-        bludger_velocities[i].y += 0.1f;
+        bludger_velocities[i].y += 0.04f;
 
         bludger_positions[i].y += bludger_velocities[i].y * GetFrameTime() * bludger_speed;
         cout << "Bludger Y-Position: " << bludger_positions[i].y << endl;
+
+        if (CheckCollisionCircles(Vector2{bludger_positions[i].x + bludgerRadius, bludger_positions[i].y + bludgerRadius}, bludgerRadius, Vector2{hp.x + characterRadius, hp.y + characterRadius}, characterRadius)) // syntax: CheckCollisionCircles(Vector2 center1, float radius1, Vector2 center2, float radius2)
+        {
+            PlaySound(hitSound);
+            hp.isHpPaused = true;
+            hp.hp_pause_timer = 0.0f;
+        }
 
         // Reset bludger position if it moves out of the screen
         if (bludger_positions[i].y > GetScreenHeight())
         {
             bludger_positions[i].x = GetRandomValue(0, GetScreenWidth() - 30);
-            bludger_positions[i].y = 0;
+            bludger_positions[i].y = -30;
             bludger_velocities[i].y = 0.0f;
         }
 
-        // if (CheckCollisionRecs(Rectangle{bludger_positions[i].x, bludger_positions[i].y, 30, 30}, Rectangle{hp.x, hp.y, 100, 100}))
+        // Calculate the distance between the centers of the bludger and the character
+        // float dx = bludger_positions[i].x + bludgerRadius - (hp.x + characterRadius);
+        // float dy = bludger_positions[i].y + bludgerRadius - (hp.y + characterRadius);
+        // float distance = sqrt(dx * dx + dy * dy);
+
+        // Check if the bludger is within the character's bounding box
+        // if (bludger_positions[i].x >= hp.x - 25 && bludger_positions[i].x <= hp.x + characterRadius * 2 + 25 &&
+        //     bludger_positions[i].y >= hp.y - 25 && bludger_positions[i].y <= hp.y + characterRadius * 2 + 25)
         // {
         //     PlaySound(hitSound);
         //     hp.isHpPaused = true;
         //     hp.hp_pause_timer = 0.0f;
         // }
 
-        // Calculate the distance between the centers of the bludger and the character
-        float dx = bludger_positions[i].x + bludgerRadius - (hp.x + characterRadius);
-        float dy = bludger_positions[i].y + bludgerRadius - (hp.y + characterRadius);
-        float distance = sqrt(dx * dx + dy * dy);
-
         // Check for collision
-        if (distance < bludgerRadius + characterRadius)
-        {
-            PlaySound(hitSound);
-            hp.isHpPaused = true;
-            hp.hp_pause_timer = 0.0f;
-        }
+        // if (distance < bludgerRadius + characterRadius) // adding a small buffer
+        // {
+        //     // Debug statements to print positions and distance
+        //     cout << "Bludger Position: (" << bludger_positions[i].x << ", " << bludger_positions[i].y << ")" << endl;
+        //     cout << "Character Position: (" << hp.x << ", " << hp.y << ")" << endl;
+        //     cout << "Distance: " << distance << endl;
+        //     PlaySound(hitSound);
+        //     hp.isHpPaused = true;
+        //     hp.hp_pause_timer = 0.0f;
+        // }
     }
 }
 
@@ -134,6 +147,7 @@ void Collectibles::Draw(Texture2D texture)
 
 void Collectibles::DrawBludgers(Texture2D bludgerTexture)
 {
+
     for (int i = 0; i < 3; i++)
     {
         DrawTexture(bludgerTexture, bludger_positions[i].x, bludger_positions[i].y, WHITE);
@@ -165,37 +179,37 @@ void Character::Update()
     {
         if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D))
         {
-            x += 4;
+            x += 5;
         }
         if (IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A))
         {
-            x -= 4;
+            x -= 5;
         }
         if (IsKeyDown(KEY_UP) || IsKeyDown(KEY_W))
         {
-            y -= 4;
+            y -= 5;
         }
         if (IsKeyDown(KEY_DOWN) || IsKeyDown(KEY_S))
         {
-            y += 4;
+            y += 5;
         }
 
         // FOR faster speed of the character while clicking the keys along with the shift key
         if ((IsKeyDown(KEY_RIGHT) && IsKeyDown(KEY_RIGHT_SHIFT)) || (IsKeyDown(KEY_D) && IsKeyDown(KEY_RIGHT_SHIFT)))
         {
-            x += 1;
+            x += 3;
         }
         if ((IsKeyDown(KEY_LEFT) && IsKeyDown(KEY_RIGHT_SHIFT)) || (IsKeyDown(KEY_A) && IsKeyDown(KEY_RIGHT_SHIFT)))
         {
-            x -= 1;
+            x -= 3;
         }
         if ((IsKeyDown(KEY_UP) && IsKeyDown(KEY_RIGHT_SHIFT)) || (IsKeyDown(KEY_W) && IsKeyDown(KEY_RIGHT_SHIFT)))
         {
-            y -= 1;
+            y -= 3;
         }
         if ((IsKeyDown(KEY_DOWN) && IsKeyDown(KEY_RIGHT_SHIFT)) || (IsKeyDown(KEY_S) && IsKeyDown(KEY_RIGHT_SHIFT)))
         {
-            y += 1;
+            y += 3;
         }
     }
 
