@@ -28,7 +28,7 @@ Collectibles collectible;
 
 int main()
 {
-    InitWindow(1400, 900, "Wizardry");//changed size of window
+    InitWindow(1260, 700, "Wizardry");//changed size of window
     SetTargetFPS(60);
     cout << "Window Initialized" << endl;
     Texture2D backgroundlevel1 = LoadTexture("./images/bg1.png");
@@ -65,9 +65,11 @@ int main()
     Texture2D mainbuildinghovered = LoadTexture("./images/mainbuildinghovered.png");
 
     // defining areas for each level
-    Rectangle hogsmeadeArea = {100, 200, 200, 150}; // syntax: Rectangle{x, y, width, height}
-    Rectangle forbiddenArea = {1200, 300, 200, 150};
-    Rectangle mainbuildingArea = {800, 600, 300, 300};
+   // Defining areas for each level adjusted for a window size of 1260 x 700
+Rectangle hogsmeadeArea = {90, 155, 180, 117};       // Hogsmeade area
+Rectangle forbiddenArea = {1080, 232, 180, 117};     // Forbidden area
+Rectangle mainbuildingArea = {720, 466, 270, 233};    // Main building area
+
 
     while (!WindowShouldClose())
     {
