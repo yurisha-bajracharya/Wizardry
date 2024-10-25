@@ -28,7 +28,7 @@ Collectibles collectible;
 
 int main()
 {
-    InitWindow(1400, 900, "Wizardry");
+    InitWindow(1400, 900, "Wizardry");//changed size of window
     SetTargetFPS(60);
     cout << "Window Initialized" << endl;
     Texture2D backgroundlevel1 = LoadTexture("./images/bg1.png");
