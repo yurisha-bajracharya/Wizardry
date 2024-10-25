@@ -179,7 +179,7 @@ void InitGhosts() {
         Ghost ghost;
         ghost.r = std::rand() % numrows;
         ghost.c = std::rand() % ncols;
-        ghost.texture = LoadTexture("src/ghost.png"); // Load ghost texture
+        ghost.texture = LoadTexture("./images/ghost.png"); // Load ghost texture
         ghosts.push_back(ghost);
     }
 }
@@ -223,22 +223,29 @@ void UpdateGhosts() {
 
 // Draw level 2 function, including all elements
 void DrawLevel2() {
-     // Load sounds and music after initializing audio device
-    collide = LoadSound("./Audio/ghostcollide.wav"); // Load collision sound
-    music = LoadMusicStream("./Audio/sound.wav"); // Load music stream
-    PlayMusicStream(music); // Start playing music
+    static bool initialized = false; // Static variable to track initialization
 
-    std::srand(static_cast<unsigned>(std::time(0))); // Seed random number generator
+    if (!initialized) {
+        // Load sounds and music after initializing audio device
+        collide = LoadSound("./Audio/ghostcollide.wav"); // Load collision sound
+        music = LoadMusicStream("./Audio/sound.wav"); // Load music stream
+        PlayMusicStream(music); // Start playing music
 
-    InitGrid(); // Initialize the grid
-    current = &grid[0]; // Start from the first cell
+        std::srand(static_cast<unsigned>(std::time(0))); // Seed random number generator
 
-    // Load player texture
-    player.texture = LoadTexture("./images/harry.png"); // Ensure this path is correct
-    hermione.texture = LoadTexture("./images/hermione.png");
-    hermione.r = numrows - 1; // Set Hermione's position to the last row
-    hermione.c = ncols - 1; // Set Hermione's position to the last column
-    InitGhosts(); // Initialize ghosts
+        InitGrid(); // Initialize the grid
+        current = &grid[0]; // Start from the first cell
+
+        // Load player texture
+        player.texture = LoadTexture("./images/harry.png"); // Ensure this path is correct
+        hermione.texture = LoadTexture("./images/hermione.png");
+        hermione.r = numrows - 1; // Set Hermione's position to the last row
+        hermione.c = ncols - 1; // Set Hermione's position to the last column
+
+        InitGhosts(); // Initialize ghosts
+
+        initialized = true; // Set initialization flag to true
+    }
 
 }
 
