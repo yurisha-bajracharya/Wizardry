@@ -252,28 +252,33 @@ void DrawLevel2() {
 // Update level 2 function
 void UpdateLevel2() {
     if (!play) {
-            MazeGenerator(); // Generate the maze
-        } else {
-            UpdatePlayer(); // Update player position
-            UpdateGhosts(); // Update ghosts
+        MazeGenerator(); // Continue generating the maze until complete
+    } else {
+        UpdatePlayer(); // Update player position once the maze is generated
+        UpdateGhosts(); // Update ghosts
+    }
+
+    // Update the music stream
+    UpdateMusicStream(music); // Ensure music plays smoothly
+
+    // Handle collision timing
+    if (isColliding) {
+        collisionTime -= GetFrameTime(); // Decrease the collision timer
+        if (collisionTime <= 0.0f) {
+            PlayMusicStream(music); // Resume music after the pause
+            isColliding = false; // Reset collision flag
         }
+    }
 
-        // Update the music stream
-        UpdateMusicStream(music); // Ensure music plays smoothly
+    BeginDrawing();
+    ClearBackground(RAYWHITE);
+    DrawMaze(); // Draw the maze
+    DrawHermione(hermione, cellSize); // Draw Hermione
 
-        // Handle collision timing
-        if (isColliding) {
-            collisionTime -= GetFrameTime(); // Decrease the collision timer
-            if (collisionTime <= 0.0f) {
-                PlayMusicStream(music); // Resume music after the pause
-                isColliding = false; // Reset collision flag
-            }
-        }
-
-        BeginDrawing();
-        ClearBackground(RAYWHITE);
-        DrawMaze(); // Draw the maze
-        DrawHermione(hermione, cellSize); // Draw Hermione
-        if (gameWon) {
+    // If the game is won, display the "You Win!" message
+    if (gameWon) {
         DrawText("You Win!", ncols * cellSize / 2 - MeasureText("You Win!", 20) / 2, numrows * cellSize / 2 - 10, 20, GREEN);
-    }}
+    }
+
+    EndDrawing();
+}
