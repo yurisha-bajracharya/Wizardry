@@ -221,8 +221,8 @@ void UpdateGhosts() {
     }
 }
 
-// Draw level 2 function, including all elements
-void DrawLevel2() {
+// UPDATE level 2 function, including all elements
+void UpdateLevel2() {
     static bool initialized = false; // Static variable to track initialization
 
     if (!initialized) {
@@ -246,12 +246,7 @@ void DrawLevel2() {
 
         initialized = true; // Set initialization flag to true
     }
-
-}
-
-// Update level 2 function
-void UpdateLevel2() {
-    if (!play) {
+     if (!play) {
         MazeGenerator(); // Continue generating the maze until complete
     } else {
         UpdatePlayer(); // Update player position once the maze is generated
@@ -270,8 +265,13 @@ void UpdateLevel2() {
         }
     }
 
-    BeginDrawing();
-    ClearBackground(RAYWHITE);
+}
+
+// DRAW level 2 function
+void DrawLevel2() {
+     
+
+    ClearBackground(RAYWHITE); // Clear the screen
     DrawMaze(); // Draw the maze
     DrawHermione(hermione, cellSize); // Draw Hermione
 
@@ -279,6 +279,6 @@ void UpdateLevel2() {
     if (gameWon) {
         DrawText("You Win!", ncols * cellSize / 2 - MeasureText("You Win!", 20) / 2, numrows * cellSize / 2 - 10, 20, GREEN);
     }
-
-    EndDrawing();
+  
 }
+
