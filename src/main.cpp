@@ -48,7 +48,7 @@ int main()
 
     // Load cloud texture
     Texture2D cloud = LoadTexture("./images/bgclouds.png");
-    const int numClouds = 2;           // number of clouds
+    const int numClouds = 6;           // number of clouds
     Vector2 cloudPositions[numClouds]; // position of clouds
 
     // Initialize cloud positions with random values

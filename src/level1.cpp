@@ -21,15 +21,15 @@ Texture2D characterimg;
 Texture2D characterimgfrozen;
 
 // Define the radii of the bludger and the character
-const float bludgerRadius = 15.0f;   // Half of the bludger's width/height
-const float characterRadius = 50.0f; // Half of the character's width/height
+const float bludgerRadius = 10.0f;   // Half of the bludger's width/height
+const float characterRadius = 40.0f; // Half of the character's width/height
 
-Collectibles::Collectibles() : texture{0}, bludger_texture{0}, snitch_position{0, 0}, bludger_positions{{0, 0}, {0, 0}, {0, 0}}, bludger_velocities{{0, 0}, {0, 0}, {0, 0}}, bludger_speed{200}, speed{200}, snitch_timer{0.0f}
+Collectibles::Collectibles() : texture{0}, bludger_texture{0}, snitch_position{0, 0}, bludger_positions{{0, 0}}, bludger_velocities{{0, 0}}, bludger_speed{200}, speed{200}, snitch_timer{0.0f}
 {
     cout << "Collectibles constructor called";
     snitch_position = GenerateRandomPosition();
 
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < 1; i++)
     {
         bludger_positions[i].x = GetRandomValue(0, GetScreenWidth() - 30);
         bludger_positions[i].y = 0;
@@ -81,10 +81,10 @@ void Collectibles::UpdateBludgers()
 {
     cout << "UpdateBludgers called" << endl;
 
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < 1; i++)
     {
         cout << "reachedd" << endl;
-        bludger_velocities[i].y += 0.1f;
+        bludger_velocities[i].y += 0.05f;
 
         bludger_positions[i].y += bludger_velocities[i].y * GetFrameTime() * bludger_speed;
         cout << "Bludger Y-Position: " << bludger_positions[i].y << endl;
@@ -97,25 +97,25 @@ void Collectibles::UpdateBludgers()
             bludger_velocities[i].y = 0.0f;
         }
 
-        // if (CheckCollisionRecs(Rectangle{bludger_positions[i].x, bludger_positions[i].y, 30, 30}, Rectangle{hp.x, hp.y, 100, 100}))
-        // {
-        //     PlaySound(hitSound);
-        //     hp.isHpPaused = true;
-        //     hp.hp_pause_timer = 0.0f;
-        // }
-
-        // Calculate the distance between the centers of the bludger and the character
-        float dx = bludger_positions[i].x + bludgerRadius - (hp.x + characterRadius);
-        float dy = bludger_positions[i].y + bludgerRadius - (hp.y + characterRadius);
-        float distance = sqrt(dx * dx + dy * dy);
-
-        // Check for collision
-        if (distance < bludgerRadius + characterRadius)
+        if (CheckCollisionCircles(Vector2{bludger_positions[i].x + bludgerRadius, bludger_positions[i].y + bludgerRadius}, bludgerRadius, Vector2{hp.x + characterRadius, hp.y + characterRadius}, characterRadius))
         {
             PlaySound(hitSound);
             hp.isHpPaused = true;
             hp.hp_pause_timer = 0.0f;
         }
+
+        // Calculate the distance between the centers of the bludger and the character
+        // float dx = (hp.x + characterRadius) - (bludger_positions[i].x + bludgerRadius);
+        // float dy = (hp.y + characterRadius) - (bludger_positions[i].y + bludgerRadius);
+        // float distance = sqrt(dx * dx + dy * dy);
+
+        // // Check for collision
+        // if (distance < bludgerRadius + characterRadius)
+        // {
+        //     PlaySound(hitSound);
+        //     hp.isHpPaused = true;
+        //     hp.hp_pause_timer = 0.0f;
+        // }
     }
 }
 
@@ -134,7 +134,7 @@ void Collectibles::Draw(Texture2D texture)
 
 void Collectibles::DrawBludgers(Texture2D bludgerTexture)
 {
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < 1; i++)
     {
         DrawTexture(bludgerTexture, bludger_positions[i].x, bludger_positions[i].y, WHITE);
     }
