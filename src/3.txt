@@ -1,4 +1,4 @@
-#include "C:\raylib\raylib\src\raylib.h"
+#include "raylib.h"
 #include <vector>
 #include <cstdlib>
 #include <ctime>
@@ -179,7 +179,7 @@ void InitGhosts() {
         Ghost ghost;
         ghost.r = std::rand() % numrows;
         ghost.c = std::rand() % ncols;
-        ghost.texture = LoadTexture("./images/ghost.png"); // Load ghost texture
+        ghost.texture = LoadTexture("src/ghost.png"); // Load ghost texture
         ghosts.push_back(ghost);
     }
 }
@@ -214,71 +214,58 @@ void UpdateGhosts() {
             player.c = 0;
 
             // Stop the music and set collision flag
-            StopMusicStream(music);
             isColliding = true;
             collisionTime = 3.0f; // Set collision duration (3 second)
         }
     }
 }
 
-// UPDATE level 2 function, including all elements
-void UpdateLevel2() {
-    static bool initialized = false; // Static variable to track initialization
-
-    if (!initialized) {
-        // Load sounds and music after initializing audio device
-        collide = LoadSound("./Audio/ghostcollide.wav"); // Load collision sound
-        music = LoadMusicStream("./Audio/sound.wav"); // Load music stream
-        PlayMusicStream(music); // Start playing music
-
-        std::srand(static_cast<unsigned>(std::time(0))); // Seed random number generator
-
-        InitGrid(); // Initialize the grid
-        current = &grid[0]; // Start from the first cell
-
-        // Load player texture
-        player.texture = LoadTexture("./images/harry.png"); // Ensure this path is correct
-        hermione.texture = LoadTexture("./images/hermione.png");
-        hermione.r = numrows - 1; // Set Hermione's position to the last row
-        hermione.c = ncols - 1; // Set Hermione's position to the last column
-
-        InitGhosts(); // Initialize ghosts
-
-        initialized = true; // Set initialization flag to true
-    }
-     if (!play) {
-        MazeGenerator(); // Continue generating the maze until complete
-    } else {
-        UpdatePlayer(); // Update player position once the maze is generated
-        UpdateGhosts(); // Update ghosts
-    }
-
-    // Update the music stream
-    UpdateMusicStream(music); // Ensure music plays smoothly
-
-    // Handle collision timing
-    if (isColliding) {
-        collisionTime -= GetFrameTime(); // Decrease the collision timer
-        if (collisionTime <= 0.0f) {
-            PlayMusicStream(music); // Resume music after the pause
-            isColliding = false; // Reset collision flag
-        }
-    }
-
-}
-
-// DRAW level 2 function
+// Draw level 2 function, including all elements
 void DrawLevel2() {
-     
+    collide = LoadSound("./Audio/ghostcollide.wav"); // Load collision sound
+    music = LoadMusicStream("./Audio/sound.wav"); // Load music stream
+    PlayMusicStream(music); // Start playing music
 
-    ClearBackground(RAYWHITE); // Clear the screen
-    DrawMaze(); // Draw the maze
-    DrawHermione(hermione, cellSize); // Draw Hermione
+    std::srand(static_cast<unsigned>(std::time(0))); // Seed random number generator
 
-    // If the game is won, display the "You Win!" message
-    if (gameWon) {
-        DrawText("You Win!", ncols * cellSize / 2 - MeasureText("You Win!", 20) / 2, numrows * cellSize / 2 - 10, 20, GREEN);
-    }
-  
+    InitGrid(); // Initialize the grid
+    // Generate the maze
+
+    // Load player texture
+    player.texture = LoadTexture("./images/harry.png"); // Ensure this path is correct
+    hermione.texture = LoadTexture("./images/hermione.png");
+    hermione.r = numrows - 1; // Set Hermione's position to the last row
+    hermione.c = ncols - 1; // Set Hermione's position to the last column
+    InitGhosts(); // Initialize ghosts
 }
 
+
+// Update level 2 function
+void UpdateLevel2() {
+    if (!play) {
+        MazeGenerator();// Generate the maze
+        } else {
+            UpdatePlayer(); // Update player position
+            UpdateGhosts(); // Update ghosts
+        }
+
+        // Update the music stream
+        UpdateMusicStream(music); // Ensure music plays smoothly
+
+        // Handle collision timing
+        if (isColliding) {
+            collisionTime -= GetFrameTime(); // Decrease the collision timer
+            if (collisionTime <= 0.0f) {
+                PlayMusicStream(music); // Resume music after the pause
+                isColliding = false; // Reset collision flag
+            }
+        }
+
+        BeginDrawing();
+        ClearBackground(RAYWHITE);
+        DrawMaze(); // Draw the maze
+        MazeGenerator();
+        DrawHermione(hermione, cellSize); // Draw Hermione
+        if (gameWon) {
+        DrawText("You Win!", ncols * cellSize / 2 - MeasureText("You Win!", 20) / 2, numrows * cellSize / 2 - 10, 20, GREEN);
+    }}
