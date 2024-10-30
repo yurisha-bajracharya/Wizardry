@@ -20,8 +20,8 @@ private:
     Texture2D texture;
     Texture2D bludger_texture;
     Vector2 snitch_position;
-    Vector2 bludger_positions[4];
-    Vector2 bludger_velocities[4];
+    Vector2 bludger_positions[1];
+    Vector2 bludger_velocities[1];
     float bludger_speed;
     float speed;
     float snitch_timer;
