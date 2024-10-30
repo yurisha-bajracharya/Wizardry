@@ -28,13 +28,13 @@ Collectibles collectible;
 
 int main()
 {
-    InitWindow(1260, 700, "Wizardry");//changed size of window
+    InitWindow(1260, 700, "Wizardry"); // changed size of window
     SetTargetFPS(60);
     cout << "Window Initialized" << endl;
     Texture2D backgroundlevel1 = LoadTexture("./images/bg1.png");
     float startTime = 0.0f;
     float elapsedTime = 0.0f;
-    float endTime = 90.0f;
+    float endTime = 60.0f;
     float RemainingTime = 0.0f;
 
     Color OLIVE_GREEN = {107, 142, 35, 255};
@@ -65,11 +65,10 @@ int main()
     Texture2D mainbuildinghovered = LoadTexture("./images/mainbuildinghovered.png");
 
     // defining areas for each level
-   // Defining areas for each level adjusted for a window size of 1260 x 700
-Rectangle hogsmeadeArea = {90, 155, 180, 117};       // Hogsmeade area
-Rectangle forbiddenArea = {1080, 232, 180, 117};     // Forbidden area
-Rectangle mainbuildingArea = {720, 466, 270, 233};    // Main building area
-
+    // Defining areas for each level adjusted for a window size of 1260 x 700
+    Rectangle hogsmeadeArea = {90, 155, 180, 117};     // Hogsmeade area
+    Rectangle forbiddenArea = {1080, 232, 180, 117};   // Forbidden area
+    Rectangle mainbuildingArea = {720, 466, 270, 233}; // Main building area
 
     while (!WindowShouldClose())
     {

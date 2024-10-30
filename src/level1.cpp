@@ -10,7 +10,7 @@ using namespace std;
 
 const int screenWidth = 1400;
 const int screenHeight = 900;
-int cellSize = 50;
+const int cellSize = 50; // Ensure cellSize is defined as a constant
 const int cellCountX = screenWidth / cellSize;
 const int cellCountY = screenHeight / cellSize;
 int CollectibleCount = 0;
@@ -20,9 +20,11 @@ Sound level1Music, hitSound;
 Texture2D characterimg;
 Texture2D characterimgfrozen;
 
-// Define the radii of the bludger and the character
-const float bludgerRadius = 10.0f;   // Half of the bludger's width/height
-const float characterRadius = 40.0f; // Half of the character's width/height
+// Define the dimensions of the bludger and the character
+const float bludgerWidth = 15.0f;    // Width of the bludger
+const float bludgerHeight = 15.0f;   // Height of the bludger
+const float characterWidth = 30.0f;  // Width of the character
+const float characterHeight = 30.0f; // Height of the character
 
 Collectibles::Collectibles() : texture{0}, bludger_texture{0}, snitch_position{0, 0}, bludger_positions{{0, 0}}, bludger_velocities{{0, 0}}, bludger_speed{200}, speed{200}, snitch_timer{0.0f}
 {
@@ -92,30 +94,22 @@ void Collectibles::UpdateBludgers()
         // Reset bludger position if it moves out of the screen
         if (bludger_positions[i].y > GetScreenHeight())
         {
-            bludger_positions[i].x = GetRandomValue(0, GetScreenWidth() - 30);
-            bludger_positions[i].y = 0;
-            bludger_velocities[i].y = 0.0f;
+            do
+            {
+                bludger_positions[i].x = GetRandomValue(0, GetScreenWidth() - 30);
+                bludger_positions[i].y = 0; // Reset to the top of the screen
+            } while (CheckCollisionRecs(Rectangle{bludger_positions[i].x, bludger_positions[i].y, bludgerWidth, bludgerHeight}, Rectangle{hp.x, hp.y, characterWidth, characterHeight}));
+            bludger_velocities[i].y = 0.0f; // Reset velocity
         }
 
-        if (CheckCollisionCircles(Vector2{bludger_positions[i].x + bludgerRadius, bludger_positions[i].y + bludgerRadius}, bludgerRadius, Vector2{hp.x + characterRadius, hp.y + characterRadius}, characterRadius))
+        if (CheckCollisionRecs(Rectangle{bludger_positions[i].x, bludger_positions[i].y, bludgerWidth, bludgerHeight}, Rectangle{hp.x, hp.y, characterWidth, characterHeight}))
         {
+            cout << "Harry Position: (" << hp.x << ", " << hp.y << ")" << endl;
+            cout << "Bludger Position: (" << bludger_positions[i].x << ", " << bludger_positions[i].y << ")" << endl;
             PlaySound(hitSound);
             hp.isHpPaused = true;
             hp.hp_pause_timer = 0.0f;
         }
-
-        // Calculate the distance between the centers of the bludger and the character
-        // float dx = (hp.x + characterRadius) - (bludger_positions[i].x + bludgerRadius);
-        // float dy = (hp.y + characterRadius) - (bludger_positions[i].y + bludgerRadius);
-        // float distance = sqrt(dx * dx + dy * dy);
-
-        // // Check for collision
-        // if (distance < bludgerRadius + characterRadius)
-        // {
-        //     PlaySound(hitSound);
-        //     hp.isHpPaused = true;
-        //     hp.hp_pause_timer = 0.0f;
-        // }
     }
 }
 
