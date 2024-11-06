@@ -34,7 +34,7 @@ int main()
     Texture2D backgroundlevel1 = LoadTexture("./images/bg1.png");
     float startTime = 0.0f;
     float elapsedTime = 0.0f;
-    float endTime = 60.0f;
+    float endTime = 45.0f;
     float RemainingTime = 0.0f;
 
     Color OLIVE_GREEN = {107, 142, 35, 255};
@@ -201,7 +201,7 @@ int main()
             // collectible.Draw(texture);
             DrawLevel1();
             DrawCollectible(texture);
-            DrawBludgers(bludgerTexture);
+            collectible.DrawBludgers(bludgerTexture);
 
             // Draw clouds
             for (int i = 0; i < numClouds; i++)
