@@ -30,14 +30,14 @@ Rectangle hpRect, bludgerRect;
 
 float collisionCooldownTimer = 0.0f; // Timer to prevent multiple collisions
 
-Collectibles::Collectibles() : texture{0}, bludger_texture{0}, snitch_position{0, 0}, bludger_positions{{0, 0}}, bludger_velocities{{0, 0}}, bludger_speed{200}, speed{200}, snitch_timer{0.0f}
+Collectibles::Collectibles() : texture{0}, bludger_texture{0}, snitch_position{0, 0}, bludger_positions{{0, 0}, {0, 0}, {0, 0}}, bludger_velocities{{0, 0}, {0, 0}, {0, 0}}, speed{200}, snitch_timer{0.0f}
 {
     cout << "Collectibles constructor called";
     snitch_position = GenerateRandomPosition();
 
     // hpRect = {hp.x, hp.y, characterWidth, characterHeight};
 
-    for (int i = 0; i < 1; i++)
+    for (int i = 0; i < 3; i++)
     {
         do
         {
@@ -87,99 +87,45 @@ void Collectibles::Update()
     }
 }
 
-void Collectibles::UpdateBludgers()
+void Collectibles::UpdateBludgers(int i)
 {
     // to update the cooldown timer
     if (collisionCooldownTimer > 0.0f)
     {
         collisionCooldownTimer -= GetFrameTime();
     }
-    for (int i = 0; i < 1; i++)
+
+    bludger_velocities[i].y += 0.1f;                   // Increase the velocity of the bludger
+    bludger_positions[i].y += bludger_velocities[i].y; // Update the position of the bludger
+
+    if (collisionCooldownTimer <= 0.0f)
     {
-        bludger_velocities[i].y += 0.05f;                  // Increase the velocity of the bludger
-        bludger_positions[i].y += bludger_velocities[i].y; // Update the position of the bludger
-        // cout << "Bludger Y-Position: " << bludger_positions[i].y << endl;
-
-        // Check collision rectangle
-        // bludgerRect = {bludger_positions[i].x, bludger_positions[i].y, bludgerWidth, bludgerHeight};
-        // hpRect = {hp.x, hp.y, characterWidth, characterHeight};
-
-        // check collision by using circle instead
-        Vector2 bludgerCenter = {bludger_positions[i].x + 30, bludger_positions[i].y + 30};
-        Vector2 hpCenter = {hp.x + characterWidth / 2, hp.y + characterHeight / 2};
-
-        float distance = sqrt(pow(bludgerCenter.x - hpCenter.x, 2) + pow(bludgerCenter.y - hpCenter.y, 2));
-
-        // skip collision detection if cooldown timer is active
-        if (collisionCooldownTimer <= 0.0f)
+        if (bludger_positions[i].x < hp.x + characterWidth &&
+            bludger_positions[i].x + bludgerWidth > hp.x &&
+            bludger_positions[i].y < hp.y + characterHeight &&
+            bludger_positions[i].y + bludgerHeight > hp.y)
         {
-            if (distance < (40.0f))
-            {
-                cout << "Collision detected" << endl;
-                cout << "Harry Position: (" << hp.x << ", " << hp.y << ")" << endl;
-                cout << "Bludger Position: (" << bludger_positions[i].x << ", " << bludger_positions[i].y << ")" << endl;
-                cout << "Harry Center: (" << hpCenter.x << ", " << hpCenter.y << ")" << endl;
-                cout << "Bludger Center: (" << bludgerCenter.x << ", " << bludgerCenter.y << ")" << endl;
-                cout << "Collision cause Distance: " << distance << endl;
-                PlaySound(hitSound);
-                hp.isHpPaused = true;
-                hp.hp_pause_timer = 0.0f;
-                collisionCooldownTimer = 3.0f;
-            }
-        }
-
-        // Reset bludger position if it moves out of the screen
-        if (bludger_positions[i].y > GetScreenHeight())
-        {
-            do
-            {
-                bludger_positions[i].x = GetRandomValue(0, GetScreenWidth() - bludgerWidth);
-                bludger_positions[i].y = 0; // Reset to the top of the screen
-            } while (CheckCollisionRecs(Rectangle{bludger_positions[i].x, bludger_positions[i].y, bludgerWidth, bludgerHeight}, hpRect));
-            bludger_velocities[i].y = 0.0f; // Reset velocity
+            cout << "Collision detected" << endl;
+            cout << "Harry Position: (" << hp.x << ", " << hp.y << ")" << endl;
+            cout << "Bludger Position: (" << bludger_positions[i].x << ", " << bludger_positions[i].y << ")" << "It was bludger no. : " << i << endl;
+            PlaySound(hitSound);
+            hp.isHpPaused = true;
+            hp.hp_pause_timer = 0.0f;
+            collisionCooldownTimer = 3.0f;
         }
     }
+
+    // Reset bludger position if it moves out of the screen
+    if (bludger_positions[i].y > GetScreenHeight())
+    {
+        do
+        {
+            bludger_positions[i].x = GetRandomValue(0, GetScreenWidth() - bludgerWidth);
+            bludger_positions[i].y = 0; // Reset to the top of the screen
+        } while (CheckCollisionRecs(Rectangle{bludger_positions[i].x, bludger_positions[i].y, bludgerWidth, bludgerHeight}, hpRect));
+        bludger_velocities[i].y = 0.0f; // Reset velocity
+    }
 }
-
-// void Collectibles::UpdateBludgers()
-// {
-//     for (int i = 0; i < 1; i++)
-//     {
-//         bludger_velocities[i].y += 0.05f; // Increase velocity for a falling effect
-//         bludger_positions[i].y += bludger_velocities[i].y;
-
-//         Vector2 bludgerCenter = {bludger_positions[i].x + bludgerRadius, bludger_positions[i].y + bludgerRadius};
-//         Vector2 hpCenter = {hp.x + characterWidth / 2, hp.y + characterHeight / 2};
-
-//         float distanceThreshold = 10.0f; // Adjust as needed
-//         if (fabs(bludger_positions[i].x - hp.x) < distanceThreshold && fabs(bludger_positions[i].y - hp.y) < distanceThreshold)
-//         {
-//             // Collision detected
-//             cout << "Collision detected" << endl;
-//             cout << "Harry Position: (" << hp.x << ", " << hp.y << ")" << endl;
-//             cout << "Bludger Position: (" << bludger_positions[i].x << ", " << bludger_positions[i].y << ")" << endl;
-//             cout << "Harry Center: (" << hpCenter.x << ", " << hpCenter.y << ")" << endl;
-//             cout << "Bludger Center: (" << bludgerCenter.x << ", " << bludgerCenter.y << ")" << endl;
-//             PlaySound(hitSound);
-//             hp.isHpPaused = true;
-//             hp.hp_pause_timer = 0.0f;
-//         }
-
-//         // Use circle collision check
-//         // if (CheckCollisionCircles(bludgerCenter, bludgerRadius, hpCenter, characterWidth / 2))
-//         // {
-
-//         // }
-
-//         // Reset bludger position if it moves out of the screen
-//         if (bludger_positions[i].y > GetScreenHeight())
-//         {
-//             bludger_positions[i].x = GetRandomValue(30, 1200);
-//             bludger_positions[i].y = -bludgerHeight; // Start slightly above screen
-//             bludger_velocities[i].y = 0.0f;          // Reset velocity
-//         }
-//     }
-// }
 
 Collectibles::~Collectibles()
 {
@@ -195,15 +141,14 @@ void Collectibles::Draw(Texture2D texture)
     DrawText(("Snitch Count: " + std::to_string(CollectibleCount)).c_str(), 590, 100, 30, GOLD);
 }
 
-void Collectibles::DrawBludgers(Texture2D bludgerTexture)
+void Collectibles::DrawBludgers(int i, Texture2D bludgerTexture)
 {
-    for (int i = 0; i < 1; i++)
-    {
-        DrawTexture(bludgerTexture, bludger_positions[i].x, bludger_positions[i].y, WHITE);
-        // DrawRectangleLines(bludgerRect.x, bludgerRect.y, bludgerRect.width, bludgerRect.height, BLUE);
-        //  drawcircle instead
-        DrawCircleLines(bludger_positions[i].x + 30, bludger_positions[i].y + 30, bludgerRadius, BLUE); // syntax: DrawCircle(Vector2 center, float radius, Color color)
-    }
+
+    DrawTexture(bludgerTexture, bludger_positions[i].x, bludger_positions[i].y, WHITE);
+    DrawText(("bludger no. " + std::to_string(i)).c_str(), bludger_positions[i].x, bludger_positions[i].y - 20, 20, BLUE);
+    // DrawRectangleLines(bludgerRect.x, bludgerRect.y, bludgerRect.width, bludgerRect.height, BLUE);
+    //  drawcircle instead
+    DrawCircleLines(bludger_positions[i].x + 30, bludger_positions[i].y + 30, bludgerRadius, BLUE); // syntax: DrawCircle(Vector2 center, float radius, Color color)
 }
 
 Vector2 Collectibles::GenerateRandomPosition()
@@ -281,7 +226,7 @@ void UpdateLevel1()
 {
     hp.Update();
     collectible.Update();
-    collectible.UpdateBludgers();
+    // collectible.UpdateBludgers();
 }
 
 void DrawLevel1()
