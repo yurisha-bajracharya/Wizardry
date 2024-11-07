@@ -63,7 +63,7 @@ Through this project, we had the opportunity to apply our understanding of  C++ 
 
 ## How to Play
 
-1. Start the game by executing the compiled file (`./wizardry`).
+1. Start the game by executing the compiled file.
 2. **Level 1**: Use the arrow keys to navigate Harry and collect snitches. Avoid falling bludgers.
 3. **Level 2**: Continue collecting coins to increase your score. Use the snitches collected in Level 1 to remove ghosts and navigate the maze.
 4. **Level 3**: Solve the riddle presented at the end of the maze to win the game.
