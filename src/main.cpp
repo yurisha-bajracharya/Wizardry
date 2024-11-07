@@ -60,13 +60,13 @@ int main()
 
     // Load map and highlighted images
     Texture2D mapImage = LoadTexture("./images/mapimg.png");
-    Texture2D hogsmeadehovered = LoadTexture("./images/hogsmeadehovered.png");
+    Texture2D quidditchhovered = LoadTexture("./images/quidditchhovered.png");
     Texture2D forbiddenhovered = LoadTexture("./images/forbiddenhovered.png");
     Texture2D mainbuildinghovered = LoadTexture("./images/mainbuildinghovered.png");
 
     // defining areas for each level
     // Defining areas for each level adjusted for a window size of 1260 x 700
-    Rectangle hogsmeadeArea = {90, 155, 180, 117};     // Hogsmeade area
+    Rectangle quidditchArea = {500, 300, 180, 117};    // Hogsmeade area
     Rectangle forbiddenArea = {1080, 232, 180, 117};   // Forbidden area
     Rectangle mainbuildingArea = {720, 466, 270, 233}; // Main building area
 
@@ -75,7 +75,7 @@ int main()
         elapsedTime = GetTime() - startTime;
         RemainingTime = endTime - elapsedTime;
         Vector2 mousePosition = GetMousePosition();
-        bool isHoveringHogsmeade = CheckCollisionPointRec(mousePosition, hogsmeadeArea);
+        bool isHoveringQuidditch = CheckCollisionPointRec(mousePosition, quidditchArea);
         bool isHoveringForbiddenForest = CheckCollisionPointRec(mousePosition, forbiddenArea);
         bool isHoveringMainBuilding = CheckCollisionPointRec(mousePosition, mainbuildingArea);
 
@@ -91,9 +91,9 @@ int main()
             break;
 
         case MAP:
-            if (isHoveringHogsmeade)
+            if (isHoveringQuidditch)
             {
-                currentMapImage = hogsmeadehovered;
+                currentMapImage = quidditchhovered;
             }
             else if (isHoveringForbiddenForest)
             {
@@ -107,7 +107,7 @@ int main()
             {
                 currentMapImage = mapImage;
             }
-            if (isHoveringHogsmeade && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+            if (isHoveringQuidditch && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
             {
                 currentState = LEVEL1;
                 startTime = GetTime();
