@@ -137,18 +137,13 @@ Collectibles::~Collectibles()
 void Collectibles::Draw(Texture2D texture)
 {
     DrawTexture(texture, snitch_position.x * cellSize, snitch_position.y * cellSize, WHITE);
-    DrawCircleLines(snitch_position.x * cellSize + 30, snitch_position.y * cellSize + 30, 30, GOLD); // syntax: DrawCircle(Vector2 center, float radius, Color color)
-    DrawText(("Snitch Count: " + std::to_string(CollectibleCount)).c_str(), 590, 100, 30, GOLD);
+    DrawText(("Snitch Count: " + std::to_string(CollectibleCount)).c_str(), 573, 52, 15, BLACK);
 }
 
 void Collectibles::DrawBludgers(int i, Texture2D bludgerTexture)
 {
 
     DrawTexture(bludgerTexture, bludger_positions[i].x, bludger_positions[i].y, WHITE);
-    DrawText(("bludger no. " + std::to_string(i)).c_str(), bludger_positions[i].x, bludger_positions[i].y - 20, 20, BLUE);
-    // DrawRectangleLines(bludgerRect.x, bludgerRect.y, bludgerRect.width, bludgerRect.height, BLUE);
-    //  drawcircle instead
-    DrawCircleLines(bludger_positions[i].x + 30, bludger_positions[i].y + 30, bludgerRadius, BLUE); // syntax: DrawCircle(Vector2 center, float radius, Color color)
 }
 
 Vector2 Collectibles::GenerateRandomPosition()
@@ -234,14 +229,10 @@ void DrawLevel1()
     if (!hp.isHpPaused)
     {
         hp.Draw(characterimg);
-        // DrawRectangleLines(hpRect.x, hpRect.y, hpRect.width, hpRect.height, RED); // For Harry
-        DrawCircleLines(hp.x + characterWidth / 2, hp.y + characterHeight / 2, characterWidth / 2, RED); // For Harry
     }
     else
     {
         hp.Draw(characterimgfrozen);
-        // DrawRectangleLines(hpRect.x, hpRect.y, hpRect.width, hpRect.height, RED); // For Harry
-        DrawCircleLines(hp.x + characterWidth / 2, hp.y + characterHeight / 2, characterWidth / 2, RED); // For Harry
     }
 }
 

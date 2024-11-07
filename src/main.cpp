@@ -31,14 +31,14 @@ int main()
     InitWindow(1260, 700, "Wizardry"); // changed size of window
     SetTargetFPS(60);
     cout << "Window Initialized" << endl;
-    Texture2D backgroundlevel1 = LoadTexture("./images/bg1.png");
+    Texture2D backgroundlevel1 = LoadTexture("./images/level1bg.png");
     float startTime = 0.0f;
     float elapsedTime = 0.0f;
     float endTime = 60.0f;
     float RemainingTime = 0.0f;
 
-    Color OLIVE_GREEN = {107, 142, 35, 255};
-    // Current state of the game
+    // Color OLIVE_GREEN = {107, 142, 35, 255};
+    //  Current state of the game
     GameState currentState = MENU;
     Collectibles collectible;
     Texture2D currentMapImage = {0};
@@ -216,7 +216,7 @@ int main()
             }
             RemainingTime = endTime - elapsedTime;
             // Draw Timer
-            DrawText(TextFormat("Remaining Time: %.2f", RemainingTime), 510, 30, 40, OLIVE_GREEN);
+            DrawText(TextFormat("Remaining Time: \n %.2f", RemainingTime), 1052, 49, 19, darkGreen); // syntax: DrawText(const char *text, int posX, int posY, int fontSize, Color color)
             break;
 
         case LEVEL2:
