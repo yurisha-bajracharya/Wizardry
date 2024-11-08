@@ -141,11 +141,11 @@ int main()
 
         case LEVEL2:
             UpdateLevel2();
-            if (IsKeyDown(KEY_W)) /* condition for winning */
+            if (IsKeyDown(KEY_O)) /* condition for winning */
             {
                 currentState = GAMEOVER; // Game over after winning
             }
-            else if (IsKeyDown(KEY_W)) /* condition for losing */
+            else if (IsKeyDown(KEY_O)) /* condition for losing */
             {
                 currentState = GAMEOVER; // Game over after losing
             }
