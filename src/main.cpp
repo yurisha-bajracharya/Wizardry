@@ -34,7 +34,7 @@ int main()
     Texture2D backgroundlevel1 = LoadTexture("./images/level1bg.png");
     float startTime = 0.0f;
     float elapsedTime = 0.0f;
-    float endTime = 60.0f;
+    float endTime = 120.0f;
     float RemainingTime = 0.0f;
 
     // Color OLIVE_GREEN = {107, 142, 35, 255};
