@@ -32,7 +32,7 @@ Through this project, we had the opportunity to apply our understanding of  C++ 
   The player controls Harry, who must collect snitches which appears one by one throughout the level. However, falling bludgers threaten the player. If a bludger touches Harry, he freezes temporarily and loses some progress. The level ends when Harry collects a certain number of snitches in the given time.
 
 - **Level 2**:  
-  The snitches collected in Level 1 are used as a resource to remove ghosts that sets player to initial pposition when collided. The player must navigate a maze while collecting coins to increase their score. The goal is to reach Hermione, who marks the end of the maze and completion of the level.
+  The snitches collected in Level 1 are used as a resource to remove ghosts that sets player to initial position when collided. The player must navigate a maze while collecting coins to increase their score. The goal is to reach Hermione, who marks the end of the maze and completion of the level.
 
 - **Level 3**:  
   At the end of the maze, a riddle is presented to the player. Solving the riddle will lead to a victory screen and the completion of the game.
@@ -64,8 +64,8 @@ Through this project, we had the opportunity to apply our understanding of  C++ 
 ## How to Play
 
 1. Start the game by executing the compiled file.
-2. **Level 1**: Use the arrow keys to navigate Harry and collect snitches. Avoid falling bludgers.
-3. **Level 2**: Continue collecting coins to increase your score. Use the snitches collected in Level 1 to remove ghosts and navigate the maze.
+2. **Level 1**: Use the arrow keys or WSAD keys (shift + the keys: for faster speed) to navigate Harry and collect as many snitches as possible. Avoid falling bludgers.
+3. **Level 2**: Continue collecting coins to increase your score and get more hints in the riddle asked in Level 3. Use the snitches collected in Level 1 to remove ghosts and navigate the maze.
 4. **Level 3**: Solve the riddle presented at the end of the maze to win the game.
 
 ## Contributors
