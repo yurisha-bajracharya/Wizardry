@@ -4,14 +4,15 @@
 #include<stdio.h>
 #include "raylib.h"
 #include"button.hpp"
+Texture2D background= LoadTexture("./images/back.png");
+Button playagainbutton{"./images/replay.png",{80,700},0.35};
+Button menu{"./images/menu.png",{1100,700},0.65};
+Texture2D gameover=LoadTexture("./images/game.png");
+Sound sound=LoadSound("./Audio/music.mp3");
 
 void UpdateGameOver()
 {
-    Texture2D background= LoadTexture("./images/back.png");
-    Button playagainbutton{"./images/replay.png",{80,700},0.35};
-     Button menu{"./images/menu.png",{1100,700},0.65};
-    Texture2D gameover=LoadTexture("./images/game.png");
-    Sound sound=LoadSound("./Audio/music.mp3");
+    
     
         if (IsKeyPressed(KEY_SPACE))
         {
@@ -28,18 +29,10 @@ void UpdateGameOver()
               std::cout<<"Menu is pressed"<<std::endl;
         }
        
-       
-    }
-    UnloadTexture(background);
-    
-
-
-    
-
-
+ }
+   
 void DrawGameOver()
 {
-     
         ClearBackground(BLACK);
         DrawTexture(background,0,0,WHITE);
         DrawTexture(gameover,500,300,WHITE);
