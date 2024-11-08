@@ -31,14 +31,14 @@ int main()
     InitWindow(1260, 700, "Wizardry"); // changed size of window
     SetTargetFPS(60);
     cout << "Window Initialized" << endl;
-    Texture2D backgroundlevel1 = LoadTexture("./images/bg1.png");
+    Texture2D backgroundlevel1 = LoadTexture("./images/level1bg.png");
     float startTime = 0.0f;
     float elapsedTime = 0.0f;
-    float endTime = 60.0f;
+    float endTime = 120.0f;
     float RemainingTime = 0.0f;
 
-    Color OLIVE_GREEN = {107, 142, 35, 255};
-    // Current state of the game
+    // Color OLIVE_GREEN = {107, 142, 35, 255};
+    //  Current state of the game
     GameState currentState = MENU;
     Collectibles collectible;
     Texture2D currentMapImage = {0};
@@ -60,13 +60,13 @@ int main()
 
     // Load map and highlighted images
     Texture2D mapImage = LoadTexture("./images/mapimg.png");
-    Texture2D hogsmeadehovered = LoadTexture("./images/hogsmeadehovered.png");
+    Texture2D quidditchhovered = LoadTexture("./images/quidditchhovered.png");
     Texture2D forbiddenhovered = LoadTexture("./images/forbiddenhovered.png");
     Texture2D mainbuildinghovered = LoadTexture("./images/mainbuildinghovered.png");
 
     // defining areas for each level
     // Defining areas for each level adjusted for a window size of 1260 x 700
-    Rectangle hogsmeadeArea = {90, 155, 180, 117};     // Hogsmeade area
+    Rectangle quidditchArea = {500, 300, 180, 117};    // Hogsmeade area
     Rectangle forbiddenArea = {1080, 232, 180, 117};   // Forbidden area
     Rectangle mainbuildingArea = {720, 466, 270, 233}; // Main building area
 
@@ -75,7 +75,7 @@ int main()
         elapsedTime = GetTime() - startTime;
         RemainingTime = endTime - elapsedTime;
         Vector2 mousePosition = GetMousePosition();
-        bool isHoveringHogsmeade = CheckCollisionPointRec(mousePosition, hogsmeadeArea);
+        bool isHoveringQuidditch = CheckCollisionPointRec(mousePosition, quidditchArea);
         bool isHoveringForbiddenForest = CheckCollisionPointRec(mousePosition, forbiddenArea);
         bool isHoveringMainBuilding = CheckCollisionPointRec(mousePosition, mainbuildingArea);
 
@@ -91,9 +91,9 @@ int main()
             break;
 
         case MAP:
-            if (isHoveringHogsmeade)
+            if (isHoveringQuidditch)
             {
-                currentMapImage = hogsmeadehovered;
+                currentMapImage = quidditchhovered;
             }
             else if (isHoveringForbiddenForest)
             {
@@ -107,7 +107,7 @@ int main()
             {
                 currentMapImage = mapImage;
             }
-            if (isHoveringHogsmeade && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+            if (isHoveringQuidditch && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
             {
                 currentState = LEVEL1;
                 startTime = GetTime();
@@ -127,7 +127,7 @@ int main()
 
         case LEVEL1:
             UpdateLevel1();
-            collectible.UpdateBludgers();
+            // collectible.UpdateBludgers();
             if (RemainingTime <= 0) /* time up*/
             {
                 RemainingTime = 0;
@@ -141,11 +141,11 @@ int main()
 
         case LEVEL2:
             UpdateLevel2();
-            if (IsKeyDown(KEY_W)) /* condition for winning */
+            if (IsKeyDown(KEY_O)) /* condition for winning */
             {
                 currentState = GAMEOVER; // Game over after winning
             }
-            else if (IsKeyDown(KEY_W)) /* condition for losing */
+            else if (IsKeyDown(KEY_O)) /* condition for losing */
             {
                 currentState = GAMEOVER; // Game over after losing
             }
@@ -201,7 +201,13 @@ int main()
             // collectible.Draw(texture);
             DrawLevel1();
             DrawCollectible(texture);
-            DrawBludgers(bludgerTexture);
+
+            for (int i = 0; i < 3; i++)
+            {
+
+                collectible.UpdateBludgers(i);
+                collectible.DrawBludgers(i, bludgerTexture);
+            };
 
             // Draw clouds
             for (int i = 0; i < numClouds; i++)
@@ -210,7 +216,7 @@ int main()
             }
             RemainingTime = endTime - elapsedTime;
             // Draw Timer
-            DrawText(TextFormat("Remaining Time: %.2f", RemainingTime), 510, 30, 40, OLIVE_GREEN);
+            DrawText(TextFormat("Remaining Time: \n %.2f", RemainingTime), 1052, 49, 19, darkGreen); // syntax: DrawText(const char *text, int posX, int posY, int fontSize, Color color)
             break;
 
         case LEVEL2:
