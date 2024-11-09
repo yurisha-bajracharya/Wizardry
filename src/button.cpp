@@ -1,18 +1,24 @@
-#include "button.hpp"
+#include "button.h"
+#include <iostream>
+#include "C:\raylib\raylib\src\raylib.h"
 
+using namespace std;
 
-
-Button::Button(const char* imagepath, Vector2 imageposition,float scale)
+Button::Button() : texture{0}, position{0, 0}
 {
-    Image image=LoadImage(imagepath);
-    int originalwidth=image.width;
-    int originalheight=image.height;
-    int newwidth=static_cast<int>(originalwidth*scale);
-    int newheight=static_cast<int>(originalheight*scale);
-    ImageResize(&image,newwidth,newheight);
-    texture=LoadTextureFromImage(image);
+}
+Button::Button(const char *imagepath, Vector2 imageposition, float scale)
+{
+    Image image = LoadImage(imagepath);
+    int originalwidth = image.width;
+    int originalheight = image.height;
+    int newwidth = static_cast<int>(originalwidth * scale);
+    int newheight = static_cast<int>(originalheight * scale);
+    ImageResize(&image, newwidth, newheight);
+    texture = LoadTextureFromImage(image);
     UnloadImage(image);
-    position =imageposition;
+    position = imageposition;
+    cout << "imgpath:" << imagepath << endl;
 }
 Button::~Button()
 {
@@ -20,17 +26,17 @@ Button::~Button()
 }
 void Button::Draw()
 {
-    DrawTextureV(texture,position,WHITE);
+    DrawTextureV(texture, position, WHITE);
 }
- bool Button::isPressed(Vector2 mousePos, bool mousePressed)
+bool Button::isPressed(Vector2 mousePos, bool mousePressed)
 {
-    Rectangle rect={position.x,position.y,static_cast<float>(texture.width),static_cast<float>(texture.height)};
-     if(CheckCollisionPointRec(mousePos,rect)&& mousePressed)
+    Rectangle rect = {position.x, position.y, static_cast<float>(texture.width), static_cast<float>(texture.height)};
+    if (CheckCollisionPointRec(mousePos, rect) && mousePressed)
     {
         return true;
-     } 
-      else
-     {
-    return false;     
     }
- }
+    else
+    {
+        return false;
+    }
+}

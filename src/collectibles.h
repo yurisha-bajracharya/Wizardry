@@ -11,10 +11,10 @@ public:
     Texture2D LoadTexture(const char *fileName);
     ~Collectibles();
     void Draw(Texture2D texture);
-    void DrawBludgers(Texture2D texture);
+    void DrawBludgers(int i, Texture2D texture);
     Vector2 GenerateRandomPosition();
     void Update();
-    void UpdateBludgers();
+    void UpdateBludgers(int i);
 
 private:
     Texture2D texture;
@@ -22,7 +22,6 @@ private:
     Vector2 snitch_position;
     Vector2 bludger_positions[3];
     Vector2 bludger_velocities[3];
-    float bludger_speed;
     float speed;
     float snitch_timer;
 };

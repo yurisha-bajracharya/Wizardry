@@ -1,17 +1,17 @@
 #include "C:\raylib\raylib\src\raylib.h"
-#include "Pause.h"
+#include "Pause1.h"
 #include <iostream>
-#include <string>
 #include "collectibles.h"
+#include "string"
 
-void UpdatePause()
+void UpdatePause1()
 {
     // pause
 }
 
-void DrawPause()
+void DrawPause1()
 {
-    DrawRectangle(0, 0, 1260, 700, Fade(DARKGRAY, 0.8f));
+    DrawRectangle(0, 0, 1400, 900, Fade(DARKGRAY, 0.8f));
     DrawText("PAUSED", 550, 400, 40, WHITE);
     DrawText(("You earned total " + std::to_string(CollectibleCount) + " points").c_str(), 500, 450, 20, WHITE);
     DrawText("Press P to move to the next level", 500, 500, 20, WHITE);
