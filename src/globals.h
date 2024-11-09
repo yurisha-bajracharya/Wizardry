@@ -9,5 +9,5 @@ extern Character hp;
 extern int CollectibleCount;
 extern int coinsCollected;
 extern bool gameWon;
-extern bool gameOver;   
+extern bool gameOver;
 #endif // GLOBALS_H

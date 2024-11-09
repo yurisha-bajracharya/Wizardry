@@ -3,7 +3,7 @@
 #include "menu.h"
 #include "level1.h"
 #include "level2.h"
-#include "level3.h" 
+#include "level3.h"
 #include "gameover.h"
 #include "collectibles.h"
 #include "character.h"
@@ -43,6 +43,7 @@ int main()
 
     // Color OLIVE_GREEN = {107, 142, 35, 255};
     //  Current state of the game
+
     GameState currentState = MENU;
     Collectibles collectible;
     Texture2D currentMapImage = {0};
@@ -70,7 +71,7 @@ int main()
 
     // defining areas for each level
     // Defining areas for each level adjusted for a window size of 1260 x 700
-    Rectangle quidditchArea = {500, 300, 180, 117};    // Hogsmeade area
+    Rectangle quidditchArea = {500, 260, 180, 150};    // Quidditch area
     Rectangle forbiddenArea = {1080, 232, 180, 117};   // Forbidden area
     Rectangle mainbuildingArea = {720, 466, 270, 233}; // Main building area
 
@@ -126,6 +127,7 @@ int main()
             {
                 currentState = GAMEOVER;
                 startTime = GetTime();
+                InitGameOver();
             }
             break;
 
@@ -155,8 +157,8 @@ int main()
             }
             break;
         case LEVEL3:
-          UpdateLevel3();
-          if (IsKeyDown(KEY_O)) /* condition for winning */
+            UpdateLevel3();
+            if (IsKeyDown(KEY_O)) /* condition for winning */
             {
                 currentState = GAMEOVER; // Game over after winning
             }
@@ -265,6 +267,7 @@ int main()
         EndDrawing();
     }
     UnloadTexture(cloud);
+    UnloadGameOver();
     CloseWindow();
     return 0;
 }

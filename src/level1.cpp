@@ -1,4 +1,4 @@
-#include "raylib.h"
+#include "C:\raylib\raylib\src\raylib.h"
 #include "level1.h"
 #include <iostream>
 #include "collectibles.h"
@@ -6,6 +6,7 @@
 #include "globals.h"
 #include <cstdio>
 #include <cmath>
+#include <string>
 using namespace std;
 
 const int screenWidth = 1260;
