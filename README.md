@@ -70,7 +70,7 @@ Through this project, we had the opportunity to apply our understanding of  C++ 
 
 ## Contributors
 
-- [Shristi Pokhrel](https://github.com/collaborator-1)
+- [Shristi Pokhrel](https://github.com/Shri-29)
 - [Shruti Maharjan](https://github.com/shruti-1007)
 - [Swarnima Khadka](https://github.com/Swarnima-Khadka)
 - [Yurisha Bajracharya](https://github.com/yurisha-bajracharya)
