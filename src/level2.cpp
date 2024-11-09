@@ -202,33 +202,42 @@ void MazeGenerator() {
     }
 }
 
-void UpdatePlayer() {
+void UpdatePlayer()
+{
     // Check for player movement
-    if (IsKeyDown(KEY_UP) && !grid[player.r * ncols + player.c].walls[0]) { // Up
+    if ((IsKeyDown(KEY_UP) || IsKeyDown(KEY_W)) && !grid[player.r * ncols + player.c].walls[0])
+    { // Up
         player.r--;
     }
-    if (IsKeyDown(KEY_RIGHT) && !grid[player.r * ncols + player.c].walls[1]) { // Right
+    if ((IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D)) && !grid[player.r * ncols + player.c].walls[1])
+    { // Right
         player.c++;
     }
-    if (IsKeyDown(KEY_DOWN) && !grid[player.r * ncols + player.c].walls[2]) { // Down
+    if ((IsKeyDown(KEY_DOWN) || IsKeyDown(KEY_S)) && !grid[player.r * ncols + player.c].walls[2])
+    { // Down
         player.r++;
     }
-    if (IsKeyDown(KEY_LEFT) && !grid[player.r * ncols + player.c].walls[3]) { // Left
+    if ((IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A)) && !grid[player.r * ncols + player.c].walls[3])
+    { // Left
         player.c--;
     }
 
     // Check for collision with Hermione
-    if (player.r == hermione.r && player.c == hermione.c) {
+    if (player.r == hermione.r && player.c == hermione.c)
+    {
         gameWon = true; // Set the win flag
     }
 
     // Check for collision with coins
-    for (auto it = coins.begin(); it != coins.end(); ) {
-        if (player.r == it->r && player.c == it->c) {
-            PlaySound(coincollected); // Play coin collection sound
-            coinsCollected++; // Increment the coin counter
+    for (auto it = coins.begin(); it != coins.end();)
+    {
+        if (player.r == it->r && player.c == it->c)
+        {
+            coinsCollected++;     // Increment the coin counter
             it = coins.erase(it); // Remove the collected coin
-        } else {
+        }
+        else
+        {
             ++it;
         }
     }
