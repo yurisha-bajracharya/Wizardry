@@ -1,14 +1,14 @@
 #include "raylib.h"
-#include "Pause.h"
+#include "Pause1.h"
 #include <iostream>
 #include "collectibles.h"
 
-void UpdatePause()
+void UpdatePause1()
 {
     // pause
 }
 
-void DrawPause()
+void DrawPause1()
 {
     DrawRectangle(0, 0, 1400, 900, Fade(DARKGRAY, 0.8f));
     DrawText("PAUSED", 550, 400, 40, WHITE);
