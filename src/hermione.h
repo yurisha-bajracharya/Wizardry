@@ -1,7 +1,7 @@
 #ifndef HERMIONE_H
 #define HERMIONE_H
 
-#include "raylib.h"
+#include "C:\raylib\raylib\src\raylib.h"
 
 struct Hermione
 {

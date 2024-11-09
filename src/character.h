@@ -2,7 +2,7 @@
 #ifndef CHARACTER_H
 #define CHARACTER_H
 
-#include "raylib.h"
+#include "C:\raylib\raylib\src\raylib.h"
 
 class Character
 {

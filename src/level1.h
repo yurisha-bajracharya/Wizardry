@@ -1,7 +1,7 @@
 #ifndef LEVEL1_H
 #define LEVEL1_H
 
-#include "raylib.h"
+#include "C:\raylib\raylib\src\raylib.h"
 
 void UpdateLevel1();
 void DrawLevel1();

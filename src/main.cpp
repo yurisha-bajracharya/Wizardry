@@ -3,10 +3,12 @@
 #include "menu.h"
 #include "level1.h"
 #include "level2.h"
+#include "level3.h"
 #include "gameover.h"
 #include "collectibles.h"
 #include "character.h"
-#include "Pause.h"
+#include "Pause1.h"
+#include "Pause2.h"
 #include "globals.h"
 
 using namespace std;
@@ -20,8 +22,10 @@ enum GameState
     MAP,
     LEVEL1,
     LEVEL2,
+    LEVEL3,
     GAMEOVER,
-    PAUSE
+    PAUSE1,
+    PAUSE2
 };
 
 Collectibles collectible;
@@ -34,11 +38,12 @@ int main()
     Texture2D backgroundlevel1 = LoadTexture("./images/level1bg.png");
     float startTime = 0.0f;
     float elapsedTime = 0.0f;
-    float endTime = 120.0f;
+    float endTime = 60.0f;
     float RemainingTime = 0.0f;
 
     // Color OLIVE_GREEN = {107, 142, 35, 255};
     //  Current state of the game
+
     GameState currentState = MENU;
     Collectibles collectible;
     Texture2D currentMapImage = {0};
@@ -66,7 +71,7 @@ int main()
 
     // defining areas for each level
     // Defining areas for each level adjusted for a window size of 1260 x 700
-    Rectangle quidditchArea = {500, 300, 180, 117};    // Hogsmeade area
+    Rectangle quidditchArea = {500, 260, 180, 150};    // Quidditch area
     Rectangle forbiddenArea = {1080, 232, 180, 117};   // Forbidden area
     Rectangle mainbuildingArea = {720, 466, 270, 233}; // Main building area
 
@@ -122,6 +127,7 @@ int main()
             {
                 currentState = GAMEOVER;
                 startTime = GetTime();
+                InitGameOver();
             }
             break;
 
@@ -131,7 +137,7 @@ int main()
             if (RemainingTime <= 0) /* time up*/
             {
                 RemainingTime = 0;
-                currentState = PAUSE;
+                currentState = PAUSE1;
             }
             if (IsKeyDown(KEY_L))
             {
@@ -141,6 +147,17 @@ int main()
 
         case LEVEL2:
             UpdateLevel2();
+            if (gameWon) /* condition for winning */
+            {
+                currentState = PAUSE2; // Game over after winning
+            }
+            else if (gameOver) /* condition for losing */
+            {
+                currentState = GAMEOVER; // Game over after losing
+            }
+            break;
+        case LEVEL3:
+            UpdateLevel3();
             if (IsKeyDown(KEY_O)) /* condition for winning */
             {
                 currentState = GAMEOVER; // Game over after winning
@@ -159,11 +176,18 @@ int main()
             }
             break;
 
-        case PAUSE:
-            UpdatePause();
+        case PAUSE1:
+            UpdatePause1();
             if (IsKeyPressed(KEY_P))
             {
                 currentState = LEVEL2; // Move to the next level
+            }
+            break;
+        case PAUSE2:
+            UpdatePause2();
+            if (IsKeyPressed(KEY_L))
+            {
+                currentState = LEVEL3; // Move to the next level
             }
             break;
         }
@@ -223,19 +247,27 @@ int main()
             ClearBackground(darkGreen);
             DrawLevel2();
             break;
+        case LEVEL3:
+            ClearBackground(darkGreen);
+            DrawLevel3();
+            break;
 
         case GAMEOVER:
             DrawGameOver();
             break;
 
-        case PAUSE:
-            DrawPause();
+        case PAUSE1:
+            DrawPause1();
+            break;
+        case PAUSE2:
+            DrawPause2();
             break;
         }
 
         EndDrawing();
     }
     UnloadTexture(cloud);
+    UnloadGameOver();
     CloseWindow();
     return 0;
 }
