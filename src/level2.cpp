@@ -20,6 +20,10 @@ int coinsCollected = 0;           // Counter for collected coins
 float blastDisplayTime = 0.0f;    // Timer for blast display duration
 const float blastDuration = 1.0f; // Duration to display the blast (in seconds)
 
+void extraLife(){
+    CollectibleCount = CollectibleCount/5;
+}
+
 // Cell structure definition
 struct Cell
 {
@@ -476,7 +480,7 @@ void DrawLevel2()
     // Draw the remaining time
     DrawRemainingTime();
     // Display remaining collectibles
-    std::string collectibleText = "Collectibles Remaining: " + std::to_string(CollectibleCount);
+    std::string collectibleText = "Extra Lives: " + std::to_string(CollectibleCount);
     DrawText(collectibleText.c_str(), 10, 10, 20, BLUE); // Adjust position and color as needed
 
     // If the game is won, display the "You Win!" message

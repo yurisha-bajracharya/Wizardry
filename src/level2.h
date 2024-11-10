@@ -16,5 +16,6 @@ void UpdatePlayer();
 void MazeGenerator();
 void DrawMaze();
 void InitGrid();
+void extraLife();
 
 #endif // LEVEL2_H

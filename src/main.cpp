@@ -29,6 +29,7 @@ enum GameState
 };
 
 Collectibles collectible;
+bool extraLifeCalled = false;
 
 int main()
 {
@@ -169,6 +170,11 @@ int main()
             break;
 
         case LEVEL2:
+            if (!extraLifeCalled)
+            {
+                extraLife();
+                extraLifeCalled = true;
+            }
             UpdateLevel2();
             if (gameWon) /* condition for winning */
             {
