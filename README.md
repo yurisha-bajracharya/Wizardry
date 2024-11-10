@@ -7,10 +7,9 @@
 2. [Gameplay](#gameplay)
 3. [Features](#features)
 4. [Installation](#installation)
-5. [Requirements](#requirements)
-6. [How to Play](#how-to-play)
-7. [Contributors](#contributors)
-8. [Acknowledgments](#acknowledgments)
+5. [How to Play](#how-to-play)
+6. [Contributors](#contributors)
+
 
 ---
 
@@ -60,6 +59,31 @@ Through this project, we had the opportunity to apply our understanding of  C++ 
   Custom textures for characters and objects along with background music and sound effects that enhance immersion.
 
 ---
+## Installation
+1. **Install Dependencies**  
+   Before running the game, make sure you have Raylib installed. You can follow the installation instructions from the [Raylib website](https://www.raylib.com) or use a package manager like `vcpkg` (on Windows) or `brew` (on macOS).
+   <p align="center">
+🎥 <a href="https://www.youtube.com/watch?v=PaAcVk5jUd8">Video Tutorial on YouTube</a>
+</p>
+
+
+3. **Build the Game**  
+   After downloading or cloning the repository, you can compile the game by running the appropriate build command in your IDE or terminal:
+
+   - **For Visual Studio**:  
+     Open the project and press `F5` to compile and run the game.
+   
+   - **For Code::Blocks**:  
+     Open the project, press `F5` to compile and run the game.
+   
+   - **For CLion**:  
+     Open the project and press `Shift + F10` (or `F5` depending on your configuration) to compile and run the game.
+
+   - **For VS Code with Makefile**:
+     Ensure the `Makefile` is set up correctly (see the [Building the Game](#building-the-game) section for more details). Then press `F5` to run the game.
+
+4. **Run the Game**  
+   Once compiled, run the game by executing the generated binary or by pressing `F5` in your IDE. The game will start, and you can begin playing!
 
 ## How to Play
 
