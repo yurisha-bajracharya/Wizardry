@@ -17,7 +17,7 @@ const int cellCountY = screenHeight / cellSize;
 int CollectibleCount = 0;
 
 Character hp;
-Sound level1Music, hitSound, chimeMusic;
+Sound level1Music = {0}, hitSound = {0}, chimeMusic = {0};
 Texture2D characterimg;
 Texture2D characterimgfrozen;
 
@@ -248,10 +248,10 @@ void InitLevel1()
     {
         InitAudioDevice();
     }
-    level1Music = LoadSound("./audio/level1.mp3");
+    level1Music = LoadSound("./Audio/level1.mp3");
     PlaySound(level1Music);
-    chimeMusic = LoadSound("./audio/chime-sound.mp3");
-    hitSound = LoadSound("./audio/hit.mp3");
+    chimeMusic = LoadSound("./Audio/chime-sound.mp3");
+    hitSound = LoadSound("./Audio/hit.mp3");
     hp.isHpPaused = false;
 
     Image charimg = LoadImage("./images/hpright.png");
@@ -260,14 +260,25 @@ void InitLevel1()
     ImageResize(&charimgfrozen, 100, 100);
     characterimg = LoadTextureFromImage(charimg);
     characterimgfrozen = LoadTextureFromImage(charimgfrozen);
-
     UnloadImage(charimg);
     UnloadImage(charimgfrozen);
 }
 
 void UnloadLevel1()
 {
-    UnloadSound(level1Music);
+    if (IsAudioDeviceReady())
+    {
+        if (hitSound.frameCount > 0)
+            UnloadSound(hitSound);
+        if (chimeMusic.frameCount > 0)
+            UnloadSound(chimeMusic);
+        if (level1Music.frameCount > 0)
+            UnloadSound(level1Music);
+    }
+    else
+    {
+        cout << "Audio Device not ready" << endl;
+    }
     UnloadTexture(characterimg);
     UnloadTexture(characterimgfrozen);
     if (IsAudioDeviceReady())

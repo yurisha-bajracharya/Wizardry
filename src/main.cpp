@@ -29,16 +29,18 @@ enum GameState
 };
 
 Collectibles collectible;
+bool extraLifeCalled = false;
 
 int main()
 {
     InitWindow(1260, 700, "Wizardry"); // changed size of window
+    InitAudioDevice();
     SetTargetFPS(60);
     cout << "Window Initialized" << endl;
     Texture2D backgroundlevel1 = LoadTexture("./images/level1bg.png");
     float startTime = 0.0f;
     float elapsedTime = 0.0f;
-    float endTime = 60.0f;
+    float endTime = 120.0f;
     float RemainingTime = 0.0f;
 
     // Color OLIVE_GREEN = {107, 142, 35, 255};
@@ -55,6 +57,17 @@ int main()
     Texture2D cloud = LoadTexture("./images/bgclouds.png");
     const int numClouds = 5;           // number of clouds
     Vector2 cloudPositions[numClouds]; // position of clouds
+    Sound mapbgm = LoadSound("./Audio/mapbgm.mp3");
+    // to check if sound loaded or not
+    if (mapbgm.frameCount == 0)
+    {
+        cout << "mapbgm Sound not loaded" << endl;
+    }
+    else
+    {
+        cout << "Sound loaded" << endl;
+    }
+    Sound hovered = LoadSound("./Audio/hovered.mp3");
 
     // Initialize cloud positions with random values
     for (int i = 0; i < numClouds; i++)
@@ -96,6 +109,10 @@ int main()
             break;
 
         case MAP:
+            if (!IsSoundPlaying(mapbgm))
+            {
+                PlaySound(mapbgm);
+            }
             if (isHoveringQuidditch)
             {
                 currentMapImage = quidditchhovered;
@@ -114,21 +131,28 @@ int main()
             }
             if (isHoveringQuidditch && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
             {
+                StopSound(mapbgm);
+                PlaySound(hovered);
                 currentState = LEVEL1;
                 startTime = GetTime();
                 InitLevel1();
             }
             else if (isHoveringForbiddenForest && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
             {
+                StopSound(mapbgm);
+                PlaySound(hovered);
                 currentState = LEVEL2;
                 startTime = GetTime();
             }
             else if (isHoveringMainBuilding && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
             {
+                StopSound(mapbgm);
+                PlaySound(hovered);
                 currentState = GAMEOVER;
                 startTime = GetTime();
                 InitGameOver();
             }
+            // to stop playing sound after mapimg is not displayed
             break;
 
         case LEVEL1:
@@ -146,6 +170,11 @@ int main()
             break;
 
         case LEVEL2:
+            if (!extraLifeCalled)
+            {
+                extraLife();
+                extraLifeCalled = true;
+            }
             UpdateLevel2();
             if (gameWon) /* condition for winning */
             {
@@ -266,8 +295,10 @@ int main()
 
         EndDrawing();
     }
+    UnloadLevel1();
     UnloadTexture(cloud);
     UnloadGameOver();
+    UnloadSound(mapbgm);
     CloseWindow();
     return 0;
 }
