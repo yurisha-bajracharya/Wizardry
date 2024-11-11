@@ -1,9 +1,10 @@
 #include "C:\raylib\raylib\src\raylib.h"
 #include <iostream>
 #include "menu.h"
+#include "button.hpp"
 #include "level1.h"
 #include "level2.h"
-#include "level3.h"
+#include "level3.h" 
 #include "gameover.h"
 #include "collectibles.h"
 #include "character.h"
@@ -16,37 +17,36 @@ using namespace std;
 Color green = {173, 204, 96, 255};
 Color darkGreen = {43, 51, 24, 255};
 
-enum GameState
-{
-    MENU = 0,
-    MAP,
-    LEVEL1,
-    LEVEL2,
-    LEVEL3,
-    GAMEOVER,
-    PAUSE1,
-    PAUSE2
-};
+// enum GameState
+// {
+//     MENU = 0,
+//     MAP,
+//     LEVEL1,
+//     LEVEL2,
+//     LEVEL3,
+//     GAMEOVER,
+//     PAUSE1,
+//     PAUSE2
+// };
 
 Collectibles collectible;
-bool extraLifeCalled = false;
 
 int main()
 {
     InitWindow(1260, 700, "Wizardry"); // changed size of window
-    InitAudioDevice();
     SetTargetFPS(60);
     cout << "Window Initialized" << endl;
     Texture2D backgroundlevel1 = LoadTexture("./images/level1bg.png");
     float startTime = 0.0f;
     float elapsedTime = 0.0f;
-    float endTime = 120.0f;
+    float endTime = 60.0f;
     float RemainingTime = 0.0f;
-
+     bool exit= false;
     // Color OLIVE_GREEN = {107, 142, 35, 255};
     //  Current state of the game
-
     GameState currentState = MENU;
+    Menu menu;
+    menu.Init();
     Collectibles collectible;
     Texture2D currentMapImage = {0};
 
@@ -57,17 +57,6 @@ int main()
     Texture2D cloud = LoadTexture("./images/bgclouds.png");
     const int numClouds = 5;           // number of clouds
     Vector2 cloudPositions[numClouds]; // position of clouds
-    Sound mapbgm = LoadSound("./Audio/mapbgm.mp3");
-    // to check if sound loaded or not
-    if (mapbgm.frameCount == 0)
-    {
-        cout << "mapbgm Sound not loaded" << endl;
-    }
-    else
-    {
-        cout << "Sound loaded" << endl;
-    }
-    Sound hovered = LoadSound("./Audio/hovered.mp3");
 
     // Initialize cloud positions with random values
     for (int i = 0; i < numClouds; i++)
@@ -84,11 +73,11 @@ int main()
 
     // defining areas for each level
     // Defining areas for each level adjusted for a window size of 1260 x 700
-    Rectangle quidditchArea = {500, 260, 180, 150};    // Quidditch area
+    Rectangle quidditchArea = {500, 300, 180, 117};    // Hogsmeade area
     Rectangle forbiddenArea = {1080, 232, 180, 117};   // Forbidden area
     Rectangle mainbuildingArea = {720, 466, 270, 233}; // Main building area
 
-    while (!WindowShouldClose())
+    while (!WindowShouldClose() && !exit)
     {
         elapsedTime = GetTime() - startTime;
         RemainingTime = endTime - elapsedTime;
@@ -100,19 +89,14 @@ int main()
         switch (currentState)
         {
         case MENU:
-            UpdateMenu();
-            if (IsKeyPressed(KEY_ENTER))
-            {
-                currentState = MAP;
-                startTime = GetTime();
-            }
+        
+        menu.UpdateButtons(exit , currentState);
+        menu.UpdateAnimation();
+        menu.UpdateTypingEffect();
+    
             break;
 
         case MAP:
-            if (!IsSoundPlaying(mapbgm))
-            {
-                PlaySound(mapbgm);
-            }
             if (isHoveringQuidditch)
             {
                 currentMapImage = quidditchhovered;
@@ -131,28 +115,20 @@ int main()
             }
             if (isHoveringQuidditch && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
             {
-                StopSound(mapbgm);
-                PlaySound(hovered);
                 currentState = LEVEL1;
                 startTime = GetTime();
                 InitLevel1();
             }
             else if (isHoveringForbiddenForest && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
             {
-                StopSound(mapbgm);
-                PlaySound(hovered);
                 currentState = LEVEL2;
                 startTime = GetTime();
             }
             else if (isHoveringMainBuilding && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
             {
-                StopSound(mapbgm);
-                PlaySound(hovered);
                 currentState = GAMEOVER;
                 startTime = GetTime();
-                InitGameOver();
             }
-            // to stop playing sound after mapimg is not displayed
             break;
 
         case LEVEL1:
@@ -170,11 +146,6 @@ int main()
             break;
 
         case LEVEL2:
-            if (!extraLifeCalled)
-            {
-                extraLife();
-                extraLifeCalled = true;
-            }
             UpdateLevel2();
             if (gameWon) /* condition for winning */
             {
@@ -186,8 +157,8 @@ int main()
             }
             break;
         case LEVEL3:
-            UpdateLevel3();
-            if (IsKeyDown(KEY_O)) /* condition for winning */
+          UpdateLevel3();
+          if (IsKeyDown(KEY_O)) /* condition for winning */
             {
                 currentState = GAMEOVER; // Game over after winning
             }
@@ -240,7 +211,7 @@ int main()
         switch (currentState)
         {
         case MENU:
-            DrawMenu();
+            menu.Draw();
             break;
 
         case MAP:
@@ -295,10 +266,7 @@ int main()
 
         EndDrawing();
     }
-    UnloadLevel1();
     UnloadTexture(cloud);
-    UnloadGameOver();
-    UnloadSound(mapbgm);
     CloseWindow();
     return 0;
 }
