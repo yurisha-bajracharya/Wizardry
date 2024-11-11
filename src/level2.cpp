@@ -19,9 +19,12 @@ const int numCoinss = 35;
 int coinsCollected = 0;           // Counter for collected coins
 float blastDisplayTime = 0.0f;    // Timer for blast display duration
 const float blastDuration = 1.0f; // Duration to display the blast (in seconds)
+float moveCooldown = 0.2f;        // cooldown time between moves in sec
+float moveTimer = 0.0f;
 
-void extraLife(){
-    CollectibleCount = CollectibleCount/5;
+void extraLife()
+{
+    CollectibleCount = CollectibleCount / 5;
 }
 
 // Cell structure definition
@@ -114,7 +117,7 @@ void DrawMaze()
             // Draw cell background
             if (cell.visited)
             {
-                DrawRectangle(c * cellSize, r * cellSize, cellSize, cellSize, DARKGRAY);
+                DrawRectangle(c * cellSize, r * cellSize, cellSize, cellSize, DARKGREEN);
             }
             // Draw walls
             if (cell.walls[0])
@@ -129,16 +132,16 @@ void DrawMaze()
     }
 
     // Draw the player's frame and texture (Harry)
-    int playerFrameX = player.c * cellSize;                                          // X position of the player's frame
-    int playerFrameY = player.r * cellSize;                                          // Y position of the player's frame
-    DrawRectangle(playerFrameX, playerFrameY, cellSize - 1, cellSize - 1, DARKGRAY); // Frame background
+    int playerFrameX = player.c * cellSize;                                           // X position of the player's frame
+    int playerFrameY = player.r * cellSize;                                           // Y position of the player's frame
+    DrawRectangle(playerFrameX, playerFrameY, cellSize - 1, cellSize - 1, DARKGREEN); // Frame background
     // Draw the blast inside frame
-    int blastFrameX = blast.c * cellSize;                                          // X position of the player's frame
-    int blastFrameY = blast.r * cellSize;                                          // Y position of the player's frame
-    DrawRectangle(blastFrameX, blastFrameY, cellSize - 1, cellSize - 1, DARKGRAY); // Frame background
+    int blastFrameX = blast.c * cellSize;                                           // X position of the player's frame
+    int blastFrameY = blast.r * cellSize;                                           // Y position of the player's frame
+    DrawRectangle(blastFrameX, blastFrameY, cellSize - 1, cellSize - 1, DARKGREEN); // Frame background
 
     // Draw the player texture (scaled)
-    float playerScale = 0.1f; // Scale the player texture to 5% of original size
+    float playerScale = 0.1f;
     DrawTextureEx(player.texture,
                   Vector2{playerFrameX + (cellSize - player.texture.width * playerScale) / 2,
                           playerFrameY + (cellSize - player.texture.height * playerScale) / 2},
@@ -146,9 +149,9 @@ void DrawMaze()
     // Draw the blast texture if it's within the grid
     if (blast.r >= 0 && blast.c >= 0)
     {
-        int blastFrameX = blast.c * cellSize;                                          // X position of the blast's frame
-        int blastFrameY = blast.r * cellSize;                                          // Y position of the blast's frame
-        DrawRectangle(blastFrameX, blastFrameY, cellSize - 1, cellSize - 1, DARKGRAY); // Frame background
+        int blastFrameX = blast.c * cellSize;                                           // X position of the blast's frame
+        int blastFrameY = blast.r * cellSize;                                           // Y position of the blast's frame
+        DrawRectangle(blastFrameX, blastFrameY, cellSize - 1, cellSize - 1, DARKGREEN); // Frame background
 
         float blastScale = 0.1f; // Scale the blast texture to 5% of original size
         DrawTextureEx(blast.texture,
@@ -163,7 +166,7 @@ void DrawMaze()
     {
         int ghostFrameX = ghost.c * cellSize;
         int ghostFrameY = ghost.r * cellSize;
-        DrawRectangle(ghostFrameX, ghostFrameY, cellSize - 1, cellSize - 1, DARKGRAY); // Frame background
+        // DrawRectangle(ghostFrameX, ghostFrameY, cellSize - 1, cellSize - 1, DARKGREEN); // Frame background
 
         DrawTextureEx(ghost.texture,
                       Vector2{ghostFrameX + (cellSize - ghost.texture.width * ghostScale) / 2,
@@ -171,17 +174,17 @@ void DrawMaze()
                       0.0f, ghostScale, WHITE); // Draw the ghost texture
     }
     //  Draw coins inside a frame
-    float coinScale = 0.09f; // Scale coins to 8% of original size
+    float coinScale = 0.06f; // scales the coins to 6% of original size
     for (const Coin &coin : coins)
     {
         int coinFrameX = coin.c * cellSize;
         int coinFrameY = coin.r * cellSize;
-        DrawRectangle(coinFrameX, coinFrameY, cellSize - 1, cellSize - 1, DARKGRAY); // Frame background
+        // DrawRectangle(coinFrameX, coinFrameY, cellSize - 1, cellSize - 1, DARKGREEN); // Frame background
 
         DrawTextureEx(coin.texture,
                       Vector2{coinFrameX + (cellSize - coin.texture.width * coinScale) / 2,
                               coinFrameY + (cellSize - coin.texture.height * coinScale) / 2},
-                      0.0f, coinScale, DARKGRAY); // Draw the coin texture
+                      0.0f, coinScale, WHITE); // Draw the coin texture
     }
 }
 
@@ -244,22 +247,33 @@ void MazeGenerator()
 
 void UpdatePlayer()
 {
+    // update the movement timer
+    moveTimer += GetFrameTime();
+
     // Check for player movement
-    if ((IsKeyDown(KEY_UP) || IsKeyDown(KEY_W)) && !grid[player.r * ncols + player.c].walls[0])
-    { // Up
-        player.r--;
-    }
-    if ((IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D)) && !grid[player.r * ncols + player.c].walls[1])
-    { // Right
-        player.c++;
-    }
-    if ((IsKeyDown(KEY_DOWN) || IsKeyDown(KEY_S)) && !grid[player.r * ncols + player.c].walls[2])
-    { // Down
-        player.r++;
-    }
-    if ((IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A)) && !grid[player.r * ncols + player.c].walls[3])
-    { // Left
-        player.c--;
+    if (moveTimer >= moveCooldown)
+    {
+
+        if ((IsKeyDown(KEY_UP) || IsKeyDown(KEY_W)) && !grid[player.r * ncols + player.c].walls[0])
+        { // Up
+            player.r--;
+            moveTimer = 0.0f; // reset timer
+        }
+        if ((IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D)) && !grid[player.r * ncols + player.c].walls[1])
+        { // Right
+            player.c++;
+            moveTimer = 0.0f;
+        }
+        if ((IsKeyDown(KEY_DOWN) || IsKeyDown(KEY_S)) && !grid[player.r * ncols + player.c].walls[2])
+        { // Down
+            player.r++;
+            moveTimer = 0.0f;
+        }
+        if ((IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A)) && !grid[player.r * ncols + player.c].walls[3])
+        { // Left
+            player.c--;
+            moveTimer = 0.0f;
+        }
     }
 
     // Check for collision with Hermione
@@ -473,7 +487,7 @@ void UpdateLevel2()
 // DRAW level 2 function
 void DrawLevel2()
 {
-    ClearBackground(RAYWHITE);        // Clear the screen
+    ClearBackground(GRAY);            // Clear the screen
     DrawMaze();                       // Draw the maze
     DrawHermione(hermione, cellSize); // Draw Hermione
 
