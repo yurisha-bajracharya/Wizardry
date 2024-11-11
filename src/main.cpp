@@ -161,6 +161,7 @@ int main()
             if (RemainingTime <= 0) /* time up*/
             {
                 RemainingTime = 0;
+                InitPause1();
                 currentState = PAUSE1;
             }
             if (IsKeyDown(KEY_L))
@@ -206,9 +207,11 @@ int main()
             break;
 
         case PAUSE1:
+            PlaySound(mapbgm);
             UpdatePause1();
             if (IsKeyPressed(KEY_P))
             {
+                StopSound(mapbgm);
                 currentState = LEVEL2; // Move to the next level
             }
             break;
@@ -299,6 +302,7 @@ int main()
     UnloadTexture(cloud);
     UnloadGameOver();
     UnloadSound(mapbgm);
+    UnloadPause1();
     CloseWindow();
     return 0;
 }
