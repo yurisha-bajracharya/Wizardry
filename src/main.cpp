@@ -93,10 +93,15 @@ int main()
     Rectangle mainbuildingArea = {720, 466, 270, 233}; // Main building area
 
     // initializing
+    InitLevel1();
     InitPause1();
     InitGameOver();
     Texture2D newgame = LoadTexture("./images/newgame.png");
     Texture2D menuimg = LoadTexture("./images/menuimg.png");
+    playagainbutton.SetPosition(80, 600);
+    menubutton.SetPosition(920, 600);
+    playagainbutton.scale = 0.65f;
+    menubutton.scale = 0.45f;
 
     while (!WindowShouldClose())
     {
@@ -148,7 +153,6 @@ int main()
                 PlaySound(hovered);
                 currentState = LEVEL1;
                 startTime = GetTime();
-                InitLevel1();
             }
             else if (isHoveringForbiddenForest && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
             {
@@ -224,16 +228,16 @@ int main()
             {
                 currentState = MENU; // Return to the main menu
             }
-            bool mousePressed = IsMouseButtonPressed(MOUSE_BUTTON_LEFT);
+            bool mousePressed = IsMouseButtonPressed(MOUSE_LEFT_BUTTON);
             {
-                if (playagainbutton.isPressed(mousePosition, mousePressed))
+                if (playagainbutton.isPressed(mousePosition, mousePressed, playagainbutton.position, playagainbutton.scale))
                 {
                     currentState = LEVEL1; // Move to the next level
                     cout << "Play again button is pressed" << endl;
                 }
-                if (menubutton.isPressed(mousePosition, mousePressed))
+                if (menubutton.isPressed(mousePosition, mousePressed, menubutton.position, menubutton.scale))
                 {
-                    currentState = MENU; 
+                    currentState = MENU;
                     cout << "Menu is pressed" << endl;
                 }
             }
@@ -325,8 +329,8 @@ int main()
 
         case GAMEOVER:
             DrawGameOver();
-            playagainbutton.Draw(newgame, Vector2{80, 500}, 0.65f);
-            menubutton.Draw(menuimg, Vector2{900, 500}, 0.45f);
+            playagainbutton.Draw(newgame, playagainbutton.scale);
+            menubutton.Draw(menuimg, menubutton.scale);
             break;
 
         case PAUSE1:

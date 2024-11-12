@@ -44,7 +44,6 @@ void DrawGameOver()
 {
     ClearBackground(RAYWHITE);
     DrawTexture(background, 0, 0, WHITE);
-    DrawTexture(gameoverimg, 0, 0, WHITE);
-
-    DrawText("Game Over - Press ENTER to Return toothee Menuuuu", 100, 100, 20, DARKGRAY);
+    // to scale image also
+    DrawTextureEx(gameoverimg, {800, 200}, 0, 0.5f, WHITE);
 }

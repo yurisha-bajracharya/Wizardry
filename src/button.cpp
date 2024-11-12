@@ -15,7 +15,7 @@ Button::~Button()
         UnloadTexture(texture);
     }
 }
-void Button::Draw(Texture2D texture, Vector2 position, float scale)
+void Button::Draw(Texture2D texture, float scale)
 {
     if (texture.id != 0)
     {
@@ -26,15 +26,25 @@ void Button::Draw(Texture2D texture, Vector2 position, float scale)
         cout << "Texture not loaded, button texturee" << endl;
     }
 }
-bool Button::isPressed(Vector2 mousePos, bool mousePressed)
+bool Button::isPressed(Vector2 mousePos, bool mousePressed, Vector2 position, float scale)
 {
-    Rectangle rect = {position.x, position.y, static_cast<float>(texture.width), static_cast<float>(texture.height)};
+    Rectangle rect = {position.x, position.y, 430, 150};
+    cout << "mousepressed: " << mousePressed << endl;
     if (CheckCollisionPointRec(mousePos, rect) && mousePressed)
     {
         return true;
+        cout << "Button is pressed!!!" << endl;
+        cout << "Mouse position: " << mousePos.x << ", " << mousePos.y << endl;
+        cout << "Button position: " << position.x << ", " << position.y << endl;
     }
     else
     {
         return false;
     }
+}
+
+void Button::SetPosition(float x, float y)
+{
+    position.x = x;
+    position.y = y;
 }
