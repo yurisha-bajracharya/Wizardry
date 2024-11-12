@@ -4,29 +4,27 @@
 
 using namespace std;
 
-Button::Button() : texture{0}, position{0, 0}
+Button::Button() : texture{0}, position{0, 0}, scale{1.0f}
 {
 }
-Button::Button(const char *imagepath, Vector2 imageposition, float scale)
-{
-    Image image = LoadImage(imagepath);
-    int originalwidth = image.width;
-    int originalheight = image.height;
-    int newwidth = static_cast<int>(originalwidth * scale);
-    int newheight = static_cast<int>(originalheight * scale);
-    ImageResize(&image, newwidth, newheight);
-    texture = LoadTextureFromImage(image);
-    UnloadImage(image);
-    position = imageposition;
-    cout << "imgpath:" << imagepath << endl;
-}
+
 Button::~Button()
 {
-    UnloadTexture(texture);
+    if (texture.id != 0)
+    {
+        UnloadTexture(texture);
+    }
 }
-void Button::Draw()
+void Button::Draw(Texture2D texture, Vector2 position, float scale)
 {
-    DrawTextureV(texture, position, WHITE);
+    if (texture.id != 0)
+    {
+        DrawTextureEx(texture, position, 0.0f, scale, WHITE); // syntax: DrawTextureEx(Texture2D texture, Vector2 position, float rotation, float scale, Color tint)
+    }
+    else
+    {
+        cout << "Texture not loaded, button texturee" << endl;
+    }
 }
 bool Button::isPressed(Vector2 mousePos, bool mousePressed)
 {

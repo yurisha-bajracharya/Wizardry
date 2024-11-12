@@ -6,8 +6,7 @@
 
 Texture2D background;
 Sound sound;
-Button playagainbutton;
-Button menu;
+
 Texture2D gameoverimg;
 
 void InitGameOver()
@@ -22,8 +21,7 @@ void InitGameOver()
     sound = LoadSound("./Audio/music.mp3");
     if (sound.frameCount == 0)
         std::cerr << "sound not loaded" << std::endl;
-    playagainbutton = Button("./images/replay.png", {80, 700}, 0.35); // syntax: Button(const char *imagepath, Vector2 imageposition, float scale)
-    menu = Button("./images/menu.png", {1100, 700}, 0.65);
+
     std::cout << "game over screen initialized" << std::endl;
 }
 
@@ -40,16 +38,6 @@ void UpdateGameOver()
     {
         PlaySound(sound);
     }
-    Vector2 mousePosition = GetMousePosition();
-    bool mousePressed = IsMouseButtonPressed(MOUSE_BUTTON_LEFT);
-    if (playagainbutton.isPressed(mousePosition, mousePressed))
-    {
-        std::cout << "Play again button is pressed" << std::endl;
-    }
-    if (menu.isPressed(mousePosition, mousePressed))
-    {
-        std::cout << "Menu is pressed" << std::endl;
-    }
 }
 
 void DrawGameOver()
@@ -57,7 +45,6 @@ void DrawGameOver()
     ClearBackground(RAYWHITE);
     DrawTexture(background, 0, 0, WHITE);
     DrawTexture(gameoverimg, 0, 0, WHITE);
-    playagainbutton.Draw();
-    menu.Draw();
-    DrawText("Game Over - Press ENTER to Return toothee Menu", 100, 100, 20, DARKGRAY);
+
+    DrawText("Game Over - Press ENTER to Return toothee Menuuuu", 100, 100, 20, DARKGRAY);
 }

@@ -10,6 +10,7 @@
 #include "Pause1.h"
 #include "Pause2.h"
 #include "globals.h"
+#include "button.h"
 
 using namespace std;
 
@@ -30,6 +31,9 @@ enum GameState
 
 Collectibles collectible;
 bool extraLifeCalled = false;
+// Button nextLevelButton;
+Button playagainbutton;
+Button menubutton;
 
 int main()
 {
@@ -88,6 +92,12 @@ int main()
     Rectangle forbiddenArea = {1080, 232, 180, 117};   // Forbidden area
     Rectangle mainbuildingArea = {720, 466, 270, 233}; // Main building area
 
+    // initializing
+    InitPause1();
+    InitGameOver();
+    Texture2D newgame = LoadTexture("./images/newgame.png");
+    Texture2D menuimg = LoadTexture("./images/menuimg.png");
+
     while (!WindowShouldClose())
     {
         elapsedTime = GetTime() - startTime;
@@ -100,6 +110,7 @@ int main()
         switch (currentState)
         {
         case MENU:
+        {
             UpdateMenu();
             if (IsKeyPressed(KEY_ENTER))
             {
@@ -107,8 +118,10 @@ int main()
                 startTime = GetTime();
             }
             break;
+        }
 
         case MAP:
+        {
             if (!IsSoundPlaying(mapbgm))
             {
                 PlaySound(mapbgm);
@@ -154,23 +167,26 @@ int main()
             }
             // to stop playing sound after mapimg is not displayed
             break;
+        }
 
         case LEVEL1:
+        {
             UpdateLevel1();
             // collectible.UpdateBludgers();
             if (RemainingTime <= 0) /* time up*/
             {
                 RemainingTime = 0;
-                InitPause1();
                 currentState = PAUSE1;
             }
             if (IsKeyDown(KEY_L))
             {
-                currentState = LEVEL2;
+                currentState = PAUSE1;
             }
             break;
+        }
 
         case LEVEL2:
+        {
             if (!extraLifeCalled)
             {
                 extraLife();
@@ -186,7 +202,9 @@ int main()
                 currentState = GAMEOVER; // Game over after losing
             }
             break;
+        }
         case LEVEL3:
+        {
             UpdateLevel3();
             if (IsKeyDown(KEY_O)) /* condition for winning */
             {
@@ -197,16 +215,33 @@ int main()
                 currentState = GAMEOVER; // Game over after losing
             }
             break;
+        }
 
         case GAMEOVER:
+        {
             UpdateGameOver();
             if (IsKeyPressed(KEY_ENTER))
             {
                 currentState = MENU; // Return to the main menu
             }
+            bool mousePressed = IsMouseButtonPressed(MOUSE_BUTTON_LEFT);
+            {
+                if (playagainbutton.isPressed(mousePosition, mousePressed))
+                {
+                    currentState = LEVEL1; // Move to the next level
+                    cout << "Play again button is pressed" << endl;
+                }
+                if (menubutton.isPressed(mousePosition, mousePressed))
+                {
+                    currentState = MENU; 
+                    cout << "Menu is pressed" << endl;
+                }
+            }
             break;
+        }
 
         case PAUSE1:
+        {
             PlaySound(mapbgm);
             UpdatePause1();
             if (IsKeyPressed(KEY_P))
@@ -215,13 +250,17 @@ int main()
                 currentState = LEVEL2; // Move to the next level
             }
             break;
+        }
+
         case PAUSE2:
+        {
             UpdatePause2();
             if (IsKeyPressed(KEY_L))
             {
                 currentState = LEVEL3; // Move to the next level
             }
             break;
+        }
         }
         // Update cloud positions
         for (int i = 0; i < numClouds; i++)
@@ -286,6 +325,8 @@ int main()
 
         case GAMEOVER:
             DrawGameOver();
+            playagainbutton.Draw(newgame, Vector2{80, 500}, 0.65f);
+            menubutton.Draw(menuimg, Vector2{900, 500}, 0.45f);
             break;
 
         case PAUSE1:
