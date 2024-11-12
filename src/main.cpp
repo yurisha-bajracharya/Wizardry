@@ -62,6 +62,7 @@ int main()
     const int numClouds = 5;           // number of clouds
     Vector2 cloudPositions[numClouds]; // position of clouds
     Sound mapbgm = LoadSound("./Audio/mapbgm.mp3");
+    Sound level1Music = LoadSound("./Audio/level1.mp3");
     // to check if sound loaded or not
     if (mapbgm.frameCount == 0)
     {
@@ -175,15 +176,21 @@ int main()
 
         case LEVEL1:
         {
+            if (!IsSoundPlaying(level1Music))
+            {
+                PlaySound(level1Music);
+            }
             UpdateLevel1();
             // collectible.UpdateBludgers();
             if (RemainingTime <= 0) /* time up*/
             {
                 RemainingTime = 0;
+                StopSound(level1Music);
                 currentState = PAUSE1;
             }
             if (IsKeyDown(KEY_L))
             {
+                StopSound(level1Music);
                 currentState = PAUSE1;
             }
             break;
@@ -347,6 +354,7 @@ int main()
     UnloadTexture(cloud);
     UnloadGameOver();
     UnloadSound(mapbgm);
+    UnloadSound(level1Music);
     UnloadPause1();
     CloseWindow();
     return 0;
