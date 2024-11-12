@@ -34,6 +34,8 @@ bool extraLifeCalled = false;
 // Button nextLevelButton;
 Button playagainbutton;
 Button menubutton;
+Button startButton;
+Button exitButton;
 
 int main()
 {
@@ -98,10 +100,16 @@ int main()
     InitGameOver();
     Texture2D newgame = LoadTexture("./images/newgame.png");
     Texture2D menuimg = LoadTexture("./images/menuimg.png");
+    Texture2D startB = LoadTexture("./images/start.png");
+    Texture2D exitB = LoadTexture("./images/exit.png");
     playagainbutton.SetPosition(80, 600);
     menubutton.SetPosition(920, 600);
+    startButton.SetPosition(1040, 100);
+    exitButton.SetPosition(1040, 200);
     playagainbutton.scale = 0.65f;
     menubutton.scale = 0.45f;
+    exitButton.scale = 0.5;
+    startButton.scale= 0.5;
 
     while (!WindowShouldClose())
     {
@@ -116,11 +124,23 @@ int main()
         {
         case MENU:
         {
+            InitMenu();
             UpdateMenu();
             if (IsKeyPressed(KEY_ENTER))
             {
                 currentState = MAP;
                 startTime = GetTime();
+            }
+            bool mousePressed = IsMouseButtonPressed(MOUSE_LEFT_BUTTON);
+            {
+                if (startButton.isPressed(mousePosition, mousePressed, startButton.position, startButton.scale))
+                {
+                    currentState = MAP; // Move to map
+                }
+                if (exitButton.isPressed(mousePosition, mousePressed, exitButton.position, exitButton.scale))
+                {
+                   CloseWindow();
+                }
             }
             break;
         }
@@ -287,6 +307,8 @@ int main()
         {
         case MENU:
             DrawMenu();
+            startButton.Draw(startB, startButton.scale);
+            exitButton.Draw(exitB, exitButton.scale);
             break;
 
         case MAP:
