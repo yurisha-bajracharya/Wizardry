@@ -1,0 +1,194 @@
+#include <raylib.h>
+#include<iostream>
+#include<string.h>
+#include "button.hpp"
+#define MAX_LINES 6 // Maximum number of lines in the area
+#define MAX_CHARACTERS_PER_LINE 35  // Maximum characters per line before wrapping
+
+int main()
+{
+ 
+   InitWindow(1400, 800, "Home Window") ;
+  
+      InitAudioDevice();
+    Music music=LoadMusicStream("picture/main.mp3");
+    PlayMusicStream(music);
+     SetTargetFPS(60);
+   background= LoadTexture("picture/ok.png");
+    broom = LoadTexture("picture/cute.png");
+      stand= LoadTexture("picture/stand.png");
+
+   Button startButton{"picture/start.png",{1155,280},0.8};
+   Button aboutButton{"picture/about.png",{1155,380},0.8};
+   // Button creditButton{"picture/credit.png",{1155,475},0.78};
+   Button exitButton{"picture/exit.png" , {1155, 480}, 0.8};
+   bool exit=false;
+   int frameCount=6;
+   Rectangle frameRec={0.0f,0.0f,(float)broom.width,(float)broom.height};
+   Rectangle frameRec2={0.0f,0.0f,(float)stand.width,(float)stand.height};
+   int currentframe=0;
+   int frameCounter=0;
+   int frameSpeed= 5;
+   float delayTime=1.5f;
+   float timeElapsed=0.0f;
+
+  Vector2 initialPosition={0, 800/*screenheight*/- frameRec.height-10};//initial position of the image
+  Vector2 targetPosition={1400/*screenwidth*//2.0f- frameRec.width/4.0f, initialPosition.y};
+  Vector2 standPosition={1400/*screenwidth*//2.0f- frameRec2.width/4.0f,800-frameRec2.height};
+bool isBroom=true;
+bool isReachedTarget= false;
+
+bool timeForText= false;
+
+//*******************************FOR TEXT******************************
+    const char* messages[] = {
+        "Hello There!!! Ready to conquer?",
+        "I hope you are ready.But hey don't hit (START) just yet! ",
+        "Master the game by first mastering the rules.",
+        "Take a moment to check about page -it could save you from a few extra lives",
+        "Good luck with the Game.",
+        " "
+        
+    };
+        // Font and text size
+   Font font = GetFontDefault();
+    int messageIndex = 0;  // Current message being displayed
+     int charIndex = 0;     // Number of characters displayed
+    float typingSpeed = 0.05f;  // Typing speed (lower = faster)
+    float timePassed = 0.0f;  // Time elapsed for typing
+    int totalMessages = sizeof(messages) / sizeof(messages[0]);
+
+    Rectangle textArea = { 850, 670, 0, 100 };  // Area to display text (x, y, width, height)
+    int lineHeight = 40;  // Line height for spacing between lines
+
+
+ while(WindowShouldClose()==false && exit==false)
+   {
+   UpdateMusicStream(music);
+
+//*****************For updating the broom frame until final position has reached************************
+
+if( isBroom &&initialPosition.x < targetPosition.x)
+{
+  frameCounter++;
+ 
+ if(frameCounter>=(60/frameSpeed))
+ {
+  frameCounter=0;
+  currentframe++;
+
+  if(currentframe>= frameCount) currentframe=0;
+  frameRec.x=(float)currentframe* frameRec.width;//update the frame rectangle
+}
+//move the character 
+initialPosition.x +=1.0f;//adjust the movement from here
+}
+if(!isReachedTarget && initialPosition.x >=targetPosition.x)
+{
+   isReachedTarget=true;
+}
+if (isReachedTarget && isBroom)
+{
+   timeElapsed+=GetFrameTime();
+   if(timeElapsed>=delayTime)
+   {
+      isBroom= false;
+   }
+}
+if (!isBroom)
+{
+timeForText=true;
+}
+
+//******************************FOR TEXT ************************************************
+ // Check if space is pressed to load the next message
+ if(timeForText)
+ {
+        if (IsKeyPressed(KEY_SPACE) && messageIndex < totalMessages-1 ) {
+            messageIndex++;  // Move to the next message
+            charIndex = 0;   // Reset character index for new message
+            timePassed = 0.0f;  // Reset timer
+        }
+
+        // Update the time and characters for typing effect 
+        timePassed += GetFrameTime();
+        if (timePassed >= typingSpeed && charIndex < strlen(messages[messageIndex])) {
+            charIndex++;
+            timePassed = 0.0f;  // Reset timer for next character
+        }
+ }
+
+
+Vector2 mousePosition=GetMousePosition();
+    bool mousePressed =IsMouseButtonPressed(MOUSE_BUTTON_LEFT);
+
+    if(startButton.isPressed(mousePosition,mousePressed))
+    {
+       std::cout<<"Start button is pressed"<<std::endl;
+    }
+       if(aboutButton.isPressed(mousePosition,mousePressed))
+    {
+       std::cout<<"About button is pressed"<<std::endl;
+    }
+   //      if(creditButton.isPressed(mousePosition,mousePressed))
+   //  {
+   //     std::cout<<"Credit button is pressed"<<std::endl;
+   //  }
+    if(exitButton.isPressed(mousePosition,mousePressed))
+    {
+      exit=true;
+    }
+    
+
+BeginDrawing();
+ClearBackground(BLACK);
+DrawTexture(background,0,0,WHITE);
+//*********************************FOR SWITCHING IMAGES****************************************
+if(isBroom){
+DrawTextureRec(broom, frameRec, initialPosition,WHITE);
+}
+else
+{
+DrawTextureRec(stand,frameRec2, standPosition,WHITE);
+}
+//*********************************FOR TEXT*************************************************
+ // Draw text within the specific area
+        int currentCharIndex = 0;
+        int line = 0;
+        for (int i = 0; i < charIndex && line < MAX_LINES; i++) {
+            // Handle word wrapping: draw characters line by line within the area
+           
+            if ( timeForText &&currentCharIndex >= MAX_CHARACTERS_PER_LINE || messages[messageIndex][i] == '\n') {
+                line++;  // Move to the next line
+                currentCharIndex = 0;
+            }
+            if (  line < MAX_LINES) {
+                DrawTextEx(font,TextFormat("%c", messages[messageIndex][i]), (Vector2){textArea.x + currentCharIndex * 16, 
+                         textArea.y + line * lineHeight},25,2,WHITE);
+                currentCharIndex++;
+          
+            }
+         }
+        // Draw an instruction to press space for the next message
+    if (timeForText && messageIndex < totalMessages-1 && charIndex== strlen(messages[messageIndex]))
+     {
+            DrawText("Press SPACE for next message", 1000, 770, 20, WHITE);
+            
+        }
+        
+
+startButton.Draw();
+aboutButton.Draw();
+// creditButton.Draw();
+exitButton.Draw();
+   
+ EndDrawing();
+ }
+ UnloadTexture(broom);
+ UnloadTexture(stand);
+   UnloadMusicStream(music);
+    CloseAudioDevice();
+    
+     CloseWindow();
+     return 0;
+   }
