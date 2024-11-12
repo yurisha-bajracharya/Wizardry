@@ -31,6 +31,6 @@ void UpdatePause1()
 void DrawPause1()
 {
     DrawTexture(pause1bg, 0, 0, WHITE);
-    DrawTextEx(myfont2, ("You earned total " + std::to_string(CollectibleCount) + " snitches.").c_str(), (Vector2){20, 20}, 20, 2, BLACK);
-    DrawTextEx(myfont1, ("You get a total of " + std::to_string(CollectibleCount / 5) + " extra lives \n for the next round!").c_str(), (Vector2){20, 50}, 28, 2, BLACK);
+    DrawTextEx(myfont2, (std::to_string(CollectibleCount)).c_str(), (Vector2){390, 36}, 43, 2, BLACK);
+    DrawTextEx(myfont1, (std::to_string(CollectibleCount / 5)).c_str(), (Vector2){370, 87}, 50, 2, BLACK);
 }

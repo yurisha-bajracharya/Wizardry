@@ -97,6 +97,7 @@ int main()
     // initializing
     InitLevel1();
     InitPause1();
+    InitPause2();
     InitGameOver();
     Texture2D newgame = LoadTexture("./images/newgame.png");
     Texture2D menuimg = LoadTexture("./images/menuimg.png");
@@ -226,6 +227,11 @@ int main()
             {
                 currentState = PAUSE2; // Game over after winning
             }
+            else if (IsKeyDown(KEY_L))
+            {
+                StopSound(mapbgm);
+                currentState = PAUSE2;
+            }
             else if (gameOver) /* condition for losing */
             {
                 currentState = GAMEOVER; // Game over after losing
@@ -301,10 +307,24 @@ int main()
 
         case PAUSE2:
         {
+            if (!IsSoundPlaying(gameovermusic))
+            {
+                PlaySound(gameovermusic);
+            }
             UpdatePause2();
             if (IsKeyPressed(KEY_L))
             {
+                StopSound(mapbgm);
                 currentState = LEVEL3; // Move to the next level
+            }
+            bool mousePressed = IsMouseButtonPressed(MOUSE_LEFT_BUTTON);
+            {
+                StopSound(mapbgm);
+                if (nextbutton.isPressed(mousePosition, mousePressed, nextbutton.position, nextbutton.scale))
+                {
+                    currentState = LEVEL3; // Move to the next level
+                    cout << "level2 reached" << endl;
+                }
             }
             break;
         }
@@ -382,6 +402,7 @@ int main()
             break;
         case PAUSE2:
             DrawPause2();
+            nextbutton.Draw(next, nextbutton.scale);
             break;
         }
 
