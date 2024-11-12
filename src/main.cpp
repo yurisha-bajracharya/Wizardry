@@ -34,6 +34,7 @@ bool extraLifeCalled = false;
 // Button nextLevelButton;
 Button playagainbutton;
 Button menubutton;
+Button nextbutton;
 
 int main()
 {
@@ -62,6 +63,7 @@ int main()
     const int numClouds = 5;           // number of clouds
     Vector2 cloudPositions[numClouds]; // position of clouds
     Sound mapbgm = LoadSound("./Audio/mapbgm.mp3");
+    Sound level1Music = LoadSound("./Audio/level1.mp3");
     // to check if sound loaded or not
     if (mapbgm.frameCount == 0)
     {
@@ -98,10 +100,14 @@ int main()
     InitGameOver();
     Texture2D newgame = LoadTexture("./images/newgame.png");
     Texture2D menuimg = LoadTexture("./images/menuimg.png");
+    Texture2D next = LoadTexture("./images/next.png");
     playagainbutton.SetPosition(80, 600);
     menubutton.SetPosition(920, 600);
     playagainbutton.scale = 0.65f;
     menubutton.scale = 0.45f;
+    nextbutton.SetPosition(920, 600);
+    nextbutton.scale = 0.45f;
+    Sound gameovermusic = LoadSound("./Audio/music.mp3");
 
     while (!WindowShouldClose())
     {
@@ -150,21 +156,30 @@ int main()
             if (isHoveringQuidditch && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
             {
                 StopSound(mapbgm);
-                PlaySound(hovered);
+                if (!IsSoundPlaying(hovered))
+                {
+                    PlaySound(hovered);
+                }
                 currentState = LEVEL1;
                 startTime = GetTime();
             }
             else if (isHoveringForbiddenForest && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
             {
                 StopSound(mapbgm);
-                PlaySound(hovered);
+                if (!IsSoundPlaying(hovered))
+                {
+                    PlaySound(hovered);
+                }
                 currentState = LEVEL2;
                 startTime = GetTime();
             }
             else if (isHoveringMainBuilding && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
             {
                 StopSound(mapbgm);
-                PlaySound(hovered);
+                if (!IsSoundPlaying(hovered))
+                {
+                    PlaySound(hovered);
+                }
                 currentState = GAMEOVER;
                 startTime = GetTime();
                 InitGameOver();
@@ -175,15 +190,21 @@ int main()
 
         case LEVEL1:
         {
+            if (!IsSoundPlaying(level1Music))
+            {
+                PlaySound(level1Music);
+            }
             UpdateLevel1();
             // collectible.UpdateBludgers();
             if (RemainingTime <= 0) /* time up*/
             {
                 RemainingTime = 0;
+                StopSound(level1Music);
                 currentState = PAUSE1;
             }
             if (IsKeyDown(KEY_L))
             {
+                StopSound(level1Music);
                 currentState = PAUSE1;
             }
             break;
@@ -191,6 +212,10 @@ int main()
 
         case LEVEL2:
         {
+            if (IsSoundPlaying(gameovermusic))
+            {
+                StopSound(gameovermusic);
+            }
             if (!extraLifeCalled)
             {
                 extraLife();
@@ -223,6 +248,10 @@ int main()
 
         case GAMEOVER:
         {
+            if (!IsSoundPlaying(gameovermusic))
+            {
+                PlaySound(gameovermusic);
+            }
             UpdateGameOver();
             if (IsKeyPressed(KEY_ENTER))
             {
@@ -234,11 +263,13 @@ int main()
                 {
                     currentState = LEVEL1; // Move to the next level
                     cout << "Play again button is pressed" << endl;
+                    StopSound(gameovermusic);
                 }
                 if (menubutton.isPressed(mousePosition, mousePressed, menubutton.position, menubutton.scale))
                 {
                     currentState = MENU;
                     cout << "Menu is pressed" << endl;
+                    StopSound(gameovermusic);
                 }
             }
             break;
@@ -246,12 +277,24 @@ int main()
 
         case PAUSE1:
         {
-            PlaySound(mapbgm);
+            if (!IsSoundPlaying(gameovermusic))
+            {
+                PlaySound(gameovermusic);
+            }
             UpdatePause1();
             if (IsKeyPressed(KEY_P))
             {
                 StopSound(mapbgm);
                 currentState = LEVEL2; // Move to the next level
+            }
+            bool mousePressed = IsMouseButtonPressed(MOUSE_LEFT_BUTTON);
+            {
+                StopSound(mapbgm);
+                if (nextbutton.isPressed(mousePosition, mousePressed, nextbutton.position, nextbutton.scale))
+                {
+                    currentState = LEVEL2; // Move to the next level
+                    cout << "level2 reached" << endl;
+                }
             }
             break;
         }
@@ -335,6 +378,7 @@ int main()
 
         case PAUSE1:
             DrawPause1();
+            nextbutton.Draw(next, nextbutton.scale);
             break;
         case PAUSE2:
             DrawPause2();
@@ -347,6 +391,9 @@ int main()
     UnloadTexture(cloud);
     UnloadGameOver();
     UnloadSound(mapbgm);
+    UnloadSound(level1Music);
+    UnloadSound(gameovermusic);
+    UnloadSound(hovered);
     UnloadPause1();
     CloseWindow();
     return 0;

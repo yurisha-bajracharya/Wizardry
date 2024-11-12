@@ -5,7 +5,6 @@
 #include "button.h"
 
 Texture2D background;
-Sound sound;
 
 Texture2D gameoverimg;
 
@@ -16,12 +15,6 @@ void InitGameOver()
     if (background.id == 0)
         std::cerr << "background not loaded" << std::endl;
     gameoverimg = LoadTexture("./images/gameover.png");
-    if (gameoverimg.id == 0)
-        std::cerr << "gameover not loaded" << std::endl;
-    sound = LoadSound("./Audio/music.mp3");
-    if (sound.frameCount == 0)
-        std::cerr << "sound not loaded" << std::endl;
-
     std::cout << "game over screen initialized" << std::endl;
 }
 
@@ -29,15 +22,9 @@ void UnloadGameOver()
 {
     UnloadTexture(background);
     UnloadTexture(gameoverimg);
-    UnloadSound(sound);
 }
 void UpdateGameOver()
 {
-
-    if (IsKeyPressed(KEY_SPACE))
-    {
-        PlaySound(sound);
-    }
 }
 
 void DrawGameOver()

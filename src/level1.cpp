@@ -17,7 +17,8 @@ const int cellCountY = screenHeight / cellSize;
 int CollectibleCount = 0;
 
 Character hp;
-Sound level1Music = {0}, hitSound = {0}, chimeMusic = {0};
+// Sound level1Music = {0},
+Sound hitSound = {0}, chimeMusic = {0};
 Texture2D characterimg;
 Texture2D characterimgfrozen;
 
@@ -248,8 +249,8 @@ void InitLevel1()
     {
         InitAudioDevice();
     }
-    level1Music = LoadSound("./Audio/level1.mp3");
-    PlaySound(level1Music);
+    // level1Music = LoadSound("./Audio/level1.mp3");
+    // PlaySound(level1Music);
     chimeMusic = LoadSound("./Audio/chime-sound.mp3");
     hitSound = LoadSound("./Audio/hit.mp3");
     hp.isHpPaused = false;
@@ -272,8 +273,8 @@ void UnloadLevel1()
             UnloadSound(hitSound);
         if (chimeMusic.frameCount > 0)
             UnloadSound(chimeMusic);
-        if (level1Music.frameCount > 0)
-            UnloadSound(level1Music);
+        // if (level1Music.frameCount > 0)
+        //     UnloadSound(level1Music);
     }
     else
     {
