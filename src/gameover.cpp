@@ -2,7 +2,7 @@
 #include "gameover.h"
 #include <iostream>
 #include <stdio.h>
-#include "button.h"
+#include "button.hpp"
 
 Texture2D background;
 Sound sound;

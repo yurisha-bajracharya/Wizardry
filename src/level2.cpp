@@ -84,7 +84,7 @@ float collisionTime = 5.0f; // Timer for how long to pause the music
 
 // Timer variables
 auto startTime = std::chrono::steady_clock::now();
-auto endTime = startTime + std::chrono::minutes(6);
+auto endTime = startTime + std::chrono::minutes(2);
 
 // Function to initialize the grid
 void InitGrid()

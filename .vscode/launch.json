@@ -1,6 +1,7 @@
 {
   "version": "0.2.0",
   "configurations": [
+    
     {
       "name": "Debug",
       "type": "cppdbg",
@@ -60,8 +61,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": true,
-      "cwd": "c:/Users/shruti/Desktop/Wizardry-main/src",
-      "program": "c:/Users/shruti/Desktop/Wizardry-main/src/build/Debug/outDebug",
+      "cwd": "c:/Users/shruti/Desktop/Wizardry-swarnima/src",
+      "program": "c:/Users/shruti/Desktop/Wizardry-swarnima/src/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [
