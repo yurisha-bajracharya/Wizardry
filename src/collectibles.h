@@ -1,6 +1,7 @@
 // collectibles.h
 #ifndef COLLECTIBLES_H
 #define COLLECTIBLES_H
+#include "C:\raylib\raylib\src\raylib.h"
 
 extern int CollectibleCount; // declaring CollectibleCount as an external variable
 
