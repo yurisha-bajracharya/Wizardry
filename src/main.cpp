@@ -7,6 +7,7 @@
 #include "gameover.h"
 #include "collectibles.h"
 #include "character.h"
+#include "Pause.h"
 #include "Pause1.h"
 #include "Pause2.h"
 #include "globals.h"
@@ -25,6 +26,7 @@ enum GameState
     LEVEL2,
     LEVEL3,
     GAMEOVER,
+    PAUSE,
     PAUSE1,
     PAUSE2
 };
@@ -96,6 +98,7 @@ int main()
 
     // initializing
     InitLevel1();
+    InitPause();
     InitPause1();
     InitPause2();
     InitGameOver();
@@ -161,8 +164,7 @@ int main()
                 {
                     PlaySound(hovered);
                 }
-                currentState = LEVEL1;
-                startTime = GetTime();
+                currentState = PAUSE;
             }
             else if (isHoveringForbiddenForest && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
             {
@@ -191,6 +193,10 @@ int main()
 
         case LEVEL1:
         {
+            if (IsSoundPlaying(gameovermusic))
+            {
+                StopSound(gameovermusic);
+            }
             if (!IsSoundPlaying(level1Music))
             {
                 PlaySound(level1Music);
@@ -276,6 +282,32 @@ int main()
                     currentState = MENU;
                     cout << "Menu is pressed" << endl;
                     StopSound(gameovermusic);
+                }
+            }
+            break;
+        }
+
+        case PAUSE:
+        {
+            if (!IsSoundPlaying(gameovermusic))
+            {
+                PlaySound(gameovermusic);
+            }
+            UpdatePause();
+            if (IsKeyPressed(KEY_P))
+            {
+                StopSound(mapbgm);
+                currentState = LEVEL1; // Move to the next level
+                startTime = GetTime();
+            }
+            bool mousePressed = IsMouseButtonPressed(MOUSE_LEFT_BUTTON);
+            {
+                StopSound(mapbgm);
+                if (nextbutton.isPressed(mousePosition, mousePressed, nextbutton.position, nextbutton.scale))
+                {
+                    currentState = LEVEL1; // Move to the next level
+                    cout << "level1 reached" << endl;
+                    startTime = GetTime();
                 }
             }
             break;
@@ -396,6 +428,11 @@ int main()
             menubutton.Draw(menuimg, menubutton.scale);
             break;
 
+        case PAUSE:
+            DrawPause();
+            nextbutton.Draw(next, nextbutton.scale);
+            break;
+
         case PAUSE1:
             DrawPause1();
             nextbutton.Draw(next, nextbutton.scale);
@@ -415,7 +452,9 @@ int main()
     UnloadSound(level1Music);
     UnloadSound(gameovermusic);
     UnloadSound(hovered);
+    UnloadPause();
     UnloadPause1();
+    UnloadPause2();
     CloseWindow();
     return 0;
 }

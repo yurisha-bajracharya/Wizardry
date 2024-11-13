@@ -6,4 +6,4 @@ void UpdatePause2();
 void DrawPause2();
 void UnloadPause2();
 
-#endif // PAUSE1_H
+#endif // PAUSE2_H
