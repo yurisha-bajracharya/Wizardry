@@ -267,8 +267,8 @@ int main()
                 }
                 if (replaybutton.isPressed(mousePosition, mousePressed, replaybutton.position, replaybutton.scale))
                 {
-                    elapsedTime = GetTime() - startTime;
-                     RemainingTime = endTime - elapsedTime;
+                    
+                     RemainingTime = 120.0f;
                      CollectibleCount=0;
                     currentState = LEVEL1; // Move to the next level
                     
