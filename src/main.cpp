@@ -286,7 +286,7 @@ int main()
             }
             break;
         }
-
+        
         case PAUSE:
         {
             if (!IsSoundPlaying(gameovermusic))
