@@ -170,7 +170,7 @@ void DrawMaze()
         DrawTextureEx(blast.texture,
                       Vector2{blastFrameX + (cellSize - blast.texture.width * blastScale) / 2,
                               blastFrameY + (cellSize - blast.texture.height * blastScale) / 2},
-                      0.0f, blastScale, GRAY);
+                      0.0f, blastScale, customGreen);
     }
 
     // Draw ghosts inside a frame
@@ -435,7 +435,7 @@ void UpdateLevel2()
         attack = LoadSound("./Audio/attack.mp3");             // Load attack sound
         gameover = LoadSound("./Audio/gameover.wav");         // Load game over sound
         win = LoadSound("./Audio/win.mp3");                   // Load win sound
-        move = LoadSound("./Audio/move.wav");                 // Load move sound
+        move = LoadSound("./Audio/step.mp3");                 // Load move sound
         PlayMusicStream(music);                               // Start playing music
 
         std::srand(static_cast<unsigned>(std::time(0))); // Seed random number generator

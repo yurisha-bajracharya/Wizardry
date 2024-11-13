@@ -17,8 +17,7 @@ const int cellCountY = screenHeight / cellSize;
 int CollectibleCount = 0;
 
 Character hp;
-// Sound level1Music = {0},
-Sound hitSound = {0}, chimeMusic = {0};
+Sound hitSound = {0}, chimeMusic = {0}, applaud = {0};
 Texture2D characterimg;
 Texture2D characterimgfrozen;
 
@@ -81,7 +80,10 @@ void Collectibles::Update()
     // Check for collision with the character
     if (CheckCollisionCircles({snitch_position.x * cellSize + 30, snitch_position.y * cellSize + 30}, 30, {hp.x + characterWidth / 2, hp.y + characterHeight / 2}, characterWidth / 2))
     {
-
+        if (!IsSoundPlaying(applaud))
+        {
+            PlaySound(applaud);
+        }
         PlaySound(chimeMusic);
         CollectibleCount++;
         snitch_position = GenerateRandomPosition(); // Generate a new random position on collision
@@ -249,8 +251,7 @@ void InitLevel1()
     {
         InitAudioDevice();
     }
-    // level1Music = LoadSound("./Audio/level1.mp3");
-    // PlaySound(level1Music);
+    applaud = LoadSound("./Audio/applaud.mp3");
     chimeMusic = LoadSound("./Audio/chime-sound.mp3");
     hitSound = LoadSound("./Audio/hit.mp3");
     hp.isHpPaused = false;
