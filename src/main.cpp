@@ -273,7 +273,7 @@ int main()
             {
                 if (playagainbutton.isPressed(mousePosition, mousePressed, playagainbutton.position, playagainbutton.scale))
                 {
-                    currentState = LEVEL1; // Move to the next level
+                    currentState = PAUSE; // Move to the next level
                     cout << "Play again button is pressed" << endl;
                     StopSound(gameovermusic);
                 }
