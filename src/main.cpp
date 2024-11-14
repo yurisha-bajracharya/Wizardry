@@ -118,9 +118,9 @@ int main()
     nextbutton.SetPosition(920, 600);
     nextbutton.scale = 0.45f;
     homebutton.SetPosition(1090, 0);
-    homebutton.scale=1.0f;
+    homebutton.scale = 1.0f;
     exit2button.SetPosition(1200, 0);
-    exit2button.scale=1.0f;
+    exit2button.scale = 1.0f;
     replaybutton.SetPosition(1145, 0);
     replaybutton.scale = 1.0f;
     Sound gameovermusic = LoadSound("./Audio/music.mp3");
@@ -231,7 +231,7 @@ int main()
 
         case LEVEL2:
         {
-           if (IsSoundPlaying(gameovermusic))
+            if (IsSoundPlaying(gameovermusic))
             {
                 StopSound(gameovermusic);
             }
@@ -254,12 +254,11 @@ int main()
             {
                 currentState = GAMEOVER; // Game over after losing
             }
-              bool mousePressed = IsMouseButtonPressed(MOUSE_LEFT_BUTTON);
+            bool mousePressed = IsMouseButtonPressed(MOUSE_LEFT_BUTTON);
             {
                 if (homebutton.isPressed(mousePosition, mousePressed, homebutton.position, homebutton.scale))
                 {
                     currentState = MAP; // Move to map
-                    
                 }
                 if (exit2button.isPressed(mousePosition, mousePressed, exit2button.position, exit2button.scale))
                 {
@@ -267,13 +266,11 @@ int main()
                 }
                 if (replaybutton.isPressed(mousePosition, mousePressed, replaybutton.position, replaybutton.scale))
                 {
-                    
-                     RemainingTime = 120.0f;
-                     CollectibleCount=0;
+
+                    RemainingTime = 120.0f;
+                    CollectibleCount = 0;
                     currentState = LEVEL1; // Move to the next level
-                    
                 }
-    
             }
             break;
         }
@@ -319,7 +316,7 @@ int main()
             }
             break;
         }
-        
+
         case PAUSE:
         {
             if (!IsSoundPlaying(gameovermusic))
