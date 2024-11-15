@@ -10,20 +10,11 @@ extern int CollectibleCount;
 extern int coinsCollected;
 extern bool gameWon;
 extern bool gameOver;
+extern Font fontBold;
+extern Font fontNormal;
 
-// enum GameState
-// {
-//     MENU = 0,
-//     MAP,
-//     LEVEL1,
-//     LEVEL2,
-//     LEVEL3,
-//     GAMEOVER,
-//     PAUSE1,
-//     PAUSE2
-// };
-
-// extern GameState currentState;
+void InitFonts();
+void UnloadFonts();
 
 #endif // GLOBALS_H
 
