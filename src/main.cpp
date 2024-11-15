@@ -37,6 +37,9 @@ bool extraLifeCalled = false;
 Button playagainbutton;
 Button menubutton;
 Button nextbutton;
+Button homebutton;
+Button exit2button;
+Button replaybutton;
 Button startButton;
 Button exitButton;
 
@@ -108,6 +111,9 @@ int main()
     Texture2D newgame = LoadTexture("./images/newgame.png");
     Texture2D menuimg = LoadTexture("./images/menuimg.png");
     Texture2D next = LoadTexture("./images/next.png");
+    Texture2D home = LoadTexture("./images/homebutton.png");
+    Texture2D exit2 = LoadTexture("./images/exit2.png");
+    Texture2D replay = LoadTexture("./images/replay.png");
     Texture2D startB = LoadTexture("./images/start.png");
     Texture2D exitB = LoadTexture("./images/exit.png");
     playagainbutton.SetPosition(80, 600);
@@ -120,6 +126,12 @@ int main()
     menubutton.scale = 0.45f;
     nextbutton.SetPosition(920, 600);
     nextbutton.scale = 0.45f;
+    homebutton.SetPosition(1090, 0);
+    homebutton.scale = 1.0f;
+    exit2button.SetPosition(1200, 0);
+    exit2button.scale = 1.0f;
+    replaybutton.SetPosition(1145, 0);
+    replaybutton.scale = 1.0f;
     Sound gameovermusic = LoadSound("./Audio/music.mp3");
 
     while (!WindowShouldClose())
@@ -260,6 +272,24 @@ int main()
             else if (gameOver) /* condition for losing */
             {
                 currentState = GAMEOVER; // Game over after losing
+            }
+            bool mousePressed = IsMouseButtonPressed(MOUSE_LEFT_BUTTON);
+            {
+                if (homebutton.isPressed(mousePosition, mousePressed, homebutton.position, homebutton.scale, home.width, home.height))
+                {
+                    currentState = MAP; // Move to map
+                }
+                if (exit2button.isPressed(mousePosition, mousePressed, exit2button.position, exit2button.scale, exit2.width, exit2.height))
+                {
+                    CloseWindow();
+                }
+                if (replaybutton.isPressed(mousePosition, mousePressed, replaybutton.position, replaybutton.scale, replay.width, replay.height))
+                {
+
+                    RemainingTime = 120.0f;
+                    CollectibleCount = 0;
+                    currentState = LEVEL1; // Move to the next level
+                }
             }
             break;
         }
@@ -437,6 +467,9 @@ int main()
         case LEVEL2:
             ClearBackground(darkGreen);
             DrawLevel2();
+            exit2button.Draw(exit2, exit2button.scale);
+            homebutton.Draw(home, homebutton.scale);
+            replaybutton.Draw(replay, replaybutton.scale);
             break;
         case LEVEL3:
             ClearBackground(darkGreen);
