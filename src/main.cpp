@@ -37,6 +37,8 @@ bool extraLifeCalled = false;
 Button playagainbutton;
 Button menubutton;
 Button nextbutton;
+Button startButton;
+Button exitButton;
 
 int main()
 {
@@ -97,6 +99,7 @@ int main()
     Rectangle mainbuildingArea = {720, 466, 270, 233}; // Main building area
 
     // initializing
+    InitMenu();
     InitLevel1();
     InitPause();
     InitPause1();
@@ -105,8 +108,14 @@ int main()
     Texture2D newgame = LoadTexture("./images/newgame.png");
     Texture2D menuimg = LoadTexture("./images/menuimg.png");
     Texture2D next = LoadTexture("./images/next.png");
+    Texture2D startB = LoadTexture("./images/start.png");
+    Texture2D exitB = LoadTexture("./images/exit.png");
     playagainbutton.SetPosition(80, 600);
     menubutton.SetPosition(920, 600);
+    startButton.SetPosition(1000, 200);
+    exitButton.SetPosition(1000, 270);
+    startButton.scale = 0.5f;
+    exitButton.scale = 0.5f;
     playagainbutton.scale = 0.65f;
     menubutton.scale = 0.45f;
     nextbutton.SetPosition(920, 600);
@@ -132,9 +141,19 @@ int main()
                 currentState = MAP;
                 startTime = GetTime();
             }
+            bool mousePressed = IsMouseButtonPressed(MOUSE_LEFT_BUTTON);
+            {
+                if (startButton.isPressed(mousePosition, mousePressed, startButton.position, startButton.scale, startB.width, startB.height))
+                {
+                    currentState = MAP; // Move to map
+                }
+                if (exitButton.isPressed(mousePosition, mousePressed, exitButton.position, exitButton.scale, exitB.width, exitB.height))
+                {
+                    CloseWindow();
+                }
+            }
             break;
         }
-
         case MAP:
         {
             if (!IsSoundPlaying(mapbgm))
@@ -271,13 +290,13 @@ int main()
             }
             bool mousePressed = IsMouseButtonPressed(MOUSE_LEFT_BUTTON);
             {
-                if (playagainbutton.isPressed(mousePosition, mousePressed, playagainbutton.position, playagainbutton.scale))
+                if (playagainbutton.isPressed(mousePosition, mousePressed, playagainbutton.position, playagainbutton.scale, newgame.width, newgame.height))
                 {
                     currentState = PAUSE; // Move to the next level
                     cout << "Play again button is pressed" << endl;
                     StopSound(gameovermusic);
                 }
-                if (menubutton.isPressed(mousePosition, mousePressed, menubutton.position, menubutton.scale))
+                if (menubutton.isPressed(mousePosition, mousePressed, menubutton.position, menubutton.scale, menuimg.width, menuimg.height))
                 {
                     currentState = MENU;
                     cout << "Menu is pressed" << endl;
@@ -286,7 +305,7 @@ int main()
             }
             break;
         }
-        
+
         case PAUSE:
         {
             if (!IsSoundPlaying(gameovermusic))
@@ -303,7 +322,7 @@ int main()
             bool mousePressed = IsMouseButtonPressed(MOUSE_LEFT_BUTTON);
             {
                 StopSound(mapbgm);
-                if (nextbutton.isPressed(mousePosition, mousePressed, nextbutton.position, nextbutton.scale))
+                if (nextbutton.isPressed(mousePosition, mousePressed, nextbutton.position, nextbutton.scale, next.width, next.height))
                 {
                     currentState = LEVEL1; // Move to the next level
                     cout << "level1 reached" << endl;
@@ -328,7 +347,7 @@ int main()
             bool mousePressed = IsMouseButtonPressed(MOUSE_LEFT_BUTTON);
             {
                 StopSound(mapbgm);
-                if (nextbutton.isPressed(mousePosition, mousePressed, nextbutton.position, nextbutton.scale))
+                if (nextbutton.isPressed(mousePosition, mousePressed, nextbutton.position, nextbutton.scale, next.width, next.height))
                 {
                     currentState = LEVEL2; // Move to the next level
                     cout << "level2 reached" << endl;
@@ -352,7 +371,7 @@ int main()
             bool mousePressed = IsMouseButtonPressed(MOUSE_LEFT_BUTTON);
             {
                 StopSound(mapbgm);
-                if (nextbutton.isPressed(mousePosition, mousePressed, nextbutton.position, nextbutton.scale))
+                if (nextbutton.isPressed(mousePosition, mousePressed, nextbutton.position, nextbutton.scale, next.width, next.height))
                 {
                     currentState = LEVEL3; // Move to the next level
                     cout << "level2 reached" << endl;
@@ -382,6 +401,8 @@ int main()
         {
         case MENU:
             DrawMenu();
+            startButton.Draw(startB, startButton.scale);
+            exitButton.Draw(exitB, exitButton.scale);
             break;
 
         case MAP:
