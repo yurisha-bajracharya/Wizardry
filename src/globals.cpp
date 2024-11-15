@@ -1,10 +1,16 @@
-// #include "globals.h"
+#include "globals.h"
 
-// Collectibles collectible;
-// Character hp;
-// int CollectibleCount = 0;
-// int coinsCollected = 0;
-// bool gameWon = false;
-// bool gameOver = false;
+Font fontBold;
+Font fontNormal;
 
-// GameState currentState = MENU;
+void InitFonts()
+{
+    fontBold = LoadFontEx("./font/Poppins-Bold.ttf", 200, 0, 0);
+    fontNormal = LoadFontEx("./font/Poppins-Regular.ttf", 200, 0, 0);
+}
+
+void UnloadFonts()
+{
+    UnloadFont(fontBold);
+    UnloadFont(fontNormal);
+}

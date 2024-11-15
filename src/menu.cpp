@@ -1,6 +1,7 @@
 #include "C:\raylib\raylib\src\raylib.h"
 #include "menu.h"
 #include "string.h"
+#include "globals.h"
 
 #define MAX_LINES 6
 #define MAX_CHARACTERS_PER_LINE 35
@@ -25,14 +26,12 @@ bool timeForText = false;
 
 // Text messages
 const char *messages[] = {
-    "Hello There!!! Ready to conquer?",
-    "I hope you are ready. But hey don't hit (START) just yet!",
-    "Master the game by first mastering the rules.",
-    "Take a moment to check the about page - it could save you from a few extra lives",
+    "Hello There!!\n\n Ready to conquer?",
+    "I hope you are ready.",
+    "Three battles stand between you and victory.",
+    "Begin at Level One, if you value \nsurvival.",
     "Good luck with the Game.",
     " "};
-
-Font font = GetFontDefault();
 int messageIndex = 0;
 int charIndex = 0;
 float typingSpeed = 0.05f;
@@ -130,8 +129,8 @@ void DrawMenu()
 
         if (line < MAX_LINES)
         {
-            DrawTextEx(font, TextFormat("%c", messages[messageIndex][i]),
-                       (Vector2){textArea.x + currentCharIndex * 18, textArea.y + line * lineHeight}, 30, 2, DARKGRAY);
+            DrawTextEx(fontBold, TextFormat("%c", messages[messageIndex][i]),
+                       (Vector2){textArea.x + currentCharIndex * 18, textArea.y + line * lineHeight}, 30, 2, RAYWHITE);
             currentCharIndex++;
         }
     }
@@ -139,6 +138,14 @@ void DrawMenu()
     // Instruction to proceed to the next message
     if (timeForText && messageIndex < totalMessages - 1 && charIndex == static_cast<int>(strlen(messages[messageIndex])))
     {
-        DrawText("Press SPACE for next message", 900, 650, 20, LIGHTGRAY);
+        DrawTextEx(fontNormal, "Press SPACE for next message", Vector2{900, 650}, 20, 0, RAYWHITE);
     }
+}
+
+void UnloadMenu()
+{
+    UnloadTexture(backgroundm);
+    UnloadTexture(broom);
+    UnloadTexture(stand);
+    UnloadMusicStream(musicm);
 }

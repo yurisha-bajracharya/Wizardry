@@ -4,5 +4,6 @@
 void InitMenu();
 void UpdateMenu();
 void DrawMenu();
+void UnloadMenu();
 
 #endif // MENU_H

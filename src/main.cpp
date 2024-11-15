@@ -102,6 +102,7 @@ int main()
     Rectangle mainbuildingArea = {720, 466, 270, 233}; // Main building area
 
     // initializing
+    InitFonts();
     InitMenu();
     InitLevel1();
     InitPause();
@@ -118,8 +119,8 @@ int main()
     Texture2D exitB = LoadTexture("./images/exit.png");
     playagainbutton.SetPosition(80, 600);
     menubutton.SetPosition(920, 600);
-    startButton.SetPosition(1000, 200);
-    exitButton.SetPosition(1000, 270);
+    startButton.SetPosition(1050, 200);
+    exitButton.SetPosition(1050, 270);
     startButton.scale = 0.5f;
     exitButton.scale = 0.5f;
     playagainbutton.scale = 0.65f;
@@ -499,6 +500,8 @@ int main()
 
         EndDrawing();
     }
+    UnloadFonts();
+    UnloadMenu();
     UnloadLevel1();
     UnloadTexture(cloud);
     UnloadGameOver();
