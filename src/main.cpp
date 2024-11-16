@@ -10,6 +10,7 @@
 #include "Pause.h"
 #include "Pause1.h"
 #include "Pause2.h"
+#include "Pause3.h"
 #include "globals.h"
 #include "button.h"
 
@@ -28,11 +29,13 @@ enum GameState
     GAMEOVER,
     PAUSE,
     PAUSE1,
-    PAUSE2
+    PAUSE2,
+    PAUSE3
 };
 
 Collectibles collectible;
 bool extraLifeCalled = false;
+bool exitWindow=false;
 // Button nextLevelButton;
 Button playagainbutton;
 Button menubutton;
@@ -103,7 +106,7 @@ int main()
 
     // initializing
     InitFonts();
-    InitMenu();
+  
     InitLevel1();
     InitPause();
     InitPause1();
@@ -120,10 +123,10 @@ int main()
     Texture2D exitB = LoadTexture("./images/exit.png");
     playagainbutton.SetPosition(80, 600);
     menubutton.SetPosition(920, 600);
-    startButton.SetPosition(1050, 200);
-    exitButton.SetPosition(1050, 270);
-    startButton.scale = 0.5f;
-    exitButton.scale = 0.5f;
+    startButton.SetPosition(1045, 290);
+    exitButton.SetPosition(1045, 390);
+    startButton.scale = 0.8f;
+    exitButton.scale = 0.8f;
     playagainbutton.scale = 0.65f;
     menubutton.scale = 0.45f;
     nextbutton.SetPosition(920, 600);
@@ -138,7 +141,7 @@ int main()
     
     
 
-    while (!WindowShouldClose())
+    while (!WindowShouldClose() && !exitWindow)
     {
         elapsedTime = GetTime() - startTime;
         RemainingTime = endTime - elapsedTime;
@@ -151,12 +154,12 @@ int main()
         {
         case MENU:
         {
-            UpdateMenu();
-            if (IsKeyPressed(KEY_ENTER))
-            {
-                currentState = MAP;
-                startTime = GetTime();
-            }
+            updateMenu();
+            // if (IsKeyPressed(KEY_ENTER))
+            // {
+            //     currentState = MAP;
+            //     startTime = GetTime();
+            // }
             bool mousePressed = IsMouseButtonPressed(MOUSE_LEFT_BUTTON);
             {
                 if (startButton.isPressed(mousePosition, mousePressed, startButton.position, startButton.scale, startB.width, startB.height))
@@ -165,7 +168,7 @@ int main()
                 }
                 if (exitButton.isPressed(mousePosition, mousePressed, exitButton.position, exitButton.scale, exitB.width, exitB.height))
                 {
-                    CloseWindow();
+                    exitWindow=true;
                 }
             }
             break;
@@ -214,13 +217,13 @@ int main()
             else if (isHoveringMainBuilding && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
             {
                 StopSound(mapbgm);
-                if (!IsSoundPlaying(hovered))
-                {
-                    PlaySound(hovered);
-                }
-                currentState = GAMEOVER;
+                // if (!IsSoundPlaying(hovered))
+                // {
+                //     PlaySound(hovered);
+                // }
+                currentState = LEVEL3;
                 startTime = GetTime();
-                InitGameOver();
+                // InitGameOver();
             }
             // to stop playing sound after mapimg is not displayed
             break;
@@ -303,15 +306,19 @@ int main()
         }
         case LEVEL3:
         {
-            UpdateLevel3();
-            if (IsKeyDown(KEY_O)) /* condition for winning */
-            {
-                currentState = GAMEOVER; // Game over after winning
-            }
-            else if (IsKeyDown(KEY_O)) /* condition for losing */
-            {
-                currentState = GAMEOVER; // Game over after losing
-            }
+            updateLevel3();
+               if(riddleComplete)
+          {
+            currentState=PAUSE3;
+          }
+            // if (IsKeyDown(KEY_O)) /* condition for winning */
+            // {
+            //     currentState = GAMEOVER; // Game over after winning
+            // }
+            // else if (IsKeyDown(KEY_O)) /* condition for losing */
+            // {
+            //     currentState = GAMEOVER; // Game over after losing
+            // }
             break;
         }
 
@@ -425,7 +432,17 @@ int main()
             }
             break;
         }
+                case PAUSE3:
+                {
+             updatePause3();
+        if(IsKeyPressed(KEY_O))
+        {
+            currentState=GAMEOVER;
         }
+        break;
+        }
+        }
+
         // Update cloud positions
         for (int i = 0; i < numClouds; i++)
         {
@@ -446,7 +463,7 @@ int main()
         switch (currentState)
         {
         case MENU:
-            DrawMenu();
+            drawMenu();
             startButton.Draw(startB, startButton.scale);
             exitButton.Draw(exitB, exitButton.scale);
             break;
@@ -489,7 +506,7 @@ int main()
             break;
         case LEVEL3:
             ClearBackground(darkGreen);
-            DrawLevel3();
+            drawLevel3();
             break;
 
         case GAMEOVER:
@@ -511,12 +528,17 @@ int main()
             DrawPause2();
             nextbutton.Draw(next, nextbutton.scale);
             break;
+             
+             case PAUSE3:
+        drawPause3();
+        break;
+       
         }
 
         EndDrawing();
     }
     UnloadFonts();
-    UnloadMenu();
+    unloadMenu();
     UnloadLevel1();
     UnloadTexture(cloud);
     UnloadGameOver();

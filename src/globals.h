@@ -9,10 +9,11 @@ extern Character hp;
 extern int CollectibleCount;
 extern int coinsCollected;
 extern bool gameWon;
+extern int score;
 extern bool gameOver;
 extern Font fontBold;
 extern Font fontNormal;
-
+extern bool riddleComplete;
 
 void InitFonts();
 void UnloadFonts();
