@@ -282,6 +282,7 @@ int main()
                 if (homebutton.isPressed(mousePosition, mousePressed, homebutton.position, homebutton.scale, home.width, home.height))
                 {
                     RemainingTime=120.0f;
+                    CollectibleCount=0;
                     Initnew2();
                     currentState = MAP; // Move to map
                 }
@@ -293,6 +294,7 @@ int main()
                 {
                     
                 RemainingTime=120.0f;
+                CollectibleCount=0;
                 Initnew2();
                 currentState = LEVEL1; // Move to the next level
                 }
@@ -329,6 +331,7 @@ int main()
                 if (playagainbutton.isPressed(mousePosition, mousePressed, playagainbutton.position, playagainbutton.scale, newgame.width, newgame.height))
                 {
                      RemainingTime=120.0f;
+                     CollectibleCount=0;
                      Initnew2();
                     currentState = PAUSE; // Move to the next level
                     cout << "Play again button is pressed" << endl;
@@ -338,6 +341,7 @@ int main()
                 if (menubutton.isPressed(mousePosition, mousePressed, menubutton.position, menubutton.scale, menuimg.width, menuimg.height))
                 {
                      RemainingTime=120.0f;
+                     CollectibleCount=0;
                      Initnew2();
                     currentState = MENU;
                     cout << "Menu is pressed" << endl;
