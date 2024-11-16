@@ -13,6 +13,7 @@ extern bool gameOver;
 extern Font fontBold;
 extern Font fontNormal;
 
+
 void InitFonts();
 void UnloadFonts();
 

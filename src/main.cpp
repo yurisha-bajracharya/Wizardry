@@ -109,6 +109,7 @@ int main()
     InitPause1();
     InitPause2();
     InitGameOver();
+  
     Texture2D newgame = LoadTexture("./images/newgame.png");
     Texture2D menuimg = LoadTexture("./images/menuimg.png");
     Texture2D next = LoadTexture("./images/next.png");
@@ -134,6 +135,8 @@ int main()
     replaybutton.SetPosition(1145, 0);
     replaybutton.scale = 1.0f;
     Sound gameovermusic = LoadSound("./Audio/music.mp3");
+    
+    
 
     while (!WindowShouldClose())
     {
@@ -278,6 +281,8 @@ int main()
             {
                 if (homebutton.isPressed(mousePosition, mousePressed, homebutton.position, homebutton.scale, home.width, home.height))
                 {
+                    RemainingTime=120.0f;
+                    Initnew2();
                     currentState = MAP; // Move to map
                 }
                 if (exit2button.isPressed(mousePosition, mousePressed, exit2button.position, exit2button.scale, exit2.width, exit2.height))
@@ -286,10 +291,10 @@ int main()
                 }
                 if (replaybutton.isPressed(mousePosition, mousePressed, replaybutton.position, replaybutton.scale, replay.width, replay.height))
                 {
-
-                    RemainingTime = 120.0f;
-                    CollectibleCount = 0;
-                    currentState = LEVEL1; // Move to the next level
+                    
+                RemainingTime=120.0f;
+                Initnew2();
+                currentState = LEVEL1; // Move to the next level
                 }
             }
             break;
@@ -323,14 +328,20 @@ int main()
             {
                 if (playagainbutton.isPressed(mousePosition, mousePressed, playagainbutton.position, playagainbutton.scale, newgame.width, newgame.height))
                 {
+                     RemainingTime=120.0f;
+                     Initnew2();
                     currentState = PAUSE; // Move to the next level
                     cout << "Play again button is pressed" << endl;
+                   
                     StopSound(gameovermusic);
                 }
                 if (menubutton.isPressed(mousePosition, mousePressed, menubutton.position, menubutton.scale, menuimg.width, menuimg.height))
                 {
+                     RemainingTime=120.0f;
+                     Initnew2();
                     currentState = MENU;
                     cout << "Menu is pressed" << endl;
+                
                     StopSound(gameovermusic);
                 }
             }
@@ -515,3 +526,4 @@ int main()
     CloseWindow();
     return 0;
 }
+

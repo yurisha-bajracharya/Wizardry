@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <string>
 #include <algorithm>
+#include<iostream>
 #include <ctime>
 #include <chrono>
 #include <thread>
@@ -23,6 +24,7 @@ const float blastDuration = 1.0f; // Duration to display the blast (in seconds)
 float moveCooldown = 0.2f;        // cooldown time between moves in sec
 float moveTimer = 0.0f;
 Color customGreen = { 1, 50, 35, 255 };
+
 
 
 
@@ -94,6 +96,29 @@ float collisionTime = 5.0f; // Timer for how long to pause the music
 // Timer variables
 auto startTime = std::chrono::steady_clock::now();
 auto endTime = startTime + std::chrono::minutes(6);
+void Initnew2() //Reset level2
+{
+    gameWon=false;
+    gameOver=false;
+    coinsCollected=0;
+    startTime = std::chrono::steady_clock::now();
+    endTime = startTime + std::chrono::minutes(6);
+    isColliding = false; 
+    player.r=0;
+    player.c=0;
+    isColliding=false;
+    play=false;
+    for (auto &cell : grid)
+    {
+        cell.walls[0] = true;
+        cell.walls[1] = true;
+        cell.walls[2] = true;
+        cell.walls[3] = true;
+        cell.visited = false;
+    }
+    
+    
+}
 
 // Function to initialize the grid
 // Function to initialize the grid
@@ -164,6 +189,18 @@ void DrawMaze()
                   Vector2{playerFrameX + (cellSize - player.texture.width * playerScale) / 2,
                           playerFrameY + (cellSize - player.texture.height * playerScale) / 2},
                   0.0f, playerScale, WHITE);
+    // Draw the blast texture if it's within the grid
+    if (blast.r >= 0 && blast.c >= 0)
+    {
+        int blastFrameX = blast.c * cellSize;                                           // X position of the blast's frame
+        int blastFrameY = blast.r * cellSize;                                           // Y position of the blast's frame
+        DrawRectangle(blastFrameX, blastFrameY, cellSize - 1, cellSize - 1, DARKGREEN); // Frame background
+        float blastScale = 0.1f; // Scale the blast texture to 5% of original size
+        DrawTextureEx(blast.texture,
+                      Vector2{blastFrameX + (cellSize - blast.texture.width * blastScale) / 2,
+                              blastFrameY + (cellSize - blast.texture.height * blastScale) / 2},
+                      0.0f, blastScale, customGreen);
+    }
 
     // Draw ghosts inside a frame
     float ghostScale = 0.05f; // Scale ghosts to 5% of their original size
@@ -290,10 +327,12 @@ void UpdatePlayer()
     }
 
     // Check for collision with Hermione
-    if (player.r == hermione.r && player.c == hermione.c)
+    if (player.r == numrows-1 && player.c == ncols-1)
     {
         gameWon = true; // Set the win flag
+     
     }
+ 
 
     // Check for collision with coins
     for (auto it = coins.begin(); it != coins.end();)
@@ -335,7 +374,6 @@ void InitCoins()
     }
 }
 
-// Function to update ghosts
 // Function to update ghosts
 void UpdateGhosts()
 {

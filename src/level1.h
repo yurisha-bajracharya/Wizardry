@@ -9,4 +9,5 @@ void DrawCollectible(Texture2D texture);
 void InitLevel1();
 void UnloadLevel1();
 
+
 #endif // LEVEL1_H
