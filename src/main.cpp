@@ -306,6 +306,9 @@ int main()
         }
         case LEVEL3:
         {
+            StopSound(mapbgm);
+            StopMusicStream(musicm);
+            StopSound(gameovermusic);
             updateLevel3();
                if(riddleComplete)
           {

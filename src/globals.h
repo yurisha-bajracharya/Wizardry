@@ -14,7 +14,7 @@ extern bool gameOver;
 extern Font fontBold;
 extern Font fontNormal;
 extern bool riddleComplete;
-
+extern Music musicm;
 void InitFonts();
 void UnloadFonts();
 
