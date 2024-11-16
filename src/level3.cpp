@@ -61,7 +61,7 @@ struct Riddle {
     string hint;
 };
 vector<Riddle> riddles = {
-    {"I am not alive, but I can grow;\n \n\nI don’t have lungs, but I need air;\n\n\n I don’t have a mouth, but water kills me.\n\n\n What am I?", "FIRE", "Think about something that comes from a dragon."},
+    {"I am not alive, but I can grow;\n \n\nI don't have lungs, but I need air;\n\n\n I don't have a mouth, but water kills me.\n\n\n What am I?", "FIRE", "Think about something that comes from a dragon."},
     {"What can only be seen once it's broken?", "PROMISE", "Dumbledore warned Harry about this in \n\n\nThe Half-Blood Prince."},
     {"I open at the close. What am I?", "THE SNITCH", "Quidditch players will know this!"},
     {"I have a beginning, but no end.\n \n\n I grow with age, but shrink with wisdom.\n \n\n What am I?", "TIME", "Professor Trelawney talks about this constantly."},
