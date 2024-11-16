@@ -37,9 +37,9 @@ Music musicm;
 // Text messages
 const char* messages[] = {
     "Hello There!!! Ready to conquer?",
-    "I hope you are ready. But hey don't hit (START) just yet!",
-    "Master the game by first mastering the rules.",
-    "Take a moment to check the about page - it could save you from a few extra lives",
+    "I hope you are ready.",
+    "Three battles stand between you and victory.",
+    "Begin at level one(Quidditch),if   you value survival",
     "Good luck with the Game.",
     " "
 };
