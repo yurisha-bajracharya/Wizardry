@@ -2,6 +2,7 @@
 #include <iostream>
 #include  "menu.h"
 #include <string.h>
+#include "globals.h"
 #define MAX_LINES 6 // Maximum number of lines in the area
 #define MAX_CHARACTERS_PER_LINE 35  // Maximum characters per line before wrapping
 
@@ -37,15 +38,15 @@ Music musicm;
 // Text messages
 const char* messages[] = {
     "Hello There!!! Ready to conquer?",
-    "I hope you are ready. But hey don't hit (START) just yet!",
-    "Master the game by first mastering the rules.",
-    "Take a moment to check the about page - it could save you from a few extra lives",
-    "Good luck with the Game.",
+    "I hope you are ready.",
+    "Three battles stand between you and victory.",
+    "Begin at level one(Quidditch),if   you value survival",
+    "Good luck with the Gam e.",
     " "
 };
 
      // Font and text size
-   Font font = GetFontDefault();
+   //Font font = GetFontDefault();
     int messageIndex = 0;  // Current message being displayed
      int charIndex = 0;     // Number of characters displayed
     float typingSpeed = 0.05f;  // Typing speed (lower = faster)
@@ -54,6 +55,45 @@ const char* messages[] = {
 
     Rectangle textArea;  // Area to display text (x, y, width, height)
     int lineHeight = 40;  // Line height for spacing between lines
+
+
+void initNewMenu()
+{
+    // Reset textures and music
+    UnloadTexture(menubg);
+    UnloadTexture(broom);
+    UnloadTexture(stand);
+    UnloadMusicStream(musicm);
+    menubg = LoadTexture("images/ok.png");
+    broom = LoadTexture("images/cute.png");
+    stand = LoadTexture("images/stand.png");
+    musicm = LoadMusicStream("Audio/main.mp3");
+    PlayMusicStream(musicm);
+
+    // Reset animation-related variables
+    frameRec = {0.0f, 0.0f, (float)broom.width, (float)broom.height};
+    frameRec2 = {0.0f, 0.0f, (float)stand.width, (float)stand.height};
+    initialPosition = {0, 700 - frameRec.height - 5}; // Reset initial position
+    targetPosition = {1100 / 2.0f - frameRec.width / 4.0f, initialPosition.y};
+    standPosition = {1100 / 2.0f - frameRec2.width / 4.0f, 700 - frameRec2.height};
+
+    // Reset states
+    isBroom = true;
+    isReachedTarget = false;
+    timeForText = false;
+    exit1 = false;
+    frameCounter = 0;
+    currentframe = 0;
+    timeElapsed = 0.0f;
+
+    // Reset text-related variables
+    messageIndex = 0; // Reset to the first message
+    charIndex = 0;    // Reset the character index
+    timePassed = 0.0f;
+
+    // Reset text area if needed
+    textArea = {720, 560, 0, 100};
+}
 
 
 void updateMenu()
@@ -164,9 +204,9 @@ DrawTextureRec(stand,frameRec2, standPosition,WHITE);
                 charCount = 0;
             }
             if (line < MAX_LINES) {
-                DrawTextEx(font, TextFormat("%c", messages[messageIndex][i]), 
+                DrawTextEx(semiItalic, TextFormat("%c", messages[messageIndex][i]), 
                            (Vector2){textArea.x + charCount * 15, textArea.y + line * lineHeight}, 
-                           25, 2, WHITE);
+                           35, 2.5, WHITE);
                 charCount++;
             }
         }

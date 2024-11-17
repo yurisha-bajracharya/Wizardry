@@ -35,8 +35,8 @@ enum GameState
 
 Collectibles collectible;
 bool extraLifeCalled = false;
+bool extraHintCalled = false;
 bool exitWindow = false;
-// Button nextLevelButton;
 Button playagainbutton;
 Button menubutton;
 Button nextbutton;
@@ -208,7 +208,7 @@ int main()
                 {
                     PlaySound(hovered);
                 }
-                currentState = LEVEL2;
+                currentState = PAUSE1;
                 startTime = GetTime();
             }
             else if (isHoveringMainBuilding && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
@@ -218,7 +218,7 @@ int main()
                 // {
                 //     PlaySound(hovered);
                 // }
-                currentState = LEVEL3;
+                currentState = PAUSE2;
                 startTime = GetTime();
                 // InitGameOver();
             }
@@ -303,11 +303,54 @@ int main()
         }
         case LEVEL3:
         {
+            if (!extraHintCalled)
+            {
+                extraHint();
+                extraHintCalled = true;
+            }
             updateLevel3();
-            if (riddleComplete)
+            if (riddleComplete && isWon && IsKeyDown(KEY_Q)) // condition for winning to go to pause3 screen
             {
                 currentState = PAUSE3;
             }
+
+            if (riddleComplete && !isWon && IsKeyDown(KEY_Q)) // condition for loosing to go to gameover page
+            {
+                currentState = GAMEOVER;
+            }
+
+            bool mousePressed = IsMouseButtonPressed(MOUSE_LEFT_BUTTON);
+            {
+                if (homebutton.isPressed(mousePosition, mousePressed, homebutton.position, homebutton.scale, home.width, home.height))
+                {
+                    RemainingTime = 120.0f;
+                    CollectibleCount = 0;
+                    Initnew2();
+                    currentState = MAP;
+                    initNewLevel3(); // Move to map
+                }
+                if (exit2button.isPressed(mousePosition, mousePressed, exit2button.position, exit2button.scale, exit2.width, exit2.height))
+                {
+                    CloseWindow();
+                }
+                if (replaybutton.isPressed(mousePosition, mousePressed, replaybutton.position, replaybutton.scale, replay.width, replay.height))
+                {
+
+                    // RemainingTime=120.0f;
+                    // CollectibleCount=0;
+                    // Initnew2();
+                    currentState = LEVEL3;
+                    initNewLevel3(); // Move to the next level
+                }
+            }
+            // if (IsKeyDown(KEY_O)) /* condition for winning */
+            // {
+            //     currentState = GAMEOVER; // Game over after winning
+            // }
+            // else if (IsKeyDown(KEY_O)) /* condition for losing */
+            // {
+            //     currentState = GAMEOVER; // Game over after losing
+            // }
             break;
         }
 
@@ -318,10 +361,10 @@ int main()
                 PlaySound(gameovermusic);
             }
             UpdateGameOver();
-            if (IsKeyPressed(KEY_ENTER))
-            {
-                currentState = MENU; // Return to the main menu
-            }
+            // if (IsKeyPressed(KEY_ENTER))
+            // {
+            //     currentState = MENU; // Return to the main menu
+            // }
             bool mousePressed = IsMouseButtonPressed(MOUSE_LEFT_BUTTON);
             {
                 if (playagainbutton.isPressed(mousePosition, mousePressed, playagainbutton.position, playagainbutton.scale, newgame.width, newgame.height))
@@ -340,6 +383,8 @@ int main()
                     CollectibleCount = 0;
                     Initnew2();
                     currentState = MENU;
+                    initNewMenu();
+                    initNewLevel3();
                     cout << "Menu is pressed" << endl;
 
                     StopSound(gameovermusic);
@@ -506,6 +551,9 @@ int main()
         case LEVEL3:
             ClearBackground(darkGreen);
             drawLevel3();
+            exit2button.Draw(exit2, exit2button.scale);
+            homebutton.Draw(home, homebutton.scale);
+            replaybutton.Draw(replay, replaybutton.scale);
             break;
 
         case GAMEOVER:
@@ -539,6 +587,7 @@ int main()
     UnloadFonts();
     unloadMenu();
     UnloadLevel1();
+    UnloadLevel3();
     UnloadTexture(cloud);
     UnloadGameOver();
     UnloadSound(mapbgm);
