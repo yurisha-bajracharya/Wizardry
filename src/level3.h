@@ -1,12 +1,15 @@
 #ifndef LEVEL3_H
 #define LEVEL3_H
 
-#include "C:\raylib\raylib\src\raylib.h"
+#include "raylib.h"
 #include <vector>
+
+
 
 // Functions
 
-void UpdateLevel3();
-void DrawLevel3();
+void updateLevel3();
+void drawLevel3();  
+
 
 #endif // LEVEL3_H

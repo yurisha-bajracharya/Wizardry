@@ -7,7 +7,7 @@ public:
   Button(); 
   ~Button();
   void Draw(Texture2D texture, float scale);
-  bool isPressed(Vector2 mousePos, bool mousePressed, Vector2 position, float scale);
+  bool isPressed(Vector2 mousePos, bool mousePressed, Vector2 position, float scale, float width, float height);
   void SetPosition(float x, float y);
   Texture2D texture;
   Vector2 position;

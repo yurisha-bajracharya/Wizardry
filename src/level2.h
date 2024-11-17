@@ -7,7 +7,7 @@
 
 
 // Functions
-void InitLevel2();
+void Initnew2();
 void UpdateLevel2();
 void DrawLevel2();  
 void InitGhosts();
