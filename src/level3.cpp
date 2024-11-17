@@ -35,7 +35,7 @@ int frameCounter1 = 0;
 int frameSpeed1 = 5;
 bool reachedTarget = false;
 bool riddleComplete= false;
-
+bool isWon =false;
 //Voldemort dialog variables
 const char* prabachan[] = {
     "HAHAHAHA, You're almost there, but until you solve this, you haven't   won.",
@@ -61,18 +61,18 @@ struct Riddle {
     string hint;
 };
 vector<Riddle> riddles = {
-    {"I am not alive, but I can grow;\n \n\nI don't have lungs, but I need air;\n\n\n I don't have a mouth, but water kills me.\n\n\n What am I?", "FIRE", "Think about something that comes from a dragon."},
-    {"What can only be seen once it's broken?", "PROMISE", "Dumbledore warned Harry about this in \n\n\nThe Half-Blood Prince."},
-    {"I open at the close. What am I?", "THE SNITCH", "Quidditch players will know this!"},
-    {"I have a beginning, but no end.\n \n\n I grow with age, but shrink with wisdom.\n \n\n What am I?", "TIME", "Professor Trelawney talks about this constantly."},
-    {"What belongs to you, but others use it more than you do?", "NAME", "Think about how people address you."},
-    {"I am always hungry, I must always be fed.\n \n\n The finger I touch will soon turn red. What am I?", "FIRE", "It burns and requires fuel to survive."},
-    {"I am the one who will never lie,I never speak, \n\n\nbut I tell the truth,With my face, you always decide,\n\n\n What I show is always the proof.What am I?", "MIRROR", "Think about the Mirror of Erised and how it shows what the heart desires."},
-{"I can be cracked, I can be made,\n\n\n I can be told, I can be played.What am I?", "JOKE", "A certain professor in Harry Potter and\n\n the Prisoner of Azkaban would love this one."},
-{"What is invisible and makes the loudest sound,\n\n\n But no one can see it or touch it?", "MAGIC", "Wizards and witches use it daily,\n\n but you can't see it."},
-{"The more you have of me,The less you see.\n\n\nWhat am I?", "DARKNESS", "Think about the Forbidden Forest at night."},
-{"I have a face, but no eyes,I have hands, \n\n\nbut no arms,I have a body, but no legs,\n\n\nWhat am I?", "CLOCK", "The timepiece that governs much of life at Hogwarts."},
-{"I have many faces,But no eyes to see.\n\n\nI change my form often,What could I be?", "COIN", "Think about the Galleons in the wizarding world, which have two sides."}
+    {"I am not alive, but I can grow;\n \nI don't have lungs, but I need air;\n\n I don't have a mouth, but water kills me.\n\n What am I?", "FIRE", "Think about something that comes \n\nfrom a dragon."},
+    {"What can only be seen once\n\n it's broken?", "PROMISE", "Dumbledore warned Harry about this in \n\n\nThe Half-Blood Prince."},
+    {"I open at the close.\n\n What am I?", "THE SNITCH", "Quidditch players will know this!"},
+    {"I have a beginning, but no end.\n\n I grow with age, but shrink with wisdom. \n\n What am I?", "TIME", "Professor Trelawney talks about this\n\n constantly."},
+    {"What belongs to you,\n\n but others use it more than you do?", "NAME", "Think about how people address you."},
+    {"I am always hungry, I must always be fed.\n \n The finger I touch will soon turn red. What am I?", "FIRE", "It burns and requires fuel to survive."},
+    {"I am the one who will never lie,I never speak, \n\nbut I tell the truth,With my face, you always decide,\n\n What I show is always the proof.What am I?", "MIRROR", "Think about the Mirror of Erised\n\n and how it shows what the heart desires."},
+{"I can be cracked, I can be made,\n\n I can be told, I can be played.What am I?", "JOKE", "A certain professor in Harry Potter and\n\n the Prisoner of Azkaban would love this one."},
+{"What is invisible and makes the loudest sound,\n\n But no one can see it or touch it?", "MAGIC", "Wizards and witches use it daily,\n\n but you can't see it."},
+{"The more you have of me,The less you see.\n\nWhat am I?", "DARKNESS", "Think about the Forbidden Forest at night."},
+{"I have a face, but no eyes,I have hands, \n\nbut no arms,I have a body, but no legs,\n\nWhat am I?", "CLOCK", "The timepiece that governs much of \n\nlife at Hogwarts."},
+{"I have many faces,But no eyes to see.\n\nI change my form often,What could I be?", "COIN", "Think about the Galleons in the wizarding\n\n world, which have two sides."}
 };
 vector<Riddle> selectedRiddles;
 int currentRiddle = 0;
@@ -97,19 +97,65 @@ string toLower(string str) {
 /*********************RIDDLE SCREEN************************** */
 void drawRiddleScreen(const Riddle& riddle, const string& playerInput,  int score) {
  
-    DrawText(("Riddle: " + riddle.question).c_str(), 300, 310, 25, WHITE);
+    DrawTextEx(fontBold,("Riddle: " + riddle.question).c_str(),(Vector2){350, 290},35,2.5,WHITE);
    DrawText(("Score: " + to_string(score)).c_str(), 70, 150, 25, GREEN);  // Display score
 
    //HINT
     if (hintShown) {
-        DrawText(("Hint: " + riddle.hint).c_str(), 310, 400, 25, BLACK);
+        DrawTextEx(medium,("Hint: " + riddle.hint).c_str(),(Vector2) {340, 440} ,30,2.5, YELLOW);
     }
     DrawText("Type your answer:", 620, 570, 27, LIGHTGRAY);
-        DrawText(playerInput.c_str(), 630, 605, 25, WHITE);  // Display real-time input
+        DrawTextEx(fontNormal,("Answer: " + playerInput).c_str(), Vector2{620, 605}, 30,2.5, WHITE);  // Display real-time input
 }
    
+void initNewLevel3() {
+  
 
-    
+    level3bg = LoadTexture("images/riddle1.png");
+    voldeBaba = LoadTexture("images/voldemort.png");
+    lovies = LoadTexture("images/lovies.png");
+    riText = LoadTexture("images/dd.png");
+    voldeEntry = LoadMusicStream("Audio/volde.mp3");
+    voldeHappy = LoadSound("Audio/voldeHappy.mp3");
+    voldeSad = LoadSound("Audio/voldeSad.mp3");
+    complete = LoadSound("Audio/forRiddle.mp3");
+    PlayMusicStream(voldeEntry);
+
+    // Reset positions and animation variables
+    frameRec1 = {0.0f, 0.0f, static_cast<float>(voldeBaba.width), static_cast<float>(voldeBaba.height)};
+    firstPosition = {0, 0};
+    finalPosition = {firstPosition.x, 700 - frameRec1.height};
+    frameCount1 = 6;
+    currentframe1 = 0;
+    frameCounter1 = 0;
+    frameSpeed1 = 5;
+    reachedTarget = false;
+
+    // Reset Voldemort dialog variables
+    messageIndex1 = 0;
+    charIndex1 = 0;
+    timePassed1 = 0.0f;
+    gamePhase = VOLDEMORT_MESSAGES;
+
+    // Shuffle and select riddles
+    random_device rd;
+    mt19937 g(rd());
+    shuffle(riddles.begin(), riddles.end(), g);
+    selectedRiddles.assign(riddles.begin(), riddles.begin() + 3);
+
+    // Reset riddle variables
+    currentRiddle = 0;
+    playerInput.clear();
+    showResult = false;
+    isCorrect = false;
+    hintShown = false;
+    score = 0;
+
+    // Reset win/loss flags
+    isWon = false;
+    riddleComplete = false;
+}
+
 
 void updateLevel3()
 {
@@ -162,7 +208,7 @@ UpdateMusicStream(voldeEntry);
     
 // /*************************** VOLDEBABA KO PRABACHAN**********************************/
         if (reachedTarget && gamePhase == VOLDEMORT_MESSAGES) {
-            if (IsKeyPressed(KEY_SPACE) && messageIndex1 < totalMessages1 - 1) {
+            if (IsKeyPressed(KEY_RIGHT) && messageIndex1 < totalMessages1 - 1) {
                 messageIndex1++;
                 charIndex1 = 0;
                 timePassed1 = 0.0f;
@@ -235,7 +281,7 @@ void drawLevel3()
         }
 
         if (messageIndex1 < totalMessages1 - 1 && charIndex1 == static_cast<int>(strlen(prabachan[messageIndex1]))) {
-            DrawText("Press SPACE for next message", 300, 680, 20, WHITE);
+            DrawText("Press RIGHT(>)KEY for next message", 300, 680, 20, WHITE);
         }
      /****************************RIDDLE**************** */
         if (gamePhase == RIDDLE_QUIZ) {
@@ -264,9 +310,16 @@ void drawLevel3()
                     // riddleComplete= true;
                  
                 } 
-                if  (currentRiddle + 1 == static_cast<int>(selectedRiddles.size()) && IsKeyPressed(KEY_Q)) 
-                
+                if  (score>=2 &&currentRiddle + 1 == static_cast<int>(selectedRiddles.size()) && IsKeyPressed(KEY_Q)) 
+                {
+                isWon=true;
                 riddleComplete=true;
+                }
+              if  (score<2 &&currentRiddle + 1 == static_cast<int>(selectedRiddles.size()) && IsKeyPressed(KEY_Q)) 
+              {
+                isWon=false;
+                riddleComplete=true;
+              }  
             }
             else {
                 drawRiddleScreen(selectedRiddles[currentRiddle], playerInput,  score);
@@ -276,3 +329,15 @@ void drawLevel3()
         
 }
 
+void UnloadLevel3()
+{
+    // Unload and reload assets
+    UnloadTexture(level3bg);
+    UnloadTexture(voldeBaba);
+    UnloadTexture(lovies);
+    UnloadTexture(riText);
+    UnloadMusicStream(voldeEntry);
+    UnloadSound(complete);
+    UnloadSound(voldeHappy);
+    UnloadSound(voldeSad);
+}

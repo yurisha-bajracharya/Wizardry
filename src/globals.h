@@ -13,8 +13,11 @@ extern int score;
 extern bool gameOver;
 extern Font fontBold;
 extern Font fontNormal;
+extern Font semiItalic;
+extern Font medium;
 extern bool riddleComplete;
-extern Music musicm;
+extern bool isWon;
+
 void InitFonts();
 void UnloadFonts();
 

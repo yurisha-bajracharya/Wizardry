@@ -8,8 +8,10 @@
 
 // Functions
 
+void initNewLevel3();
 void updateLevel3();
 void drawLevel3();  
+void UnloadLevel3();
 
 
 #endif // LEVEL3_H

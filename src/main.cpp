@@ -306,14 +306,41 @@ int main()
         }
         case LEVEL3:
         {
-            StopSound(mapbgm);
-            StopMusicStream(musicm);
-            StopSound(gameovermusic);
             updateLevel3();
-               if(riddleComplete)
+               if (riddleComplete &&  isWon)//condition for winning to go to pause3 screen
           {
             currentState=PAUSE3;
           }
+
+          if(riddleComplete && !isWon)//condition for loosing to go to gameover page
+          {
+            currentState=GAMEOVER;
+          }
+
+          bool mousePressed = IsMouseButtonPressed(MOUSE_LEFT_BUTTON);
+            {
+                if (homebutton.isPressed(mousePosition, mousePressed, homebutton.position, homebutton.scale, home.width, home.height))
+                {
+                    RemainingTime=120.0f;
+                    CollectibleCount=0;
+                    Initnew2();
+                    currentState = MAP;
+                    initNewLevel3(); // Move to map
+                }
+                if (exit2button.isPressed(mousePosition, mousePressed, exit2button.position, exit2button.scale, exit2.width, exit2.height))
+                {
+                    CloseWindow();
+                }
+                if (replaybutton.isPressed(mousePosition, mousePressed, replaybutton.position, replaybutton.scale, replay.width, replay.height))
+                {
+                    
+                // RemainingTime=120.0f;
+                // CollectibleCount=0;
+                // Initnew2();
+               currentState = LEVEL3;
+                initNewLevel3(); // Move to the next level
+                }
+            }
             // if (IsKeyDown(KEY_O)) /* condition for winning */
             // {
             //     currentState = GAMEOVER; // Game over after winning
@@ -332,10 +359,10 @@ int main()
                 PlaySound(gameovermusic);
             }
             UpdateGameOver();
-            if (IsKeyPressed(KEY_ENTER))
-            {
-                currentState = MENU; // Return to the main menu
-            }
+            // if (IsKeyPressed(KEY_ENTER))
+            // {
+            //     currentState = MENU; // Return to the main menu
+            // }
             bool mousePressed = IsMouseButtonPressed(MOUSE_LEFT_BUTTON);
             {
                 if (playagainbutton.isPressed(mousePosition, mousePressed, playagainbutton.position, playagainbutton.scale, newgame.width, newgame.height))
@@ -354,6 +381,8 @@ int main()
                      CollectibleCount=0;
                      Initnew2();
                     currentState = MENU;
+                    initNewMenu();
+                    initNewLevel3();
                     cout << "Menu is pressed" << endl;
                 
                     StopSound(gameovermusic);
@@ -437,11 +466,36 @@ int main()
         }
                 case PAUSE3:
                 {
+                     if (!IsSoundPlaying(gameovermusic))
+            {
+                PlaySound(gameovermusic);
+            }
              updatePause3();
-        if(IsKeyPressed(KEY_O))
-        {
-            currentState=GAMEOVER;
-        }
+     bool mousePressed = IsMouseButtonPressed(MOUSE_LEFT_BUTTON);
+            {
+                if (playagainbutton.isPressed(mousePosition, mousePressed, playagainbutton.position, playagainbutton.scale, newgame.width, newgame.height))
+                {
+                     RemainingTime=120.0f;
+                     CollectibleCount=0;
+                     Initnew2();
+                     initNewLevel3();
+                    currentState = PAUSE; // Move to the next level
+                    cout << "Play again button is pressed" << endl;
+                   StopSound(gameovermusic);
+    
+                }
+                if (menubutton.isPressed(mousePosition, mousePressed, menubutton.position, menubutton.scale, menuimg.width, menuimg.height))
+                {
+                     RemainingTime=120.0f;
+                     CollectibleCount=0;
+                     Initnew2();
+                    currentState = MENU;
+                    initNewMenu();
+                    initNewLevel3();
+                    cout << "Menu is pressed" << endl;
+                StopSound(gameovermusic);
+                }
+            }
         break;
         }
         }
@@ -510,6 +564,9 @@ int main()
         case LEVEL3:
             ClearBackground(darkGreen);
             drawLevel3();
+              exit2button.Draw(exit2, exit2button.scale);
+            homebutton.Draw(home, homebutton.scale);
+            replaybutton.Draw(replay, replaybutton.scale);
             break;
 
         case GAMEOVER:
@@ -534,6 +591,8 @@ int main()
              
              case PAUSE3:
         drawPause3();
+        playagainbutton.Draw(newgame, playagainbutton.scale);
+         menubutton.Draw(menuimg, menubutton.scale);
         break;
        
         }
@@ -543,6 +602,7 @@ int main()
     UnloadFonts();
     unloadMenu();
     UnloadLevel1();
+    UnloadLevel3();
     UnloadTexture(cloud);
     UnloadGameOver();
     UnloadSound(mapbgm);

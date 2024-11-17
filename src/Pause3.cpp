@@ -12,7 +12,7 @@ void updatePause3()
 void drawPause3()
 {
     DrawRectangle(0, 0, 1400, 900, Fade(DARKGRAY, 0.8f));
-    DrawText("GAME OVER", 550, 400, 40, GREEN);
-    DrawText(("You scored total " + std::to_string(score) + " score").c_str(), 500, 450, 20, WHITE);
-    DrawText("Press O to move to the next level", 500, 500, 20, WHITE);
+    DrawText("GAME OVER", 550, 300, 40, GREEN);
+    DrawText(("You WON with " + std::to_string(score) + " score").c_str(), 500, 350, 20, WHITE);
+    DrawText("Press O to move to the next level", 500, 400, 20, WHITE);
 }

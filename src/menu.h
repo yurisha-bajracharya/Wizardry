@@ -2,7 +2,7 @@
 #define MENU_H
 
 #include "raylib.h"
-
+void initNewMenu();
 void updateMenu();
 void drawMenu();
 void unloadMenu();
