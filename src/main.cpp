@@ -35,6 +35,7 @@ enum GameState
 
 Collectibles collectible;
 bool extraLifeCalled = false;
+bool extraHintCalled = false;
 bool exitWindow=false;
 // Button nextLevelButton;
 Button playagainbutton;
@@ -211,7 +212,7 @@ int main()
                 {
                     PlaySound(hovered);
                 }
-                currentState = LEVEL2;
+                currentState = PAUSE1;
                 startTime = GetTime();
             }
             else if (isHoveringMainBuilding && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
@@ -221,7 +222,7 @@ int main()
                 // {
                 //     PlaySound(hovered);
                 // }
-                currentState = LEVEL3;
+                currentState =PAUSE2;
                 startTime = GetTime();
                 // InitGameOver();
             }
@@ -306,6 +307,11 @@ int main()
         }
         case LEVEL3:
         {
+             if (!extraHintCalled)
+            {
+                extraHint();
+                extraHintCalled = true;
+            }
             updateLevel3();
                if (riddleComplete &&  isWon)//condition for winning to go to pause3 screen
           {
