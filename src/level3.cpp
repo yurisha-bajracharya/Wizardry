@@ -8,6 +8,7 @@
 #include <random>
 #include <string.h>
 #include <cstring>
+#include "button.h"
 
 #define MAX_LINES 6 // Maximum number of lines in the area
 #define MAX_CHARACTERS_PER_LINE 35  // Maximum characters per line before wrapping
@@ -23,7 +24,10 @@ Texture2D level3bg;
 Texture2D voldeBaba;
 Texture2D lovies;
 Texture2D riText;
+Button hintButton;
+Texture2D hintB;
  Color OLIVE_GREEN = {107, 142, 35, 255};
+
 
 // Positions and animation variables
 Vector2 firstPosition;
@@ -36,6 +40,7 @@ int frameSpeed1 = 5;
 bool reachedTarget = false;
 bool riddleComplete= false;
 bool isWon =false;
+bool nohint=false;
 //Voldemort dialog variables
 const char* prabachan[] = {
     "HAHAHAHA, You're almost there, but until you solve this, you haven't   won.",
@@ -92,6 +97,10 @@ string toLower(string str) {
     transform(str.begin(), str.end(), str.begin(), ::tolower);
     return str;
 }
+//hints
+void extraHint(){
+    coinsCollected=coinsCollected/3;
+}
 
 
 /*********************RIDDLE SCREEN************************** */
@@ -110,7 +119,7 @@ void drawRiddleScreen(const Riddle& riddle, const string& playerInput,  int scor
    
 void initNewLevel3() {
   
-
+    
     level3bg = LoadTexture("images/riddle1.png");
     voldeBaba = LoadTexture("images/voldemort.png");
     lovies = LoadTexture("images/lovies.png");
@@ -121,7 +130,11 @@ void initNewLevel3() {
     complete = LoadSound("Audio/forRiddle.mp3");
     PlayMusicStream(voldeEntry);
 
-    // Reset positions and animation variables
+    PlayMusicStream(voldeEntry);
+
+    // Initialize hintButton
+    hintButton.SetPosition(12000, 200);
+    hintButton.scale = 1.0f;
     frameRec1 = {0.0f, 0.0f, static_cast<float>(voldeBaba.width), static_cast<float>(voldeBaba.height)};
     firstPosition = {0, 0};
     finalPosition = {firstPosition.x, 700 - frameRec1.height};
@@ -165,6 +178,7 @@ if (!initialized)
  //InitAudioDevice();
     level3bg=LoadTexture("images/riddle1.png");
     voldeBaba=LoadTexture("images/voldemort.png");
+    hintB=LoadTexture("images/hint.png");
      lovies=LoadTexture("images/lovies.png");
     voldeEntry=LoadMusicStream("Audio/volde.mp3");
     voldeHappy=LoadSound("Audio/voldeHappy.mp3");
@@ -252,9 +266,19 @@ UpdateMusicStream(voldeEntry);
             showResult = true;
         }
 /*************************FOR HINT********************** */
-        if (IsKeyPressed(KEY_H)) 
-        hintShown = true;
-}
+       Vector2 mousePosition = GetMousePosition();
+       bool mousePressed = IsMouseButtonPressed(MOUSE_LEFT_BUTTON);
+            {
+                if (hintButton.isPressed(mousePosition, mousePressed, hintButton.position, hintButton.scale, hintB.width, hintB.height))
+                {
+                    if (coinsCollected>0){
+                    hintShown = true;
+                    }
+                    else{
+                       nohint=true;
+                    }
+                }
+}}
 
 void drawLevel3()
 {
@@ -264,6 +288,7 @@ void drawLevel3()
       DrawTextureRec(voldeBaba, frameRec1, firstPosition,WHITE);
       DrawTexture(lovies,890,410,WHITE);
       DrawTexture(riText,585,105,WHITE);
+      hintButton.Draw(hintB, hintButton.scale);
              // fOR TYPING TEXT EFFECT.....................
         int currentcharIndex1 = 0;
         int line = 0;
@@ -326,7 +351,10 @@ void drawLevel3()
             }
         }
         
-        
+      if (nohint)
+      {
+        DrawText("You don't have enough coins to buy hint", 600, 660, 20, WHITE);
+      }
 }
 
 void UnloadLevel3()
