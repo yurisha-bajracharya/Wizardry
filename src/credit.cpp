@@ -23,10 +23,22 @@ void drawCredit()
 {
         DrawTexture(creditbg, 0, 0, WHITE);
         DrawTextEx(fontNormal, "GitHub Repo Link:", {20, 20}, 40, 0, ORANGE);
-        DrawTextEx(fontNormal, "CLICK HERE", {20, 60}, 40, 0, ORANGE);
+       // DrawTextEx(fontNormal, "CLICK HERE", {20, 60}, 40, 0, ORANGE);
 
-        // Defining the bounding box for the clickable text linking
+        //Defining the bounding box for the clickable text linking
         Rectangle linkBox = {20, 60, MeasureTextEx(fontBold, "Click Here", 40, 0).x, 40};
+
+        // Check if mouse is hovering over the link
+        if (CheckCollisionPointRec(GetMousePosition(), linkBox))
+        {
+                // Highlight the text on hover
+                DrawTextEx(fontNormal, "CLICK HERE", {20, 60}, 40, 0, YELLOW);
+        }
+        else
+        {
+                // Default text color when not hovered
+                DrawTextEx(fontNormal, "CLICK HERE", {20, 60}, 40, 0, ORANGE);
+        }
 
         // Checking if the mouse is clicked within the bounding box
         if (CheckCollisionPointRec(GetMousePosition(), linkBox) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))

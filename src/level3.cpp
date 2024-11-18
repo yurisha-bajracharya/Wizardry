@@ -1,5 +1,4 @@
 #include "C:\raylib\raylib\src\raylib.h"
-#include "raylib.h"
 #include <iostream>
 #include "level3.h"
 #include <vector>
@@ -380,7 +379,7 @@ void drawLevel3()
 
     if (nohint)
     {
-        DrawText("You don't have enough coins to buy hint", 30, 200, 20, WHITE);
+        DrawTextEx(fontBold, "You don't have enough coins to buy hint", (Vector2){60, 200}, 30, 2.5, RED);
     }
 }
 
