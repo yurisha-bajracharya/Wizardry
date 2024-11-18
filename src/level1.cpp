@@ -78,7 +78,8 @@ void Collectibles::Update()
     }
 
     // Check for collision with the character
-    if (CheckCollisionCircles({snitch_position.x * cellSize + 30, snitch_position.y * cellSize + 30}, 30, {hp.x + characterWidth / 2, hp.y + characterHeight / 2}, characterWidth / 2))
+    if (CheckCollisionCircles({snitch_position.x * cellSize + 30, snitch_position.y * cellSize + 30},
+                              30, {hp.x + characterWidth / 2, hp.y + characterHeight / 2}, characterWidth / 2))
     {
         if (!IsSoundPlaying(applaud))
         {
@@ -179,7 +180,7 @@ void Character::Update()
         // If shift key is held down, increase the speed
         if (IsKeyDown(KEY_LEFT_SHIFT) || IsKeyDown(KEY_RIGHT_SHIFT))
         {
-            speed = 10.0f; // Adjust this value for desired faster speed
+            speed = 10.0f; // for faster speed
         }
 
         if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D))
@@ -225,7 +226,6 @@ void UpdateLevel1()
 {
     hp.Update();
     collectible.Update();
-    // collectible.UpdateBludgers();
 }
 
 void DrawLevel1()
