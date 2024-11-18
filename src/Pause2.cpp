@@ -1,19 +1,30 @@
 #include "C:\raylib\raylib\src\raylib.h"
-#include "Pause2.h"
+#include "Pause1.h"
 #include <iostream>
 #include "collectibles.h"
-#include "globals.h"
 #include "string"
+#include "button.h"
+#include "globals.h"
+
+Texture2D pause2bg;
+
+void InitPause2()
+{
+    pause2bg = LoadTexture("./images/pause2bg.png");
+}
+
+void UnloadPause2()
+{
+    UnloadTexture(pause2bg);
+}
 
 void UpdatePause2()
 {
-    // pause
 }
 
 void DrawPause2()
 {
-    DrawRectangle(0, 0, 1260, 700, Fade(DARKGRAY, 0.8f));
-    DrawText("YOU WIN", 550, 400, 40, GREEN);
-    DrawText(("You earned total " + std::to_string(coinsCollected) + " coinss").c_str(), 500, 450, 20, WHITE);
-    DrawText("Press L to move to the next level", 500, 500, 20, WHITE);
+    DrawTexture(pause2bg, 0, 0, WHITE);
+    DrawTextEx(fontNormal, (std::to_string(coinsCollected)).c_str(), (Vector2){380, 33}, 43, 2, BLACK);
+    DrawTextEx(fontBold, (std::to_string(coinsCollected / 3)).c_str(), (Vector2){380, 83}, 50, 2, BLACK);
 }

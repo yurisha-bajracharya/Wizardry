@@ -2,6 +2,8 @@
 #include <vector>
 #include <cstdlib>
 #include <string>
+#include <algorithm>
+#include<iostream>
 #include <ctime>
 #include <chrono>
 #include <thread>
@@ -12,8 +14,8 @@ Hermione hermione;        // Create Hermione object
 bool gameWon = false;     // Flag to track if the game is won
 bool gameOver = false;    // Flag to track if the game is over
 const int numrows = 20;   // Number of rows
-const int ncols = 36;     // Number of columns
-const int cellSize = 35;  // Size of each cell
+const int ncols = 39;     // Number of columns
+const int cellSize =655/ numrows; // Size of each cell
 const int numGhosts = 10; // Number of ghosts
 const int numCoinss = 35;
 int coinsCollected = 0;           // Counter for collected coins
@@ -21,6 +23,10 @@ float blastDisplayTime = 0.0f;    // Timer for blast display duration
 const float blastDuration = 1.0f; // Duration to display the blast (in seconds)
 float moveCooldown = 0.2f;        // cooldown time between moves in sec
 float moveTimer = 0.0f;
+Color customGreen = { 1, 50, 35, 255 };
+
+
+
 
 void extraLife()
 {
@@ -64,6 +70,8 @@ struct Coin
     Texture2D texture; // Coin texture
 };
 
+
+
 // Global variables
 std::vector<Cell> grid(numrows *ncols);
 Cell *current = nullptr;
@@ -73,19 +81,46 @@ Player player = {0, 0};    // Initialize player at the starting position
 std::vector<Ghost> ghosts; // List of ghosts
 std::vector<Coin> coins;   // List of coins
 Sound collide;             // Collision sound
-Sound attack;              // Attack sound
+Sound attack;             // Attack sound
+Sound move;                // Move sound
 Sound coincollected;       // Coin collection sound
 Music music;               // Music stream
 Sound gameover;            // Game over sound
-Sound win;                 // Win sound
+Sound win;                // Win sound
+Texture2D bgTexture;
+
 // Collision management variables
 bool isColliding = false;   // Track if the player has collided
 float collisionTime = 5.0f; // Timer for how long to pause the music
 
 // Timer variables
 auto startTime = std::chrono::steady_clock::now();
-auto endTime = startTime + std::chrono::minutes(2);
+auto endTime = startTime + std::chrono::minutes(6);
+void Initnew2() //Reset level2
+{
+    gameWon=false;
+    gameOver=false;
+    coinsCollected=0;
+    startTime = std::chrono::steady_clock::now();
+    endTime = startTime + std::chrono::minutes(6);
+    isColliding = false; 
+    player.r=0;
+    player.c=0;
+    isColliding=false;
+    play=false;
+    for (auto &cell : grid)
+    {
+        cell.walls[0] = true;
+        cell.walls[1] = true;
+        cell.walls[2] = true;
+        cell.walls[3] = true;
+        cell.visited = false;
+    }
+    
+    
+}
 
+// Function to initialize the grid
 // Function to initialize the grid
 void InitGrid()
 {
@@ -109,39 +144,47 @@ void InitGrid()
 
 void DrawMaze()
 {
+    DrawTexture(bgTexture, 0, 0, WHITE); 
+    // Define the height for the score display section (top part)
+    const int scoreSectionHeight = 50;
+
+    // Start drawing the maze from just below the score section
+    int startY = scoreSectionHeight;
+
+    // Draw the maze (cells, walls, player, ghosts, coins) below the score section
     for (int r = 0; r < numrows; r++)
     {
         for (int c = 0; c < ncols; c++)
         {
             Cell &cell = grid[r * ncols + c];
+            int drawY = startY + r * cellSize; // Y position adjusted to start below the score section
+
             // Draw cell background
             if (cell.visited)
             {
-                DrawRectangle(c * cellSize, r * cellSize, cellSize, cellSize, DARKGREEN);
+                // RGB values with alpha 255 (fully opaque)
+                DrawRectangle(c * cellSize, drawY, cellSize, cellSize, customGreen);
+
             }
+            
             // Draw walls
-            if (cell.walls[0])
-                DrawLine(c * cellSize, r * cellSize, (c + 1) * cellSize, r * cellSize, BLACK); // Top
-            if (cell.walls[1])
-                DrawLine((c + 1) * cellSize, r * cellSize, (c + 1) * cellSize, (r + 1) * cellSize, BLACK); // Right
-            if (cell.walls[2])
-                DrawLine(c * cellSize, (r + 1) * cellSize, (c + 1) * cellSize, (r + 1) * cellSize, BLACK); // Bottom
-            if (cell.walls[3])
-                DrawLine(c * cellSize, r * cellSize, c * cellSize, (r + 1) * cellSize, BLACK); // Left
+            if (cell.walls[0]) // Top wall
+                DrawLine(c * cellSize, drawY, (c + 1) * cellSize, drawY, BLACK);
+            if (cell.walls[1]) // Right wall
+                DrawLine((c + 1) * cellSize, drawY, (c + 1) * cellSize, drawY + cellSize, BLACK);
+            if (cell.walls[2]) // Bottom wall
+                DrawLine(c * cellSize, drawY + cellSize, (c + 1) * cellSize, drawY + cellSize, BLACK);
+            if (cell.walls[3]) // Left wall
+                DrawLine(c * cellSize, drawY, c * cellSize, drawY + cellSize, BLACK);
         }
     }
+   
 
-    // Draw the player's frame and texture (Harry)
-    int playerFrameX = player.c * cellSize;                                           // X position of the player's frame
-    int playerFrameY = player.r * cellSize;                                           // Y position of the player's frame
-    DrawRectangle(playerFrameX, playerFrameY, cellSize - 1, cellSize - 1, DARKGREEN); // Frame background
-    // Draw the blast inside frame
-    int blastFrameX = blast.c * cellSize;                                           // X position of the player's frame
-    int blastFrameY = blast.r * cellSize;                                           // Y position of the player's frame
-    DrawRectangle(blastFrameX, blastFrameY, cellSize - 1, cellSize - 1, DARKGREEN); // Frame background
-
-    // Draw the player texture (scaled)
-    float playerScale = 0.1f;
+    // Draw the player (Harry) texture
+    int playerFrameX = player.c * cellSize;
+    int playerFrameY = startY + player.r * cellSize; // Adjust player Y position based on maze start below score section
+    DrawRectangle(playerFrameX, playerFrameY, cellSize - 1, cellSize - 1, customGreen); // Player frame background
+    float playerScale = 0.1f; // Scale player texture
     DrawTextureEx(player.texture,
                   Vector2{playerFrameX + (cellSize - player.texture.width * playerScale) / 2,
                           playerFrameY + (cellSize - player.texture.height * playerScale) / 2},
@@ -152,41 +195,40 @@ void DrawMaze()
         int blastFrameX = blast.c * cellSize;                                           // X position of the blast's frame
         int blastFrameY = blast.r * cellSize;                                           // Y position of the blast's frame
         DrawRectangle(blastFrameX, blastFrameY, cellSize - 1, cellSize - 1, DARKGREEN); // Frame background
-
         float blastScale = 0.1f; // Scale the blast texture to 5% of original size
         DrawTextureEx(blast.texture,
                       Vector2{blastFrameX + (cellSize - blast.texture.width * blastScale) / 2,
                               blastFrameY + (cellSize - blast.texture.height * blastScale) / 2},
-                      0.0f, blastScale, WHITE);
+                      0.0f, blastScale, customGreen);
     }
 
     // Draw ghosts inside a frame
-    float ghostScale = 0.05f; // Scale ghosts to 8% of original size
+    float ghostScale = 0.05f; // Scale ghosts to 5% of their original size
     for (const Ghost &ghost : ghosts)
     {
         int ghostFrameX = ghost.c * cellSize;
-        int ghostFrameY = ghost.r * cellSize;
-        // DrawRectangle(ghostFrameX, ghostFrameY, cellSize - 1, cellSize - 1, DARKGREEN); // Frame background
-
+        int ghostFrameY = startY + ghost.r * cellSize; // Adjust ghost Y position
         DrawTextureEx(ghost.texture,
                       Vector2{ghostFrameX + (cellSize - ghost.texture.width * ghostScale) / 2,
                               ghostFrameY + (cellSize - ghost.texture.height * ghostScale) / 2},
                       0.0f, ghostScale, WHITE); // Draw the ghost texture
     }
-    //  Draw coins inside a frame
-    float coinScale = 0.06f; // scales the coins to 6% of original size
+
+    // Draw coins inside a frame
+    float coinScale = 0.06f; // Scale coins to 6% of their original size
     for (const Coin &coin : coins)
     {
         int coinFrameX = coin.c * cellSize;
-        int coinFrameY = coin.r * cellSize;
-        // DrawRectangle(coinFrameX, coinFrameY, cellSize - 1, cellSize - 1, DARKGREEN); // Frame background
-
+        int coinFrameY = startY + coin.r * cellSize; // Adjust coin Y position
         DrawTextureEx(coin.texture,
                       Vector2{coinFrameX + (cellSize - coin.texture.width * coinScale) / 2,
                               coinFrameY + (cellSize - coin.texture.height * coinScale) / 2},
                       0.0f, coinScale, WHITE); // Draw the coin texture
     }
+
+
 }
+
 
 void MazeGenerator()
 {
@@ -245,6 +287,10 @@ void MazeGenerator()
     }
 }
 
+
+
+
+
 void UpdatePlayer()
 {
     // update the movement timer
@@ -257,30 +303,36 @@ void UpdatePlayer()
         if ((IsKeyDown(KEY_UP) || IsKeyDown(KEY_W)) && !grid[player.r * ncols + player.c].walls[0])
         { // Up
             player.r--;
+            PlaySound(move); // Play move sound
             moveTimer = 0.0f; // reset timer
         }
         if ((IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D)) && !grid[player.r * ncols + player.c].walls[1])
         { // Right
             player.c++;
             moveTimer = 0.0f;
+            PlaySound(move); // Play move sound
         }
         if ((IsKeyDown(KEY_DOWN) || IsKeyDown(KEY_S)) && !grid[player.r * ncols + player.c].walls[2])
         { // Down
             player.r++;
             moveTimer = 0.0f;
+            PlaySound(move); // Play move sound
         }
         if ((IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A)) && !grid[player.r * ncols + player.c].walls[3])
         { // Left
             player.c--;
             moveTimer = 0.0f;
+            PlaySound(move); // Play move sound
         }
     }
 
     // Check for collision with Hermione
-    if (player.r == hermione.r && player.c == hermione.c)
+    if (player.r == numrows-1 && player.c == ncols-1)
     {
         gameWon = true; // Set the win flag
+     
     }
+ 
 
     // Check for collision with coins
     for (auto it = coins.begin(); it != coins.end();)
@@ -288,6 +340,7 @@ void UpdatePlayer()
         if (player.r == it->r && player.c == it->c)
         {
             coinsCollected++;         // Increment the coin counter
+            StopSound(move); // Stop the coin collection sound
             PlaySound(coincollected); // coin collection sound
             it = coins.erase(it);     // Remove the collected coin
         }
@@ -321,7 +374,6 @@ void InitCoins()
     }
 }
 
-// Function to update ghosts
 // Function to update ghosts
 void UpdateGhosts()
 {
@@ -403,14 +455,17 @@ void DrawRemainingTime()
         remaining = 0;
     }
 
-    DrawText(TextFormat("Time remaining: %02d:%02d", remaining / 60, remaining % 60),
-             GetScreenWidth() / 2 - MeasureText(TextFormat("Time remaining: %02d:%02d", remaining / 60, remaining % 60), 20) / 2,
-             20,
-             20,
-             RED);
+    DrawText(
+    TextFormat(": %02d:%02d", remaining / 60, remaining % 60),
+    270,  
+    15,   
+    25, 
+    BLACK   // Color
+);
+
     // coins collected
-    DrawText(TextFormat("Coins Collected: %d", coinsCollected),
-             GetScreenWidth() - 200, 20, 20, GOLD);
+    DrawText(TextFormat(": %d", coinsCollected),
+             520, 15, 25, BLACK);
 }
 
 // UPDATE level 2 function, including all elements
@@ -427,6 +482,7 @@ void UpdateLevel2()
         attack = LoadSound("./Audio/attack.mp3");             // Load attack sound
         gameover = LoadSound("./Audio/gameover.wav");         // Load game over sound
         win = LoadSound("./Audio/win.mp3");                   // Load win sound
+        move = LoadSound("./Audio/step.mp3");                 // Load move sound
         PlayMusicStream(music);                               // Start playing music
 
         std::srand(static_cast<unsigned>(std::time(0))); // Seed random number generator
@@ -438,9 +494,12 @@ void UpdateLevel2()
         player.texture = LoadTexture("./images/harry.png");
         hermione.texture = LoadTexture("./images/hermione.png");
         blast.texture = LoadTexture("./images/blast.png");
+        bgTexture = LoadTexture("./images/score.png");
+        
 
-        hermione.r = numrows - 1; // Set Hermione's position to the last row
-        hermione.c = ncols - 1;   // Set Hermione's position to the last column
+
+        hermione.r = numrows; // Set Hermione's position to the last row
+        hermione.c = ncols-1;   // Set Hermione's position to the last column
         InitGhosts();             // Initialize ghosts
         InitCoins();              // Initialize coins
 
@@ -487,15 +546,15 @@ void UpdateLevel2()
 // DRAW level 2 function
 void DrawLevel2()
 {
-    ClearBackground(GRAY);            // Clear the screen
+    ClearBackground(DARKGREEN);            // Clear the screen
     DrawMaze();                       // Draw the maze
     DrawHermione(hermione, cellSize); // Draw Hermione
 
     // Draw the remaining time
     DrawRemainingTime();
     // Display remaining collectibles
-    std::string collectibleText = "Extra Lives: " + std::to_string(CollectibleCount);
-    DrawText(collectibleText.c_str(), 10, 10, 20, BLUE); // Adjust position and color as needed
+    std::string collectibleText = ": " + std::to_string(CollectibleCount);
+    DrawText(collectibleText.c_str(), 90, 15, 25, BLACK); // Adjust position and color as needed
 
     // If the game is won, display the "You Win!" message
     if (gameWon)
