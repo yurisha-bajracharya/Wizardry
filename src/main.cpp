@@ -13,6 +13,7 @@
 #include "Pause3.h"
 #include "globals.h"
 #include "button.h"
+#include "unload.h"
 
 using namespace std;
 
@@ -60,7 +61,7 @@ int main()
 
     // Color OLIVE_GREEN = {107, 142, 35, 255};
     //  Current state of the game
-
+    void Unload();
     GameState currentState = MENU;
     Collectibles collectible;
     Texture2D currentMapImage = {0};
@@ -111,6 +112,7 @@ int main()
     InitPause1();
     InitPause2();
     InitGameOver();
+    Sound winmusic = LoadSound("./Audio/win.mp3");
 
     Texture2D newgame = LoadTexture("./images/newgame.png");
     Texture2D menuimg = LoadTexture("./images/menuimg.png");
@@ -165,6 +167,7 @@ int main()
                 }
                 if (exitButton.isPressed(mousePosition, mousePressed, exitButton.position, exitButton.scale, exitB.width, exitB.height))
                 {
+                    Unload();
                     exitWindow = true;
                 }
             }
@@ -284,17 +287,21 @@ int main()
                     RemainingTime = 120.0f;
                     CollectibleCount = 0;
                     Initnew2();
+                    initNewLevel3();
+                    initNewMenu();
                     currentState = MAP; // Move to map
                 }
                 if (exit2button.isPressed(mousePosition, mousePressed, exit2button.position, exit2button.scale, exit2.width, exit2.height))
                 {
-                    CloseWindow();
+                    Unload();
+                    exitWindow = true;
                 }
                 if (replaybutton.isPressed(mousePosition, mousePressed, replaybutton.position, replaybutton.scale, replay.width, replay.height))
                 {
-
                     RemainingTime = 120.0f;
                     CollectibleCount = 0;
+                    initNewLevel3();
+                    initNewMenu();
                     Initnew2();
                     currentState = LEVEL1; // Move to the next level
                 }
@@ -303,6 +310,10 @@ int main()
         }
         case LEVEL3:
         {
+            if (IsSoundPlaying(gameovermusic))
+            {
+                StopSound(gameovermusic);
+            }
             if (!extraHintCalled)
             {
                 extraHint();
@@ -331,7 +342,8 @@ int main()
                 }
                 if (exit2button.isPressed(mousePosition, mousePressed, exit2button.position, exit2button.scale, exit2.width, exit2.height))
                 {
-                    CloseWindow();
+                    Unload();
+                    exitWindow = true;
                 }
                 if (replaybutton.isPressed(mousePosition, mousePressed, replaybutton.position, replaybutton.scale, replay.width, replay.height))
                 {
@@ -468,9 +480,9 @@ int main()
         }
         case PAUSE3:
         {
-            if (!IsSoundPlaying(gameovermusic))
+            if (!IsSoundPlaying(winmusic))
             {
-                PlaySound(gameovermusic);
+                PlaySound(winmusic);
             }
             updatePause3();
             bool mousePressed = IsMouseButtonPressed(MOUSE_LEFT_BUTTON);
@@ -481,7 +493,8 @@ int main()
                 Initnew2();
                 currentState = MENU;
                 cout << "Menu is pressed" << endl;
-
+                initNewMenu();
+                initNewLevel3();
                 StopSound(gameovermusic);
             }
         }
@@ -581,22 +594,14 @@ int main()
             menubutton.Draw(menuimg, menubutton.scale);
             break;
         }
-
         EndDrawing();
     }
-    UnloadFonts();
-    unloadMenu();
-    UnloadLevel1();
-    UnloadLevel3();
-    UnloadTexture(cloud);
-    UnloadGameOver();
+    Unload();
     UnloadSound(mapbgm);
     UnloadSound(level1Music);
     UnloadSound(gameovermusic);
+    UnloadTexture(cloud);
     UnloadSound(hovered);
-    UnloadPause();
-    UnloadPause1();
-    UnloadPause2();
     CloseWindow();
     return 0;
 }

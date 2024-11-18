@@ -17,5 +17,6 @@ void MazeGenerator();
 void DrawMaze();
 void InitGrid();
 void extraLife();
+void UnloadLevel2Textures();
 
 #endif // LEVEL2_H

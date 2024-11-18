@@ -1,4 +1,3 @@
-
 #include "C:\raylib\raylib\src\raylib.h"
 #include <vector>
 #include <cstdlib>
@@ -558,14 +557,40 @@ void DrawLevel2()
     DrawText(collectibleText.c_str(), 90, 15, 25, BLACK); // Adjust position and color as needed
 
     // If the game is won, display the "You Win!" message
-    if (gameWon)
+    // if (gameWon)
+    // {
+    //     PlaySound(win);
+    // }
+
+    // // If the game is over, display the "Game Over" message
+    // if (gameOver)
+    // {
+    //     PlaySound(gameover); // Play game over sound
+    // }
+}
+
+void UnloadLevel2Textures()
+{
+    UnloadTexture(player.texture); // Unload player texture
+    UnloadTexture(hermione.texture); // Unload Hermione texture
+    UnloadTexture(blast.texture); // Unload blast texture
+    UnloadTexture(bgTexture); // Unload background texture
+
+    for (auto &ghost : ghosts)
     {
-        PlaySound(win);
+        UnloadTexture(ghost.texture); // Unload ghost textures
     }
 
-    // If the game is over, display the "Game Over" message
-    if (gameOver)
+    for (auto &coin : coins)
     {
-        PlaySound(gameover); // Play game over sound
+        UnloadTexture(coin.texture); // Unload coin textures
     }
+
+    UnloadSound(collide);      // Unload collision sound
+    UnloadSound(attack);      // Unload attack sound
+    UnloadSound(move);         // Unload move sound
+    UnloadSound(coincollected); // Unload coin collection sound
+    UnloadMusicStream(music);  // Unload music stream
+    UnloadSound(gameover);     // Unload game over sound
+    UnloadSound(win);         // Unload win sound
 }

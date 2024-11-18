@@ -138,7 +138,7 @@ void initNewLevel3()
     PlayMusicStream(voldeEntry);
 
     // Initialize hintButton
-    hintButton.SetPosition(12000, 200);
+    hintButton.SetPosition(12, 200);
     hintButton.scale = 1.0f;
     frameRec1 = {0.0f, 0.0f, static_cast<float>(voldeBaba.width), static_cast<float>(voldeBaba.height)};
     firstPosition = {0, 0};
@@ -378,7 +378,7 @@ void drawLevel3()
 
     if (nohint)
     {
-        DrawText("You don't have enough coins to buy hint", 600, 660, 20, WHITE);
+        DrawText("You don't have enough coins to buy hint", 30, 200, 20, WHITE);
     }
 }
 

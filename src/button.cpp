@@ -29,7 +29,7 @@ void Button::Draw(Texture2D texture, float scale)
 bool Button::isPressed(Vector2 mousePos, bool mousePressed, Vector2 position, float scale, float width, float height)
 {
     Rectangle rect = {position.x, position.y, width, height};//syntax: Rectangle(float x, float y, float width, float height)
-    cout << "mousepressed: " << mousePressed << endl;
+    // cout << "mousepressed: " << mousePressed << endl;
     if (CheckCollisionPointRec(mousePos, rect) && mousePressed)
     {
         return true;
