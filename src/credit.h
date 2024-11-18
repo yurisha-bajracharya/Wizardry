@@ -1,7 +1,9 @@
 #ifndef CREDIT_H
 #define CREDIT_H
 
+void InitCredits();
 void updateCredit();
 void drawCredit();
+void UnloadCredits();
 
-#endif // PAUSE3_H
+#endif // CREDIT_H

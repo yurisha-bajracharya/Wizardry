@@ -125,16 +125,15 @@ int main()
     Texture2D replay = LoadTexture("./images/replay.png");
     Texture2D startB = LoadTexture("./images/start.png");
     Texture2D exitB = LoadTexture("./images/exit.png");
-    Texture2D creditB=LoadTexture("images/credits.png");
+    Texture2D creditB = LoadTexture("images/credits.png");
     playagainbutton.SetPosition(80, 600);
     menubutton.SetPosition(920, 600);
     startButton.SetPosition(1045, 190);
-     creditButton.SetPosition(1045,290);
+    creditButton.SetPosition(1045, 290);
     exitButton.SetPosition(1045, 390);
-   
     startButton.scale = 0.8f;
     exitButton.scale = 0.8f;
-    creditButton.scale=0.8f;
+    creditButton.scale = 0.8f;
     playagainbutton.scale = 0.65f;
     menubutton.scale = 0.45f;
     nextbutton.SetPosition(920, 600);
@@ -172,13 +171,14 @@ int main()
                 {
                     currentState = MAP; // Move to map
                 }
-                if(creditButton.isPressed(mousePosition,mousePressed,creditButton.position, creditButton.scale,creditB.width, creditB.height))
+                if (creditButton.isPressed(mousePosition, mousePressed, creditButton.position, creditButton.scale, creditB.width, creditB.height))
                 {
-                    currentState=CREDIT;//Move to credit
+                    InitCredits();
+                    currentState = CREDIT; // Move to credit
                 }
                 if (exitButton.isPressed(mousePosition, mousePressed, exitButton.position, exitButton.scale, exitB.width, exitB.height))
                 {
-                    //Unload();
+                    // Unload();
                     exitWindow = true;
                 }
             }
@@ -186,30 +186,25 @@ int main()
         }
 
         case CREDIT:
-               {
-                   
-                     if (!IsSoundPlaying(gameovermusic))
+        {
+            updateCredit();
+            bool mousePressed = IsMouseButtonPressed(MOUSE_LEFT_BUTTON);
             {
-                PlaySound(gameovermusic);
-            }
-             updateCredit();
-     bool mousePressed = IsMouseButtonPressed(MOUSE_LEFT_BUTTON);
-            {
-                 if (menubutton.isPressed(mousePosition, mousePressed, menubutton.position, menubutton.scale, menuimg.width, menuimg.height))
+                if (menubutton.isPressed(mousePosition, mousePressed, menubutton.position, menubutton.scale, menuimg.width, menuimg.height))
                 {
-                     RemainingTime=120.0f;
-                     CollectibleCount=0;
-                     Initnew2();
+                    UnloadCredits();
+                    RemainingTime = 120.0f;
+                    CollectibleCount = 0;
+                    Initnew2();
                     currentState = MENU;
                     initNewMenu();
                     initNewLevel3();
                     cout << "Menu is pressed" << endl;
-                StopSound(gameovermusic);
                 }
             }
-        break;
-                   }
-               
+            break;
+        }
+
         case MAP:
         {
             if (!IsSoundPlaying(mapbgm))
@@ -564,10 +559,9 @@ int main()
             break;
 
         case CREDIT:
-        drawCredit();
-        menubutton.Draw(menuimg, menubutton.scale);
-        break;
-
+            drawCredit();
+            menubutton.Draw(menuimg, menubutton.scale);
+            break;
 
         case MAP:
             DrawTexture(currentMapImage, 0, 0, WHITE);
@@ -640,13 +634,13 @@ int main()
         }
         EndDrawing();
     }
-    //Unload();
+    // Unload();
     UnloadSound(mapbgm);
     UnloadSound(level1Music);
     UnloadSound(gameovermusic);
     UnloadTexture(cloud);
     UnloadSound(hovered);
-   UnloadFonts();
+    UnloadFonts();
     unloadMenu();
     UnloadLevel1();
     UnloadLevel3();

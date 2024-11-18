@@ -148,6 +148,8 @@ void initNewLevel3()
     frameCounter1 = 0;
     frameSpeed1 = 5;
     reachedTarget = false;
+    nohint = false;
+    hintShown = false;
 
     // Reset Voldemort dialog variables
     messageIndex1 = 0;
