@@ -11,9 +11,10 @@
 #include "Pause1.h"
 #include "Pause2.h"
 #include "Pause3.h"
+#include "credit.h"
 #include "globals.h"
 #include "button.h"
-#include "unload.h"
+// #include "unload.h"
 
 using namespace std;
 
@@ -31,7 +32,8 @@ enum GameState
     PAUSE,
     PAUSE1,
     PAUSE2,
-    PAUSE3
+    PAUSE3,
+    CREDIT
 };
 
 Collectibles collectible;
@@ -46,6 +48,7 @@ Button exit2button;
 Button replaybutton;
 Button startButton;
 Button exitButton;
+Button creditButton;
 
 int main()
 {
@@ -61,7 +64,7 @@ int main()
 
     // Color OLIVE_GREEN = {107, 142, 35, 255};
     //  Current state of the game
-    void Unload();
+    // void Unload();
     GameState currentState = MENU;
     Collectibles collectible;
     Texture2D currentMapImage = {0};
@@ -122,12 +125,16 @@ int main()
     Texture2D replay = LoadTexture("./images/replay.png");
     Texture2D startB = LoadTexture("./images/start.png");
     Texture2D exitB = LoadTexture("./images/exit.png");
+    Texture2D creditB=LoadTexture("images/credits.png");
     playagainbutton.SetPosition(80, 600);
     menubutton.SetPosition(920, 600);
-    startButton.SetPosition(1045, 290);
+    startButton.SetPosition(1045, 190);
+     creditButton.SetPosition(1045,290);
     exitButton.SetPosition(1045, 390);
+   
     startButton.scale = 0.8f;
     exitButton.scale = 0.8f;
+    creditButton.scale=0.8f;
     playagainbutton.scale = 0.65f;
     menubutton.scale = 0.45f;
     nextbutton.SetPosition(920, 600);
@@ -165,14 +172,44 @@ int main()
                 {
                     currentState = MAP; // Move to map
                 }
+                if(creditButton.isPressed(mousePosition,mousePressed,creditButton.position, creditButton.scale,creditB.width, creditB.height))
+                {
+                    currentState=CREDIT;//Move to credit
+                }
                 if (exitButton.isPressed(mousePosition, mousePressed, exitButton.position, exitButton.scale, exitB.width, exitB.height))
                 {
-                    Unload();
+                    //Unload();
                     exitWindow = true;
                 }
             }
             break;
         }
+
+        case CREDIT:
+               {
+                   
+                     if (!IsSoundPlaying(gameovermusic))
+            {
+                PlaySound(gameovermusic);
+            }
+             updateCredit();
+     bool mousePressed = IsMouseButtonPressed(MOUSE_LEFT_BUTTON);
+            {
+                 if (menubutton.isPressed(mousePosition, mousePressed, menubutton.position, menubutton.scale, menuimg.width, menuimg.height))
+                {
+                     RemainingTime=120.0f;
+                     CollectibleCount=0;
+                     Initnew2();
+                    currentState = MENU;
+                    initNewMenu();
+                    initNewLevel3();
+                    cout << "Menu is pressed" << endl;
+                StopSound(gameovermusic);
+                }
+            }
+        break;
+                   }
+               
         case MAP:
         {
             if (!IsSoundPlaying(mapbgm))
@@ -293,7 +330,7 @@ int main()
                 }
                 if (exit2button.isPressed(mousePosition, mousePressed, exit2button.position, exit2button.scale, exit2.width, exit2.height))
                 {
-                    Unload();
+                    // Unload();
                     exitWindow = true;
                 }
                 if (replaybutton.isPressed(mousePosition, mousePressed, replaybutton.position, replaybutton.scale, replay.width, replay.height))
@@ -342,7 +379,7 @@ int main()
                 }
                 if (exit2button.isPressed(mousePosition, mousePressed, exit2button.position, exit2button.scale, exit2.width, exit2.height))
                 {
-                    Unload();
+                    // Unload();
                     exitWindow = true;
                 }
                 if (replaybutton.isPressed(mousePosition, mousePressed, replaybutton.position, replaybutton.scale, replay.width, replay.height))
@@ -522,8 +559,15 @@ int main()
         case MENU:
             drawMenu();
             startButton.Draw(startB, startButton.scale);
+            creditButton.Draw(creditB, creditButton.scale);
             exitButton.Draw(exitB, exitButton.scale);
             break;
+
+        case CREDIT:
+        drawCredit();
+        menubutton.Draw(menuimg, menubutton.scale);
+        break;
+
 
         case MAP:
             DrawTexture(currentMapImage, 0, 0, WHITE);
@@ -596,12 +640,21 @@ int main()
         }
         EndDrawing();
     }
-    Unload();
+    //Unload();
     UnloadSound(mapbgm);
     UnloadSound(level1Music);
     UnloadSound(gameovermusic);
     UnloadTexture(cloud);
     UnloadSound(hovered);
+   UnloadFonts();
+    unloadMenu();
+    UnloadLevel1();
+    UnloadLevel3();
+    UnloadGameOver();
+    UnloadPause();
+    UnloadPause1();
+    UnloadPause2();
+    UnloadLevel2Textures();
     CloseWindow();
     return 0;
 }
