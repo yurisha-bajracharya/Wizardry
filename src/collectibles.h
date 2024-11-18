@@ -28,4 +28,3 @@ private:
 };
 
 #endif // COLLECTIBLES_H
-

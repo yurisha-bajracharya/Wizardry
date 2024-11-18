@@ -1,4 +1,3 @@
-#include <raylib.h>
 #include "C:\raylib\raylib\src\raylib.h"
 #include <iostream>
 #include "Pause3.h"

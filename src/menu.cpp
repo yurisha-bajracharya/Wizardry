@@ -60,10 +60,10 @@ const char* messages[] = {
 void initNewMenu()
 {
     // Reset textures and music
-    UnloadTexture(menubg);
-    UnloadTexture(broom);
-    UnloadTexture(stand);
-    UnloadMusicStream(musicm);
+    // UnloadTexture(menubg);
+    // UnloadTexture(broom);
+    // UnloadTexture(stand);
+    // UnloadMusicStream(musicm);
     menubg = LoadTexture("images/ok.png");
     broom = LoadTexture("images/cute.png");
     stand = LoadTexture("images/stand.png");
