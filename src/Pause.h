@@ -1,4 +1,4 @@
-#ifndef PUASE_H
+#ifndef PAUSE_H
 #define PAUSE_H
 
 void InitPause();

@@ -27,6 +27,13 @@ Button hintButton;
 Texture2D hintB;
 Color OLIVE_GREEN = {107, 142, 35, 255};
 
+// Constants for popup
+const float popupDuration = 2.0f; // Popup duration in seconds
+
+// Variables for popup state
+bool showPopup = false;
+float popupTimer = 0.0f;
+
 // Positions and animation variables
 Vector2 firstPosition;
 Vector2 finalPosition;
@@ -38,8 +45,8 @@ int frameSpeed1 = 5;
 bool reachedTarget = false;
 bool riddleComplete = false;
 bool isWon = false;
-bool nohint = false;
-// Voldemort dialog variables
+// bool nohint = false;
+//  Voldemort dialog variables
 const char *prabachan[] = {
     "HAHAHAHA, You're almost there, but until you solve this, you haven't   won.",
     "Let's see if your feeble mind can   unravel this riddle, shall we?",
@@ -137,7 +144,7 @@ void initNewLevel3()
     PlayMusicStream(voldeEntry);
 
     // Initialize hintButton
-    hintButton.SetPosition(12, 200);
+    hintButton.SetPosition(12, 20);
     hintButton.scale = 1.0f;
     frameRec1 = {0.0f, 0.0f, static_cast<float>(voldeBaba.width), static_cast<float>(voldeBaba.height)};
     firstPosition = {0, 0};
@@ -147,7 +154,7 @@ void initNewLevel3()
     frameCounter1 = 0;
     frameSpeed1 = 5;
     reachedTarget = false;
-    nohint = false;
+    // nohint = false;
     hintShown = false;
 
     // Reset Voldemort dialog variables
@@ -284,14 +291,38 @@ void updateLevel3()
     bool mousePressed = IsMouseButtonPressed(MOUSE_LEFT_BUTTON);
     {
         if (hintButton.isPressed(mousePosition, mousePressed, hintButton.position, hintButton.scale, hintB.width, hintB.height))
+        // {
+        //     if (coinsCollected > 0)
+        //     {
+        //         hintShown = true;
+        //     }
+        //     else
+        //     {
+        //       //  nohint = true;
+        //     }
+        // }
         {
-            if (coinsCollected > 0)
+
+            if (coinsCollected <= 0)
             {
-                hintShown = true;
+                // Trigger popup if not enough coins
+                showPopup = true;
+                popupTimer = popupDuration;
             }
             else
             {
-                nohint = true;
+                // Show hint logic
+                hintShown = true;
+            }
+        }
+
+        // Update popup timer
+        if (showPopup)
+        {
+            popupTimer -= GetFrameTime();
+            if (popupTimer <= 0.0f)
+            {
+                showPopup = false; // Hide the popup after the duration
             }
         }
     }
@@ -377,9 +408,9 @@ void drawLevel3()
         }
     }
 
-    if (nohint)
+    if (showPopup)
     {
-        DrawTextEx(fontBold, "You don't have enough coins to buy hint", (Vector2){60, 200}, 30, 2.5, RED);
+        DrawTextEx(fontBold, "You don't have enough coins to buy hint", (Vector2){68, 21}, 30, 2.5, RED);
     }
 }
 

@@ -92,6 +92,9 @@ Through this project, we had the opportunity to apply our understanding of  C++ 
 3. **Level 2**: Continue collecting coins to increase your score and get more hints in the riddle asked in Level 3. Use the snitches collected in Level 1 to remove ghosts and navigate the maze.
 4. **Level 3**: Solve the riddle presented at the end of the maze to win the game.
 
+## Demo:
+[Demo Video](https://www.youtube.com/watch?v=Y8J19nAZby4)
+
 ## Contributors
 
 - [Shristi Pokhrel](https://github.com/Shri-29)

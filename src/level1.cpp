@@ -154,7 +154,7 @@ void Collectibles::DrawBludgers(int i, Texture2D bludgerTexture)
 Vector2 Collectibles::GenerateRandomPosition()
 {
     float x = GetRandomValue(0, cellCountX - 1);
-    float y = GetRandomValue(0, cellCountY - 1);
+    float y = GetRandomValue(3, cellCountY - 1);
     return Vector2{x, y};
 }
 
