@@ -14,7 +14,6 @@
 #include "credit.h"
 #include "globals.h"
 #include "button.h"
-// #include "unload.h"
 
 using namespace std;
 
