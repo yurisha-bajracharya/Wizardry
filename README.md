@@ -3,13 +3,13 @@
 **Wizardry** is a captivating multi-level game developed using Rylib and C++. The game offers a rich mix of item collection, maze navigation and riddle-solving mechanics. Each level introduces new challenges, engaging the player with innovative game mechanics.
 
 ## Table of Contents
+
 1. [About](#about)
 2. [Gameplay](#gameplay)
 3. [Features](#features)
 4. [Installation](#installation)
 5. [How to Play](#how-to-play)
 6. [Contributors](#contributors)
-
 
 ---
 
@@ -21,7 +21,7 @@
 - **Level 2**: In this level, the player uses the snitch count from Level 1 to remove ghosts from the maze and collects coins to increase the score. The goal is to reach Hermione at the end of the maze.
 - **Level 3**: At the end of the maze, players face a riddle. Solving the riddle marks the completion of the game.
 
-Through this project, we had the opportunity to apply our understanding of  C++ programming, and game design principles, while using Raylib, a simple yet powerful game development library.
+Through this project, we had the opportunity to apply our understanding of C++ programming, and game design principles, while using Raylib, a simple yet powerful game development library.
 
 ---
 
@@ -42,7 +42,6 @@ Through this project, we had the opportunity to apply our understanding of  C++ 
 
 - **Multi-level Gameplay**:  
   The game consists of three levels, each with new gameplay mechanics.
-  
 - **Item Collection and Score System**:  
   Players collect snitches in Level 1, which are used in Level 2 to remove ghosts. Coins collected in Level 2 contribute to the player’s score.
 
@@ -59,30 +58,31 @@ Through this project, we had the opportunity to apply our understanding of  C++ 
   Custom textures for characters and objects along with background music and sound effects that enhance immersion.
 
 ---
+
 ## Installation
+
 1. **Install Dependencies**  
-   Before running the game, make sure you have Raylib installed. You can follow the installation instructions from the [Raylib website](https://www.raylib.com) or use a package manager like `vcpkg` (on Windows) or `brew` (on macOS).
+ Before running the game, make sure you have Raylib installed. You can follow the installation instructions from the [Raylib website](https://www.raylib.com) or use a package manager like `vcpkg` (on Windows) or `brew` (on macOS).
    <p align="center">
 🎥 <a href="https://www.youtube.com/watch?v=PaAcVk5jUd8">Video Tutorial on YouTube</a>
 </p>
 
-
-3. **Build the Game**  
+2. **Build the Game**  
    After downloading or cloning the repository, you can compile the game by running the appropriate build command in your IDE or terminal:
 
    - **For Visual Studio**:  
      Open the project and press `F5` to compile and run the game.
-   
+
    - **For Code::Blocks**:  
      Open the project, press `F5` to compile and run the game.
-   
+
    - **For CLion**:  
      Open the project and press `Shift + F10` (or `F5` depending on your configuration) to compile and run the game.
 
    - **For VS Code with Makefile**:
      Ensure the `Makefile` is set up correctly (see the [Building the Game](#building-the-game) section for more details). Then press `F5` to run the game.
 
-4. **Run the Game**  
+3. **Run the Game**  
    Once compiled, run the game by executing the generated binary or by pressing `F5` in your IDE. The game will start, and you can begin playing!
 
 ## How to Play
@@ -93,7 +93,8 @@ Through this project, we had the opportunity to apply our understanding of  C++ 
 4. **Level 3**: Solve the riddle presented at the end of the maze to win the game.
 
 ## Demo:
-[Demo Video](https://www.youtube.com/watch?v=Y8J19nAZby4)
+
+[Demo Video](https://www.youtube.com/watch?v=10be4Ajg9rM)
 
 ## Contributors
 
@@ -101,3 +102,13 @@ Through this project, we had the opportunity to apply our understanding of  C++ 
 - [Shruti Maharjan](https://github.com/shruti-1007)
 - [Swarnima Khadka](https://github.com/Swarnima-Khadka)
 - [Yurisha Bajracharya](https://github.com/yurisha-bajracharya)
+
+## Soundtrack Credits
+All sound effects used in this project are sourced from [Pixabay](https://pixabay.com/), a royalty-free audio platform. Special thanks to the following creators:
+
+Jean Lambert Salvatori
+Universfield
+Trading Nation
+Driken Stan
+freesound_community
+Nhựt Bùi
