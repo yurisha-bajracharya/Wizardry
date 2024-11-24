@@ -61,9 +61,6 @@ int main()
     float endTime = 120.0f;
     float RemainingTime = 0.0f;
 
-    // Color OLIVE_GREEN = {107, 142, 35, 255};
-    //  Current state of the game
-    // void Unload();
     GameState currentState = MENU;
     Collectibles collectible;
     Texture2D currentMapImage = {0};
@@ -102,7 +99,6 @@ int main()
     Texture2D mainbuildinghovered = LoadTexture("./images/mainbuildinghovered.png");
 
     // defining areas for each level
-    // Defining areas for each level adjusted for a window size of 1260 x 700
     Rectangle quidditchArea = {500, 260, 180, 150};    // Quidditch area
     Rectangle forbiddenArea = {1080, 232, 180, 117};   // Forbidden area
     Rectangle mainbuildingArea = {720, 466, 270, 233}; // Main building area
@@ -159,11 +155,6 @@ int main()
         case MENU:
         {
             updateMenu();
-            // if (IsKeyPressed(KEY_ENTER))
-            // {
-            //     currentState = MAP;
-            //     startTime = GetTime();
-            // }
             bool mousePressed = IsMouseButtonPressed(MOUSE_LEFT_BUTTON);
             {
                 if (startButton.isPressed(mousePosition, mousePressed, startButton.position, startButton.scale, startB.width, startB.height))
@@ -386,14 +377,6 @@ int main()
                     initNewLevel3(); // Move to the next level
                 }
             }
-            // if (IsKeyDown(KEY_O)) /* condition for winning */
-            // {
-            //     currentState = GAMEOVER; // Game over after winning
-            // }
-            // else if (IsKeyDown(KEY_O)) /* condition for losing */
-            // {
-            //     currentState = GAMEOVER; // Game over after losing
-            // }
             break;
         }
 

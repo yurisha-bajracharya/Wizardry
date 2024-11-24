@@ -102,3 +102,13 @@ Through this project, we had the opportunity to apply our understanding of C++ p
 - [Shruti Maharjan](https://github.com/shruti-1007)
 - [Swarnima Khadka](https://github.com/Swarnima-Khadka)
 - [Yurisha Bajracharya](https://github.com/yurisha-bajracharya)
+
+## Soundtrack Credits
+All sound effects used in this project are sourced from [Pixabay](https://pixabay.com/), a royalty-free audio platform. Special thanks to the following creators:
+
+Jean Lambert Salvatori
+Universfield
+Trading Nation
+Driken Stan
+freesound_community
+Nhựt Bùi
